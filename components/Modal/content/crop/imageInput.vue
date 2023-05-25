@@ -10,7 +10,6 @@
       </template>
     </ModalDown>
   </div>
-
   <div class="white-retangle-image" @click="imageModal()" v-if="!croppedImageNew">
     <label class="image-retangle">
       <Icon
@@ -25,6 +24,14 @@
   </div>
   <div v-else>
     <img :src="croppedImageNew" class="after-upload" />
+    <div class="flex justify-between mt-[16px] mb-[5px]">
+      <button @click="removeImage()">
+        <p class="font-semibold text-sm red">Usuń</p>
+      </button>
+      <button @click="changeImage()">
+        <p class="font-semibold text-sm primary-color">Zmień zdjęcie</p>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -45,6 +52,18 @@ const handleCroppedFile = (file: File) => {
 const handleCroppedImageData = (croppedImage: any) => {
   croppedImageNew.value = croppedImage;
 };
+
+const changeImage = () => {
+  croppedFile.value = null;
+  croppedImageNew.value = null;
+  imageModal()
+}
+
+const removeImage = () => {
+  croppedFile.value = null;
+  emit("imageFile", null)
+  croppedImageNew.value = null;
+}
 </script>
 
 <style scoped lang="scss">

@@ -1,5 +1,4 @@
 <template>
-  <Transition name="slide-fade">
   <div class="fixed z-50 left-0 bottom-0 w-full">
     <div class="dark-blur-background"></div>
       <div class="modal-down">
@@ -22,7 +21,6 @@
       </div>
     </div>
   </div>
-  </Transition>
 </template>
 <script setup lang="ts">
 const props = defineProps({
@@ -64,33 +62,5 @@ const emit = defineEmits<{
 }
 .close {
   color: rgb(209, 209, 209);
-}
-.button-remove {
-  background-color: transparent;
-  border: solid 1px $color-error;
-  padding: 10px 23px;
-  color: $color-error;
-  font-family: $family;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 22px;
-  letter-spacing: 0.05em;
-  display: block;
-  border-radius: 8px;
-  transition: color 0.3s ease-in-o;
-}
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
 }
 </style>

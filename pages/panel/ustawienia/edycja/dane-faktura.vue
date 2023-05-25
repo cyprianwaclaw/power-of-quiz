@@ -1,31 +1,21 @@
 <template>
   <div>
-    <!-- TODO: błędy walidacji do poprawy -->
-    <div class="fixed z-50 left-0 bottom-0 w-full" v-if="isOpen">
-      <div class="blur-background-update"></div>
-      <div class="modal-view-update">    
-          <div class="px-7 py-7 grid ">
-            <div v-if="success">
-              <div class="flex justify-center w0-full">
-                <Icon name="ph:check-circle-light" size="72" class="green mb-3" />
-              </div>
-              <p class="edit-message-modal"><span class="green">Gratulacje!</span> Twoje zmiany zostały poprawnie zapisane </p>            
-            </div>
-            <div v-else>
-              <div class="flex justify-center w0-full">
-                <Icon name="ph:x-circle-light" size="72" class="red mb-3" />
-              </div>
-              <p class="edit-message-modal"><span class="red">Wystąpił błąd!</span> Wprowadzone dane są błędne, sprawdź poprawność danych</p>            
-            </div>
-          </div>    
-        <div v-if="success" class="border-top flex justify-end">
-          <button class="button-modal primary-color" @click="Modal()">Okej</button>
-        </div>
-        <div v-else class="border-top flex justify-end">
-          <button class="button-modal primary-color" @click="ModalError()">Popraw błędy</button>
-        </div>
-      </div>
-    </div>
+
+    <ModalAlert
+    v-if="isOpenSuccess"
+    title="Zapisano dane"
+    des="Wprowadzone dane zostały pomyślnie zapisane"
+    closeButton="Okej"
+    @close="ModalSuccess()"
+  />
+  <ModalAlert
+  v-if="isOpenError"
+  title="Uups!"
+  des="Wprowdzone dane są błędne, zweryfikuj ich poprawność i spróbuj ponownie"
+  closeButton="Próbuje dalej"
+  @close="ModalError()"
+/>
+
     <NuxtLayout name="edit-settings">
       <div class="mb-10">
         <h1 class="title-h1">Dane do faktury</h1>
@@ -169,23 +159,13 @@ definePageMeta({
   middleware: "auth",
 });
 
-
+const isOpenError = ref(false)
+const isOpenSuccess = ref(false)
 const userStore = useUser();
 await userStore.getSettingsUser();
 const { getCompany, success, errorMessage } = storeToRefs(userStore);
 const allCompany = getCompany.value;
 const company = allCompany.address;
-const isOpen = ref(false);
-
-function Modal() {
-  isOpen.value = !isOpen.value;
-  window.location.reload();
-}
-function ModalError() {
-  isOpen.value = !isOpen.value;
-  errorMessage.value = ''
-}
-
 
 const schema = Yup.object().shape({
   company_name: Yup.string(),
@@ -252,8 +232,25 @@ async function onSubmit(values: any) {
     building_numberNew,
     house_numberNew
   );
-  isOpen.value = !isOpen.value;
+  witchModal()
 }
+
+const witchModal = () => {
+if(success){
+  return ModalSuccess()
+} else{
+  return ModalError()
+}
+}
+
+
+const ModalSuccess=()=> {
+isOpenSuccess.value =! isOpenSuccess.value
+}
+const ModalError=()=> {
+isOpenError.value =! isOpenError.value
+}
+
 </script>
 
 <style scoped>

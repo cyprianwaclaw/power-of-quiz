@@ -1,30 +1,19 @@
 <template>
-  <div>
-  <div class="fixed z-50 left-0 bottom-0 w-full" v-if="isOpen">
-    <div class="blur-background-update"></div>
-    <div class="modal-view-update">    
-        <div class="px-7 py-7 grid ">
-          <div v-if="success==true">
-            <div class="flex justify-center w-full">
-              <Icon name="ph:check-circle-light" size="72" class="green mb-3" />
-            </div>
-            <p class="edit-message-modal"><span class="green">Gratulacje!</span> Twoje zmiany zostały poprawnie zapisane </p>            
-          </div>
-          <div v-else>
-            <div class="flex justify-center w-full">
-              <Icon name="ph:x-circle-light" size="72" class="red mb-3" />
-            </div>
-            <p class="edit-message-modal"><span class="red">Wystąpił błąd!</span> Wprowadzone dane są błędne, sprawdź poprawność danych</p>            
-          </div>
-        </div>    
-      <div v-if="success==true" class="border-top flex justify-end">
-        <button class="button-modal primary-color" @click="Modal()">Okej</button>
-      </div>
-      <div v-else class="border-top flex justify-end">
-        <button class="button-modal primary-color" @click="ModalError()">Popraw błędy</button>
-      </div>
-    </div>
-  </div>
+  <ModalAlert
+    v-if="isOpenSuccess"
+    title="Zapisano dane"
+    des="Wprowadzone dane zostały pomyślnie zapisane"
+    closeButton="Okej"
+    @close="ModalSuccess()"
+  />
+  <ModalAlert
+  v-if="isOpenError"
+  title="Uups!"
+  des="Wprowdzone dane są błędne, zweryfikuj ich poprawność i spróbuj ponownie"
+  closeButton="Próbuje dalej"
+  @close="ModalError()"
+/>
+
   <NuxtLayout name="edit-settings">
     <div class="mb-8">
       <h1 class="title-h1">Wypłata środków</h1>
@@ -87,7 +76,6 @@
       </Form>
     </div>
   </NuxtLayout>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -96,13 +84,13 @@ import { storeToRefs } from "pinia";
 import { Form } from "vee-validate";
 import { useUser } from "@/store/useUser";
 import { onInvalidSubmit, ChangePlaceholderInput,  ChangeDataInput } from "@/utils/function";
-import { isNullableTypeAnnotation } from "@babel/types";
 
 definePageMeta({
   middleware: "auth",
 });
 
-const isOpen = ref(false)
+const isOpenError = ref(false)
+const isOpenSuccess = ref(false)
 const userStore = useUser();
 await userStore.getSettingsUser();
 const { getFinancial, errorMessage, success } = storeToRefs(userStore);
@@ -129,21 +117,26 @@ async function onSubmit(values: any) {
   let ibanNew = ChangeDataInput(iban, financial.iban);
   let bank_nameNew = ChangeDataInput(bank_name, financial.bank_name);
   let swiftNew = ChangeDataInput(swift, financial.swift);
-  isOpen.value =! isOpen.value
   await userStore.updateUserFinancial(ibanNew, bank_nameNew, swiftNew);
-
+witchModal()
 }
 
-function Modal() {
-isOpen.value =! isOpen.value
-window.location.reload();
+const witchModal = () => {
+if(success){
+  return ModalSuccess()
+} else{
+  return ModalError()
+}
 }
 
-function ModalError() {
-  isOpen.value =! isOpen.value
-  errorMessage.value = null
-  // success.value = ''
+
+const ModalSuccess=()=> {
+isOpenSuccess.value =! isOpenSuccess.value
 }
+const ModalError=()=> {
+isOpenError.value =! isOpenError.value
+}
+
 
 const test = ref('raz')
 

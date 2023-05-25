@@ -1,12 +1,10 @@
 <template>
+  //TODO Można kiedyś zmienić, tak aby był tylko jeden modal
     <div class="fixed z-50 left-0 bottom-0 w-full">
         <div class="blur-background-update"></div>
         <div class="modal-view-update">    
             <div class="px-5 py-7 grid ">
               <div >
-                <!-- <div class="flex justify-center w-full">
-                  <Icon name="ph:x-circle-light" size="72" class="red mb-3" />
-                </div> -->
                 <p class="text-[22px] text-center font-semibold">Brak dostępu</p>            
                 <p class="edit-message-modal">Ta sekcja wymaga pakietu Premium. Dołącz już teraz i ciesz się pełnymi możliwościami</p>            
               </div>

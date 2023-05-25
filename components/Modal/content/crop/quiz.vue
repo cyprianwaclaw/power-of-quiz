@@ -92,7 +92,7 @@ const cropImage = () => {
 };
 
 const removeImage = () => {
-  console.log("remove");
+  selectedImage.value = null
 };
 
 onMounted(() => {

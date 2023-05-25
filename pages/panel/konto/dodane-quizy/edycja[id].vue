@@ -34,25 +34,6 @@
               </div>
             </div>
           </div>
-          <!-- <div class="white-retangle" v-if="!editToggle">
-            <div
-              class="my-4 w-full flex justify-center pl-7 justify-items-centery-place-content"
-            >
-              <div class="border-r border-[#EDEDED] w-full">
-                <p class="font-medium">{{ quizItem[11].pytania }}</p>
-                <h2 class="text-sm text-[#a7a2a2] font-thin">Ilość pytań</h2>
-              </div>
-              <div class="border-r border-[#EDEDED] w-full pl-5">
-                <p class="font-medium">{{ quizItem[6].time }} min</p>
-                <h2 class="text-sm text-[#a7a2a2] font-thin">Czas</h2>
-              </div>
-              <div class="w-full pl-5">
-                <p class="font-medium">{{ quizItem[7].poziom }}</p>
-                <h2 class="text-sm text-[#a7a2a2] font-thin">Poziom</h2>
-              </div>
-            </div>
-          </div> -->
-
             <div class="white-retangle">
               <div class="row-table-start -mt-5 flex place-items-end">
                 <InputNotBorder

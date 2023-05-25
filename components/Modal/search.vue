@@ -92,12 +92,13 @@ let mapCategory = (allCategories.value = category.map((single: any) => ({
   selected: false,
 })));
 
+
 let populars = quizesValue(popularQuiz.value, mapCategory);
 
 const searchInput: any = computed(() => {
-    return quizesValue(allQuizName.value, mapCategory).filter((quiz: any) =>
-    quiz.title.toLowerCase().includes(search.value)
-    );
+  return quizesValue(allQuizName.value, mapCategory).filter((quiz: any) =>
+  quiz.title.toLowerCase().includes(search.value)
+  );
 });
 
 

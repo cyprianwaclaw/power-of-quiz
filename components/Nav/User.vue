@@ -21,9 +21,6 @@
     </div>
   </div>
       <ModalSearch v-if="openSearch"  @close= "Modal()"  title="Filtruj quizy">
-        <template #content>
-          test
-          </template>
           </ModalSearch>
 </template>
 <script setup lang="ts">

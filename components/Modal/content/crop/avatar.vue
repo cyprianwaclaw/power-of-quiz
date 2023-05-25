@@ -45,7 +45,7 @@
         </button>
       </div>
       <div v-else class="flex justify-between mt-[16px] mb-[5px]">
-        <button @click="uploadCroppedImage">
+        <button @click="removeImage()">
           <p class="font-semibold text-sm red">Usuń</p>
         </button>
         <button @click="cropImage">
@@ -121,6 +121,11 @@ const uploadCroppedImage = () => {
         console.error("Upload error", error);
       });
   }
+};
+
+const removeImage = () => {
+  croppedImage.value = false
+  selectedImage.value = null
 };
 
 onMounted(() => {
