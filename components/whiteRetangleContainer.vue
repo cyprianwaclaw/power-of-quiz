@@ -1,16 +1,16 @@
 <template>
  <div class="white-retangle1">
-    <ul  v-for="(item, index) in newArray" :key="index">
+    <div  v-for="(item, index) in newArray" :key="index">
         <!-- <div @click="rowClick()"> -->
-            <li class="row-table" @click="rowClick(index)"
-            :class="[index == 0 ? 'click-border-top': null, index != (newArray.length - 1) ? null : 'click-border-bottom', {'no-click': noClick} ]"
+            <div class="row-table" @click="rowClick(index)"
+            :class="[index == 0 ? 'click-border-top': null, index != (newArray.length - 1) ? null : 'click-border-bottom', noClick ? 'no-click':null ]"
         >
             <p class="text-des-mobile1">{{ item.des }}</p>
             <h2 class="title-menu-mobile1">{{ item.text }}</h2>
-        </li>
+        </div>
     <!-- </div> -->
     <hr  v-if="index != (newArray.length - 1) "/>
-    </ul>
+    </div>
     <!-- <NuxtLink to="/panel/ustawienia/dane-faktura">
         <div class="row-table-end flex place-items-center justify-between">
             <div class="flex place-items-center">
@@ -92,6 +92,9 @@ hr {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+.click:active{
+   background-color: red;
 }
 .title-menu-mobile1 {
     font-family: $family;
