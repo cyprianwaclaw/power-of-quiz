@@ -1,8 +1,8 @@
 <template>
  <div class="white-retangle1">
-    <div  v-for="(item, index) in newArray" :key="index">
+    <div  v-for="(item, index) in newArray" :key="index" @click="rowClick(index)">
         <!-- <div @click="rowClick()"> -->
-            <div class="row-table" @click="rowClick(index)"
+            <div class="row-table" 
             :class="[index == 0 ? 'click-border-top': null, index != (newArray.length - 1) ? null : 'click-border-bottom' ]"
         >
             <p class="text-des-mobile1">{{ item.des }}</p>
