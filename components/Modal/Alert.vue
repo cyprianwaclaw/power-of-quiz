@@ -81,7 +81,7 @@ const props = defineProps({
   margin-left: 8px;
 }
 .edit-message-modal {
-  margin-top: 10px;
+  margin: 10px 8px 0px 8px;
   line-height: 24px;
   font-weight: 500;
   font-size: 15px;

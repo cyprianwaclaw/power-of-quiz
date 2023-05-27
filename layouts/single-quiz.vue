@@ -3,13 +3,12 @@
         <NavUser />
       <div class="own-container min-h-screen page-background">
         <NuxtLink to="/panel/konto/dodane-quizy">
-        <div class="mb-14 flex justify-end">
+        <div class="mb-[52px] flex justify-end">
           <Icon name="ph:caret-right-bold" size="22" class="primary-color back-arrow" />
           <p class="go primary-color">Wszystkie quizy</p>
         </div>
-        </NuxtLink><div class="mt-10">
+        </NuxtLink>
         <slot />
-      </div>
       </div>
       <div class="sm:hidden">
         <NavBottom />

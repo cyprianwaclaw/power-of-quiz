@@ -1,15 +1,41 @@
 <template>
-        <NuxtLink :to="`/panel/konto/dodane-quizy/${quiz.id}`">
-            <div class="">           
+    <div v-if="!hasPremium">
+        <div v-if="isOpen">
+            <ModalPremiumPlan
+            @close= "isClose" 
+            />
+        </div>
+        <div class=""  @click="isClose()">           
+            <img v-if="!quiz.image" src="@/assets/file/placeholder-image.webp" class="my-quiz-image"/>
+            <img v-if="quiz.image" :src="quiz.image" class="my-quiz-image isLoading" />
+            <p class="my-quiz-title">{{ quiz.title }}</p>
+        </div>
+      </div>
+    <div v-else>
+        <div v-if="isQuiz">
+            <ModalDown
+            title="Quiz"
+            @close= "isQuizClose" 
+            >
+            <template #content>
+              <ModalContentSingleQuiz
+              :quiz="quiz"
+              />
+              </template>
+              </ModalDown>
+         </div>   
+        <!-- <NuxtLink :to="`/panel/konto/dodane-quizy/${quiz.id}`"> -->
+            <div class="" @click="isQuizClose()">           
                 <img v-if="!quiz.image" src="@/assets/file/placeholder-image.webp" class="my-quiz-image"/>
                 <img v-if="quiz.image" :src="quiz.image" class="my-quiz-image isLoading" />
                 <p class="my-quiz-title">{{ quiz.title }}</p>
             </div>
-        </NuxtLink>
+        <!-- </NuxtLink> -->
+    </div>
 </template>
 
-import { Quiz } from "@/types";
 <script setup lang="ts">
+import { Quiz } from "@/types";
 import { useUser } from "@/store/useUser";
 import { storeToRefs } from "pinia";
 

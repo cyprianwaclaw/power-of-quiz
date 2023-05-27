@@ -418,7 +418,7 @@ function isTime() {
 let form = reactive<any>([]);
 
 const remove = (index: any) => {
-  isRemove.value = !isRemove.value;
+  isRemoveModal()
   form.splice(index, 1);
   removeSuccess();
 };

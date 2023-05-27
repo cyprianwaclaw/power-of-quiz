@@ -1,4 +1,4 @@
-export type Quiz = {
+ export type Quiz = {
     id: string
     title: string,
     image: string,
@@ -52,3 +52,12 @@ export type InvitedUser = {
   is_premium: boolean,
   avatar_path: null | string,
 }
+
+export type whiteRetangle = {
+  text?: string;
+  des?: string;
+  link?: string;
+  lastIcon?:string;
+  firstIcon?:string;
+  template?: boolean;
+  }

@@ -203,7 +203,7 @@
         </div>
         <div v-if="thirdView">
           <div class="grid grid-cols-2 gap-6">
-            <QuizMyQuizes v-for="quiz in filterCategory()" :key="quiz?.id" :quiz="quiz" />
+            <QuizTwoQuiz v-for="quiz in filterCategory()" :key="quiz?.id" :quiz="quiz" />
           </div>
         </div>
         <pre></pre>
