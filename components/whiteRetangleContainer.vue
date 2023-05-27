@@ -3,7 +3,7 @@
     <div  v-for="(item, index) in newArray" :key="index">
         <!-- <div @click="rowClick()"> -->
             <div class="row-table" @click="rowClick(index)"
-            :class="[index == 0 ? 'click-border-top': null, index != (newArray.length - 1) ? null : 'click-border-bottom', noClick ? 'no-click':null ]"
+            :class="[index == 0 ? 'click-border-top': null, index != (newArray.length - 1) ? null : 'click-border-bottom' ]"
         >
             <p class="text-des-mobile1">{{ item.des }}</p>
             <h2 class="title-menu-mobile1">{{ item.text }}</h2>
