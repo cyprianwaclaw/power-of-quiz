@@ -1,106 +1,100 @@
 <template>
-  <div>
-    <div v-for="(option, index) in timeOptions" :key="index">
-      <label class="flex w-full mt-2">
-        <input
-          class="w-5 flex mb-[4px]"
-          type="checkbox"
-          :checked="option.selected"
-          @change="selectOption(index, 'time')"
-        />
-        <p class="ml-2">{{ option.name }}</p>
-      </label>
-    </div>
-    <div v-for="(option, index) in difficultyOptions" :key="index">
-      <label class="flex w-full mt-2">
-        <input
-          class="w-5 flex mb-[4px]"
-          type="checkbox"
-          :checked="option.selected"
-          @change="selectOption(index, 'difficulty')"
-        />
-        <p class="ml-2">
-          {{ option.name
-          }}<span class="text-gray text-xs font-normal ml-[5px] mt-[5px]">{{
-            option?.des
-          }}</span>
-        </p>
-      </label>
-    </div>
-    <button @click="sort()">Sortuj</button>
-    <button @click="fetchData()">Wyczyść</button>
-    <div>
-      <p class="text-2xl font-semibold mt-8">wszystkie quizy</p>
-      <!-- {{ allQuiz }} -->
-        <div v-for="quiz in allQuiz" :key="quiz.id" class="flex mt-5">
-{{ quiz.title }}
-czas: {{ quiz.time }}
-{{ quiz.difficulty }}
-        </div>
+  <div class="accordion">
+    <div v-for="item in items" :key="item.id" class="accordion-item">
+      <div class="accordion-header" @click="toggleAccordion(item.id)">
+        <span class="accordion-icon" :class="{ 'accordion-icon-expanded': item.expanded }">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <!-- Ikona rozwinięcia -->
+            <path v-if="item.expanded" d="M7 10l5 5 5-5z" />
+            <!-- Ikona zwinięcia -->
+            <path v-else d="M7 14l5-5 5 5z" />
+          </svg>
+        </span>
+        <h2 class="accordion-title">{{ item.title }}</h2>
+      </div>
+      <div class="accordion-content" :class="{ 'accordion-content-expanded': item.expanded }">
+        {{ item.content }}
+      </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from "vue";
-import { useQuiz } from "@/store/useQuiz";
-import {storeToRefs} from 'pinia'
+<script setup lang="ts">
+import { ref } from 'vue';
 
-const data1 = ref(sortItems());
+interface AccordionItem {
+  id: number;
+  title: string;
+  content: string;
+  expanded: boolean;
+}
 
-const timeOptions = computed(() => {
-  return data1.value.filter((option) => option.category === "time");
-});
+const items: AccordionItem[] = ref([
+  {
+    id: 1,
+    title: 'Pierwszy element',
+    content: 'Zawartość pierwszego elementu akordeonu.',
+    expanded: false,
+  },
+  {
+    id: 2,
+    title: 'Drugi element',
+    content: 'Zawartość drugiego elementu akordeonu.',
+    expanded: false,
+  },
+  // Dodaj więcej elementów według potrzeb
+]);
 
-const difficultyOptions = computed(() => {
-  return data1.value.filter((option) => option.category === "difficulty");
-});
-
-onMounted(() => {
-  const selectedOptions = JSON.parse(localStorage.getItem("selectedOptions"));
-  if (selectedOptions) {
-    data1.value.forEach((option, index) => {
-      option.selected = selectedOptions[index];
-    });
-  }
-});
-
-function selectOption(index, category) {
-  const categoryOptions = category === "time" ? timeOptions : difficultyOptions;
-  const selectedOption = categoryOptions.value[index];
-  selectedOption.selected = !selectedOption.selected;
-
-  categoryOptions.value.forEach((option, i) => {
-    if (i !== index) {
-      option.selected = false;
+const toggleAccordion = (itemId: number) => {
+  items.value.forEach((item:any) => {
+    if (item.id === itemId) {
+      item.expanded = !item.expanded;
+    } else {
+      item.expanded = false;
     }
   });
-
-  const selectedOptions = data1.value.map((option) => option.selected);
-  localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
-}
-
-const selectedItems = computed(() => {
-  return data1.value.filter((item) => item.selected);
-});
-
-watch(selectedItems, async(newValue, oldValue) => {
-  console.log(newValue);
-  await quiz.getAllQuiz(2, null);
-});
-
-const quiz = useQuiz();
-const { allQuiz, categories } = storeToRefs(quiz);
-
-const fetchData = async () => {
-  await quiz.getAllQuiz(24, null);
-}
-
-const sort =async ()=>{
-  await quiz.getAllQuiz(4, null);
-}
-
-onMounted(async () => {
-  await fetchData();
-});
+};
 </script>
+
+<style scoped>
+.accordion {
+  width: 100%;
+}
+
+.accordion-item {
+  margin-bottom: 1rem;
+  background-color: #f0f0f0;
+  border-radius: 0.5rem;
+}
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.accordion-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.accordion-icon-expanded {
+  transform: rotate(180deg);
+}
+
+.accordion-title {
+  margin: 0;
+}
+
+.accordion-content {
+  padding: 1rem;
+  display: none;
+}
+
+.accordion-content-expanded {
+  display: block;
+}
+</style>

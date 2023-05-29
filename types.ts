@@ -59,5 +59,10 @@ export type whiteRetangle = {
   link?: string;
   lastIcon?:string;
   firstIcon?:string;
-  template?: boolean;
+  template?: string;
+  question?: {
+    answer: string,
+  }[];
+  answers?: any;
+  isOpen?: boolean;
   }

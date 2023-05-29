@@ -131,6 +131,14 @@ export function changeStatus(number:number){
   return result;
 }
 
+export const categoryMapping = (allCategories:any, quiz:any)=>{
+  const filtered = allCategories.filter((cat:any)=>
+    quiz.category_id == cat.id
+  )
+  return filtered[0].name
+  }
+  
+  
 
 export const changePayoutsStatus = (name: string)=>{
   let results:any={

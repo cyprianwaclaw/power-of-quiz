@@ -1,115 +1,120 @@
 <template>
   <ModalAlert
-  v-if="isOpen"
-  title="Usuń quiz"
-  des="Czy na pewno chcesz usunąć quiz? Tej operacji nie będzie można cofnąć"
-  closeButton="Anuluj"
-  actionButton="Usuń"
-  actionButtonClass="text-red-500"
-  @close="isModal()"
-  @action="removeQuiz"
-/>
-<ModalAlert
-v-if="isRemoveSucessModal"
-title="Usunięto quiz"
-des="Twój quiz został usunięty"
-closeButton="Okej"
-@close="removeSuccessClose()"
-/>
-    <NuxtLayout name="single-quiz">
-      <img :src="quizItem[5].image" class="image-single" />
-     <p class="text-[22px] font-medium mr-8 mt-4 mb-10">{{ quizItem[3].name }}</p> 
-     
-     <WhiteRetangleContainer
-     :array="[...rectangleArray1]"
-     />
-     <p class="text-[18px] font-semibold mb-[3px] mt-9" v-if="quizItem[4].opis">Opis</p>
-     <p class="text" v-if="quizItem[4].opis">{{ quizItem[4].opis }}</p> 
-     <p class="text-[18px] font-semibold mb-[15px] mt-9" >Pytania</p>
-     
-<WhiteRetangleContainer
+    v-if="isOpen"
+    title="Usuń quiz"
+    des="Czy na pewno chcesz usunąć quiz? Tej operacji nie będzie można cofnąć"
+    closeButton="Anuluj"
+    actionButton="Usuń"
+    actionButtonClass="text-red-500"
+    @close="isModal()"
+    @action="removeQuiz"
+  />
+  <ModalAlert
+    v-if="isRemoveSucessModal"
+    title="Usunięto quiz"
+    des="Twój quiz został usunięty"
+    closeButton="Okej"
+    @close="removeSuccessClose()"
+  />
+  <NuxtLayout name="single-quiz">
+    <img :src="singleQuiz.image" class="image-single" />
+    <p class="text-[22px] font-medium mr-8 mt-4 mb-10">
+      {{singleQuiz.title }}
+    </p>
+    <!-- <pre>
+     {{  answers.flat()}}
+      ! lista wszystkich odpowiedzi do danego pytania
+      {{ answerById }}
+      ! lista wszystkich pytań do danego quizu
+       {{allQuestion}}
+      </pre> -->
 
-/>
+    <WhiteRetangleContainer :array="[...quizArray]" />
+    <p
+    class="text-[18px] font-semibold mb-[3px] mt-9"
+    v-if="quizStore.singleQuiz.description"
+    >
+    Opis
+  </p>
+  <p class="text" v-if="quizStore.singleQuiz.description">
+    {{ quizStore.singleQuiz.description }}
+  </p>
+  <p class="text-[18px] font-semibold mb-[15px] mt-9">Pytania</p>
+  
+  <WhiteRetangleContainer 
+  :array="[...questionArray]" 
+  />
 
-        <div class="mt-12 flex gap-6 mb-2 justify-end">
-          <button @click="isModal()">
-            <p class="action-button red">Usuń</p>
-          </button>
-            <NuxtLink :to="`/panel/konto/dodane-quizy/edycja${route.params.id}`">
-              <button class="button-primary-small">
-                Edytuj
-              </button>           
-            </NuxtLink>
-        </div>
-    </NuxtLayout>
+    <div class="mt-12 flex gap-6 mb-2 justify-end">
+      <button @click="isModal()">
+        <p class="action-button red">Usuń</p>
+      </button>
+      <NuxtLink :to="`/panel/konto/dodane-quizy/edycja${route.params.id}`">
+        <button class="button-primary-small">Edytuj</button>
+      </NuxtLink>
+    </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
-import { changeStatus, changeDifficult } from "@/utils/function";
-
-const rectangleArray1 = reactive([
-  { text: "link", des: "dwa", link: "/", icon: "four", template: true },
-  { text: "bez linku", des: "dwa", icon: "four", template: true },
-  { text: "trzysds", des: "dwdsdsda", link: "panel//ustawienia", icon: "four", template: true },
-]);
 
 const route = useRoute();
-const isOpen = ref(false);
-
-const isModal = () => {
-isOpen.value =!isOpen.value;
-}
-const isRemoveSucessModal = ref(false);
-
-const removeSuccess = () => {
-isRemoveSucessModal.value =!isRemoveSucessModal.value;
-}
-const quizStore = useQuiz();
-const { singleQuiz, allQuestion, answerById, categories, test1 } = storeToRefs(quizStore);
-await quizStore.getSingleQuiz(route.params.id);
-await quizStore.getQuestion(route.params.id);
-await quizStore.getCategory();
-let category: any = categories.value;
-let question: any = allQuestion.value;
-let quizCategory: any[] = categories.value;
 const answers: any[] = reactive([]);
+const isOpen = ref(false);
+const quizStore = useQuiz();
+const {singleQuiz, allQuestion, answerForSingleQuiz, answerById}= storeToRefs(quizStore);
+let question: any = allQuestion.value;
+ await quizStore.getSingleQuiz(route.params.id);
+ await quizStore.getQuestion(route.params.id);
+ const isModal = () => {
+   isOpen.value = !isOpen.value;
+  };
+  const isRemoveSucessModal = ref(false);
+  const removeSuccess = () => {
+    isRemoveSucessModal.value = !isRemoveSucessModal.value;
+  };
+  const removeQuiz = async () => {
+    isModal();
+    await quizStore.deleteSingleQuiz(route.params.id);
+    removeSuccess();
+  };
+  const removeSuccessClose = () => {
+    navigateTo("/panel/konto/dodane-quizy");
+  };
+  
+  
+  const quizArray = reactive([
+    { text: changeStatus(quizStore.singleQuiz.is_active), des: "Status quizu", link: '/' },
+    { text: categoryMapping(quizStore.categories, quizStore.singleQuiz), des: "Kategoria" },
+    { text: quizStore.singleQuiz.questions_count, des: "Liczba pytań" },
+    { text: changeDifficult(quizStore.singleQuiz.difficulty), des: "Poziom trudności" },
+    { text: quizStore.singleQuiz.time, des: "Szacunkowy czas trwania" },
+  ]);
+  
+  for (let quest of question) {
+    await quizStore.getAnswerById(quest.id);
+    answers.push(answerById.value);
+  }
 
-for (let quest of question) {
-  await quizStore.getAnswerById(quest.id);
-  answers.push(answerById.value);
+const answerByIdArray = (id:number)=>{
+  const answerNew = answers.flat()
+ const filtered:any = answerNew.filter((element:any) =>element.question_id === id)
+ return filtered
 }
-
-const current = Object.entries(singleQuiz.value).map(([key, value]) => {
-  return { [key]: value };
-});
-
-const quizItem: any[] = current.map((single: any) => ({
-  category: categories.value.find((cat: any) => single.category_id == cat.id),
-  time: single.time,
-  name: single.title,
-  image: single.image,
-  poziom: changeDifficult(single.difficulty),
-  pytania: single.questions_count,
-  status: changeStatus(single.is_active),
-  opis: single.description,
+const questionArray = question.map((element: any) => ({
+  //  des: element.id,
+  template: 'question',
+  text: element.question,
+question: answerByIdArray(element.id),
+isOpen: false,
 }));
-
-const removeQuiz = async()=> {
-  isModal()
-  await quizStore.deleteSingleQuiz(route.params.id);
-  removeSuccess()
-}
-const removeSuccessClose = () =>{
-navigateTo('/panel/konto/dodane-quizy')
-}
-
+//{ text: "testowa ikona", template: true,  link: "/",  firstIcon:"ph:gear-light"},
 </script>
 
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";
-
 
 .action-button {
   letter-spacing: 0.05em;
@@ -119,7 +124,7 @@ navigateTo('/panel/konto/dodane-quizy')
   padding: 6px 16px 6px 16px;
 }
 .image-single {
-    border: 1px solid $border;
+  border: 1px solid $border;
   border-radius: 12px;
   height: 240px;
 }

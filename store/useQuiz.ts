@@ -31,13 +31,14 @@ export const useQuiz = defineStore('quiz', {
     state: () => ({
         fastTwo: [],
         activeQuiz: [],
-        allQuestion: {} as SingleQuizQuestion,
-        answerById: {} as SingleAnswer,
+        allQuestion: [],
+        answerById: [],
         allQuiz: [],
         allQuiz1: [],
         allQuizNew: [],
         notActiveQuiz: [] as any,
         categories: [],
+        answerForSingleQuiz: [],
         singleQuiz: {} as Quiz,
         quizForYou: {} as any,
         quizLatest: {} as any,
@@ -210,8 +211,16 @@ export const useQuiz = defineStore('quiz', {
         },
         async getQuestion(id:any) {
             try {
-                const res = await axiosInstance.get(`quizzes/${id}/questions`)
+                const res = await axiosInstance.get(`/quizzes/${id}/questions`)
                 this.allQuestion = await res.data.data
+            } catch (e) {
+                console.error(e)
+            }
+        },
+        async getAnswer(id:any) {
+            try {
+                const res = await axiosInstance.get(`/answers/${id}/question`)
+                this.answerForSingleQuiz = await res.data.data
             } catch (e) {
                 console.error(e)
             }

@@ -1,110 +1,46 @@
 <template>
-  <div>
-    <div v-for="(option, index) in timeOptions" :key="index">
-      <label class="flex w-full mt-2">
-        <input
-          class="w-5 flex mb-[4px]"
-          type="checkbox"
-          :checked="option.selected"
-          @change="selectOption(index, 'time')"
-        />
-        <p class="ml-2">{{ option.name }}</p>
-      </label>
+  <div class="container">
+    <div class="button" @click="toggleContent">
+      {{ showContent ? 'Hide Content' : 'Show Content' }}
     </div>
-    <div v-for="(option, index) in difficultyOptions" :key="index">
-      <label class="flex w-full mt-2">
-        <input
-          class="w-5 flex mb-[4px]"
-          type="checkbox"
-          :checked="option.selected"
-          @change="selectOption(index, 'difficulty')"
-        />
-        <p class="ml-2">
-          {{ option.name
-          }}<span class="text-gray text-xs font-normal ml-[5px] mt-[5px]">{{
-            option?.des
-          }}</span>
-        </p>
-      </label>
-    </div>
-    <!-- <button @click="sort()">Sortuj</button> -->
-    <button @click="remove()">Wyczyść</button>
-    <div>
-      <p class="text-2xl font-semibold mt-8">wszystkie quizy</p>
-      <!-- {{ allQuiz }} -->
-        <div v-for="quiz in allQuiz" :key="quiz.id" class="flex mt-5">
-{{ quiz.title }}
-czas: {{ quiz.time }}
-{{ quiz.difficulty }}
-        </div>
+    <div class="content" :class="{ 'content-visible': showContent }">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tristique urna vel ullamcorper porta. Donec tempor magna non aliquam tincidunt. Sed in facilisis tortor. Duis lobortis felis sed felis vestibulum pharetra. Suspendisse ut lorem nunc. Nunc a velit sed urna placerat laoreet. Donec nec est vitae ligula vehicula vulputate. Sed fermentum lectus ut ante vulputate, vitae convallis mauris congue. Aenean dignissim leo non leo bibendum, eget viverra urna vestibulum. Fusce varius elementum purus vel sollicitudin.
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import { useQuiz } from "@/store/useQuiz";
-import {storeToRefs} from 'pinia'
+import { ref } from 'vue';
 
-const data1 = ref(sortItems());
+const showContent = ref(false);
 
-const timeOptions = computed(() => {
-  return data1.value.filter((option) => option.category === "time");
-});
-
-const difficultyOptions = computed(() => {
-  return data1.value.filter((option) => option.category === "difficulty");
-});
-
-onMounted(() => {
-  const selectedOptions = JSON.parse(localStorage.getItem("selectedOptions"));
-  if (selectedOptions) {
-    data1.value.forEach((option, index) => {
-      option.selected = selectedOptions[index];
-    });
-  }
-});
-
-function selectOption(index, category) {
-  const categoryOptions = category === "time" ? timeOptions : difficultyOptions;
-  const selectedOption = categoryOptions.value[index];
-  selectedOption.selected = !selectedOption.selected;
-
-  categoryOptions.value.forEach((option, i) => {
-    if (i !== index) {
-      option.selected = false;
-    }
-  });
-
-  const selectedOptions = data1.value.map((option) => option.selected);
-  localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
-}
-
-const selectedItems = computed(() => {
-  return data1.value.filter((item) => item.selected);
-});
-
-watch(selectedItems, async(newValue, oldValue) => {
-  let time = newValue?.[0]?.api
-  let difficulty = newValue?.[1]?.api
-  await quiz.getAllQuiz(24, difficulty, time);
-});
-
-const quiz = useQuiz();
-const { allQuiz, categories } = storeToRefs(quiz);
-
-const fetchData = async () => {
-  await quiz.getAllQuiz(24, null);
-}
-
-const remove = async()=>{
-  data1.value.forEach((option) => {
-    option.selected = false;
-  });
-  const selectedOptions = data1.value.map((option) => option.selected);
-  localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
-}
-onMounted(async () => {
-  await fetchData();
-});
+const toggleContent = () => {
+  showContent.value = !showContent.value;
+};
 </script>
+
+<style scoped>
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+}
+
+.content {
+  padding: 20px;
+  background-color: #f0f0f0;
+  display: none;
+  transition: opacity 0.3s ease-in;
+}
+
+.content-visible {
+  display: block;
+}
+</style>

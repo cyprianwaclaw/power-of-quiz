@@ -318,8 +318,8 @@
   await quizStore.getQuestion(route.params.id);
   await quizStore.getCategory();
   let category: any = categories.value;
-  let question: any = allQuestion.value;
   let quizCategory: any[] = categories.value;
+  let question: any = allQuestion.value;
   const answers: any[] = reactive([]);
 
   for (let quest of question) {
