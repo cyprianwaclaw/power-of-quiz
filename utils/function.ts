@@ -123,7 +123,7 @@ export function changeDifficult(text:any){
 export function changeStatus(number:number){
   let result:string = ''
   if(number == 0){
-    result = 'W oczekiwaniu na akceptację'
+    result = 'W oczekiwaniu'
   } 
   if(number == 1){
     result = 'Aktywny'
@@ -179,4 +179,25 @@ export  const dataURLtoBlob = (dataURL:any) => {
   }
 
   return new Blob([u8arr], { type: mime });
+};
+
+
+export const truncateText = (text:any, maxLength:any) => {
+  let results:any={
+      name: '',
+      symbol: '',
+      class:''
+  }
+  if (text.length > maxLength) {
+    results = {
+      name:text.slice(0, maxLength),
+      symbol: '...',
+      class:'text-gray'
+    }
+  } else{
+    results = {
+      name:text,
+    }
+  }
+  return results;
 };

@@ -21,7 +21,8 @@
     <p class="text-[22px] font-medium mr-8 mt-4 mb-10">
       {{singleQuiz.title }}
     </p>
-    <!-- <pre>
+    <!-- {{ singleQuiz }}
+    <pre>
      {{  answers.flat()}}
       ! lista wszystkich odpowiedzi do danego pytania
       {{ answerById }}
@@ -64,10 +65,11 @@ const route = useRoute();
 const answers: any[] = reactive([]);
 const isOpen = ref(false);
 const quizStore = useQuiz();
+await quizStore.getSingleQuiz(route.params.id);
+await quizStore.getQuestion(route.params.id);
 const {singleQuiz, allQuestion, answerForSingleQuiz, answerById}= storeToRefs(quizStore);
 let question: any = allQuestion.value;
- await quizStore.getSingleQuiz(route.params.id);
- await quizStore.getQuestion(route.params.id);
+let quiz: any = singleQuiz.value;
  const isModal = () => {
    isOpen.value = !isOpen.value;
   };
@@ -86,11 +88,11 @@ let question: any = allQuestion.value;
   
   
   const quizArray = reactive([
-    { text: changeStatus(quizStore.singleQuiz.is_active), des: "Status quizu", link: '/' },
-    { text: categoryMapping(quizStore.categories, quizStore.singleQuiz), des: "Kategoria" },
-    { text: quizStore.singleQuiz.questions_count, des: "Liczba pytań" },
-    { text: changeDifficult(quizStore.singleQuiz.difficulty), des: "Poziom trudności" },
-    { text: quizStore.singleQuiz.time, des: "Szacunkowy czas trwania" },
+    { text: changeStatus(quiz.is_active), des: "Status quizu" },
+    { text: categoryMapping(quizStore.categories, quiz), des: "Kategoria" },
+    { text: quiz.questions_count, des: "Liczba pytań" },
+    { text: changeDifficult(quiz.difficulty), des: "Poziom trudności" },
+    { text: quiz.time, des: "Szacunkowy czas trwania" },
   ]);
   
   for (let quest of question) {
@@ -108,7 +110,6 @@ const questionArray = question.map((element: any) => ({
   template: 'question',
   text: element.question,
 question: answerByIdArray(element.id),
-isOpen: false,
 }));
 //{ text: "testowa ikona", template: true,  link: "/",  firstIcon:"ph:gear-light"},
 </script>

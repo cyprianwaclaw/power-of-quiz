@@ -6,32 +6,38 @@
       @click="rowClick(index)"
       :class="[
         newArray[index].link || newArray[index].template ? 'flex flex-col' : null,
-        index !== newArray.length - 1 ? 'border-own' : null,
+        index !== newArray.length - 1 ? 'border-own1' : null,
       ]"
     >
-      <div class="row-table place-items-center">
+      <div class="row-table1 place-items-center">
         <Icon
-          :name="item.firstIcon"
           size="26"
           class="primary-color mr-2"
           v-if="newArray[index].firstIcon"
         />
         <div class="flex flex-col w-full">
           <p class="text-des-mobile1">{{ item.des }}</p>
-          <h2 class="title-menu-mobile1">{{ item.text }}</h2>
+          <h2 class="title-menu-mobile1">
+            {{ truncateText(item.text, 25)?.name }}
+            <span :class="[truncateText(item.text, 25)?.class]">
+              {{ truncateText(item.text, 25)?.symbol }}
+            </span>
+          </h2>
         </div>
         <div v-if="newArray[index].link" class="w-full flex justify-end">
           <Icon name="ph:caret-right-light" size="20" class="text-gray" />
         </div>
         <div v-if="newArray[index].template === 'question'" class="flex justify-end w-full">
-          <Icon name="ph:caret-right-light" size="20" class="text-gray" />
+          <Icon name="ph:caret-down-light" size="20" class="text-gray rotate-icon"   :class="{'reversed': openIndex === index }"/>
         </div>
       </div>
-      <div v-if="openIndex === index && item.template" class="flex flex-col">
-        <div v-for="(single, index) in item.question" :key="index">
-          {{ single.answer }}
+      <Transition name="accordion">
+        <div v-if="openIndex === index && item.template" class="flex flex-col">
+          <div v-for="(single, index) in item.question" :key="index">
+            {{ single.answer }}
+          </div>
         </div>
-      </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -50,12 +56,9 @@ const props = defineProps({
 
 const openIndex = ref(-1);
 const newArray: whiteRetangle[] = props.array;
-
 const rowClick = (index: number) => {
   openIndex.value = openIndex.value === index ? -1 : index;
-
   const filteredArray = newArray.filter((item: any, i: number) => i === openIndex.value);
-
   if (filteredArray.length > 0) {
     const item = filteredArray[0];
     if (item.link) {
@@ -65,15 +68,16 @@ const rowClick = (index: number) => {
     }
   }
 };
+
 </script>
 
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";
 
-.border-own {
+.border-own1 {
   border-bottom: 1px solid $border;
 }
-.row-table {
+.row-table1 {
   padding: 10px 14px 10px 10px;
   display: flex;
 }
@@ -85,26 +89,25 @@ const rowClick = (index: number) => {
   padding-top: 6px;
 }
 
-.no-click {
-  -webkit-tap-highlight-color: transparent;
-  border-radius: 999px;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
 .title-menu-mobile1 {
   font-family: $family;
   font-weight: 500;
   font-size: 16px;
   color: $text-black;
+  display: flex;
 }
 .text-des-mobile1 {
   font-size: 15px;
   font-weight: 300;
   color: $text-gray;
   margin-bottom: -3px;
+}
+
+.rotate-icon {
+  transition-duration: 0.2s;
+  transform: rotate(0deg);
+}
+.rotate-icon.reversed {
+  transform: rotate(-180deg);
 }
 </style>

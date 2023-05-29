@@ -27,11 +27,11 @@
       </button>
     </div>
     <div class="mt-28" v-if="all">
-      <div class="grid grid-cols-2 gap-5" v-if="userQuizAll">
+      <div  v-if="userQuizAll">
         <div v-if="loadingQuiz">
           <p>loadingQuiz data...</p>
         </div>
-        <div v-else>
+        <div class="grid grid-cols-2 gap-5" v-else>
           <QuizMyQuizes v-for="quiz in userQuizAll" :key="quiz" :quiz="quiz" />
         </div>
       </div>
@@ -71,11 +71,11 @@
       </div>
     </div>
     <div class="mt-28" v-if="waiting">
-      <div class="grid grid-cols-2 gap-6" v-if="notActiveQuiz">
+      <div v-if="notActiveQuiz">
         <div v-if="loadingQuiz">
           <p>loadingQuiz data...</p>
         </div>
-        <div v-else>
+        <div class="grid grid-cols-2 gap-5" v-else>
           <QuizMyQuizes v-for="quiz in userNotAcceptQuiz" :key="quiz" :quiz="quiz" />
         </div>
       </div>

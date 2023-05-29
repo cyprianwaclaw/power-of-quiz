@@ -2,12 +2,13 @@
     <div class="pb-20">
         <NavUser />
       <div class="own-container min-h-screen page-background">
-        <NuxtLink to="/panel/konto">
-        <div class="mb-14 flex justify-end">
+        <div class="mb-14 flex justify-end -mr-3">
+          <NuxtLink to="/panel/konto" class="flex border-transparent rounded-lg py-2 px-3">
           <Icon name="ph:caret-right-bold" size="22" class="primary-color back-arrow" />
           <p class="go primary-color">Twoje konto</p>
+        </NuxtLink>
         </div>
-        </NuxtLink><div class="mt-10">
+        <div class="mt-10">
         <slot />
       </div>
       </div>
