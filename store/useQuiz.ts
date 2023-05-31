@@ -96,7 +96,7 @@ export const useQuiz = defineStore('quiz', {
         async getActiveQuiz() {
             try {
                 this.loadingQuiz= true
-                const res = await axiosInstance.get("/quizzes?per_page=23")
+                const res = await axiosInstance.get("/quizzes?per_page=9999999")
                 this.activeQuiz = await res.data.data.data
                 this.loadingQuiz= false
             } catch (e) {

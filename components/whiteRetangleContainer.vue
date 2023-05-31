@@ -31,13 +31,25 @@
           <Icon name="ph:caret-down-light" size="20" class="text-gray rotate-icon"   :class="{'reversed': openIndex === index }"/>
         </div>
       </div>
-      <Transition name="accordion">
         <div v-if="openIndex === index && item.template" class="flex flex-col">
           <div v-for="(single, index) in item.question" :key="index">
             {{ single.answer }}
           </div>
         </div>
-      </Transition>
+<div v-if="item.template === 'addNew'" class="input-container">
+  <textarea
+  v-model="item.value"
+  @input="handleInputOwn"
+  :placeholder="item.placeholder"
+  :wrap="item.wrap ? 'soft' : 'off'"
+  rows="1"
+></textarea>
+<div>
+
+</div>
+<!-- <slot  name="select" v-if="item.select"/> -->
+</div>
+
     </div>
   </div>
 </template>
@@ -55,6 +67,7 @@ const props = defineProps({
 });
 
 const openIndex = ref(-1);
+const isTextareaFocused = ref(false);
 const newArray: whiteRetangle[] = props.array;
 const rowClick = (index: number) => {
   openIndex.value = openIndex.value === index ? -1 : index;
@@ -69,6 +82,25 @@ const rowClick = (index: number) => {
   }
 };
 
+const truncateText = (text:any, maxLength:number) => {
+  let results:any={
+      name: '',
+      symbol: '',
+      class:''
+  }
+  if (text.length > maxLength) {
+    results = {
+      name:text.slice(0, maxLength),
+      symbol: '...',
+      class:'text-gray'
+    }
+  } else{
+    results = {
+      name:text,
+    }
+  }
+  return results;
+};
 </script>
 
 <style scoped lang="scss">
@@ -109,5 +141,23 @@ const rowClick = (index: number) => {
 }
 .rotate-icon.reversed {
   transform: rotate(-180deg);
+}
+
+textarea {
+  border: none;
+  overflow: auto;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+textarea:focus {
+  border: none;
+  overflow: auto;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 </style>

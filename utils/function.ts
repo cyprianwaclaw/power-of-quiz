@@ -182,7 +182,7 @@ export  const dataURLtoBlob = (dataURL:any) => {
 };
 
 
-export const truncateText = (text:any, maxLength:any) => {
+export const truncateText = (text:any, maxLength:number) => {
   let results:any={
       name: '',
       symbol: '',
@@ -200,4 +200,10 @@ export const truncateText = (text:any, maxLength:any) => {
     }
   }
   return results;
+};
+
+export const handleInputOwn = (event: Event) => {
+  const target = event.target as HTMLTextAreaElement;
+  target.style.height = 'auto';
+  target.style.height = target.scrollHeight + 'px';
 };

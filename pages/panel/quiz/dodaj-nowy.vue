@@ -34,7 +34,23 @@
   @close="sendQuiz1()"
 />
   <NuxtLayout name="panel">
+    {{ quizArray }}
     <h1 class="title-h1">Nowy quiz</h1>
+
+    <WhiteRetangleContainer 
+    :array="[...quizArray]" 
+    >
+    <template #select>
+      <select name="difficulty" as="select" class="base-input-new-quiz" required>
+        <option value="" hidden invalid>Wybierz poziom trudności</option>
+        <option value="easy"><p class="font1">Łatwy</p></option>
+        <option value="medium"><p class="font1">Średni</p></option>
+        <option value="hard"><p class="font1">Trudny</p></option>
+      </select>
+    </template>
+
+    </WhiteRetangleContainer>
+
     <h2 class="title-h2 mt-[52px] mb-8">Podstawowe informacje</h2>
     <Form
       class="mb-24"
@@ -328,6 +344,12 @@ const allQuestion = ref(false);
 definePageMeta({
   middleware: "auth",
 });
+
+const quizArray = reactive([
+    { text: 'raz', des: "Status quizu", template:'addNew', placeholder:'test'},
+    { value:'dwa', wrap: 'soft', select: true },
+    { text: 'raz', des: "Status quizu", template:'addNew' },
+  ]);
 
 const image = ref<any | null>(null);
 const isImageModal = ref(false);

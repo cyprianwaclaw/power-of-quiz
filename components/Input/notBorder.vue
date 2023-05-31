@@ -42,40 +42,6 @@
     placeholder?: any,
   }
   const props = defineProps<Input>()
-  // const props = defineProps({
-  //   type: {
-  //     type: String,
-  //     default: "text",
-  //   },
-  //   value: {
-  //     type: String | Number,
-  //     default: "",
-  //   },
-  //   name: {
-  //     type: String,
-  //     required: true,
-  //   },
-  //   label: {
-  //     type: String,
-  //   },
-  //   successMessage: {
-  //     type: String,
-  //     default: "",
-  //   },
-  //   hasError: {
-  //     type: Boolean,
-  //   },
-  //   errorMessage: {
-  //     type: String,
-  //     default: "",
-  //   },
-  //   placeholder: {
-  //     type: String,
-  //     default: "",
-  //   },
-  // });
-  
-  let ErrorLogin: any = props.hasError;
   
   const name = toRef(props, "name");
   const { value: inputValue, errorMessage, handleBlur, handleChange, meta } = useField(
