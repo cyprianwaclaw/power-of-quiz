@@ -36,22 +36,43 @@
   <NuxtLayout name="panel">
     {{ quizArray }}
     <h1 class="title-h1">Nowy quiz</h1>
+   
 
+    <h2 class="title-h2 mt-[52px] mb-8">Podstawowe informacje</h2>
     <WhiteRetangleContainer 
     :array="[...quizArray]" 
     >
     <template #select>
-      <select name="difficulty" as="select" class="base-input-new-quiz" required>
-        <option value="" hidden invalid>Wybierz poziom trudności</option>
-        <option value="easy"><p class="font1">Łatwy</p></option>
-        <option value="medium"><p class="font1">Średni</p></option>
-        <option value="hard"><p class="font1">Trudny</p></option>
-      </select>
+      <QuizAddNewSelectOption
+      :array="[...difficultyArray]"
+      @select="difficultyOption"
+      header="Poziom trudności" 
+      name="Wybierz poziom trudności"
+      />
     </template>
-
+    <template #select1>
+      <QuizAddNewSelectOption
+      :array="[...categoriesArray]"
+      @select="categoryOption"
+      header="Kategoria" 
+      name="Wybierz kategorie"
+      />
+    </template>
+    <template #time>
+      <div class="flex flex-row w-full place-items-center" @click="isTime()">
+        <InputNotBorder
+          name="time"
+          class="time"
+          id="timeInput"
+          type="tel"
+          :placeholder="timePlaceholder"
+          :style="styleObject"
+        />
+        <p v-if="timeActive" class="font-medium pt-2">minut</p>
+      </div>
+      <!-- gdy jest błąd -->
+    </template>
     </WhiteRetangleContainer>
-
-    <h2 class="title-h2 mt-[52px] mb-8">Podstawowe informacje</h2>
     <Form
       class="mb-24"
       v-slot="{ values }"
@@ -59,63 +80,14 @@
       :validation-schema="schema"
       @invalid-submit="onInvalidSubmit"
     >
-      <!-- początek formularza -->
-      <!-- podstawowe informację -->
-      <div class="white-retangle">
-        <div class="row-table-start -mt-3 -pb-20 flex">
-          <InputTextAreaNotBorder
-            name="title"
-            id="title"
-            type="text"
-            placeholder="Nazwa quizu"
-          />
-        </div>
-        <div class="row-table-start -mt-2 -mb-1 flex place-items-end" @click="isTime()">
-          <InputNotBorder
-            name="time"
-            class="time"
-            id="timeInput"
-            type="tel"
-            :placeholder="timePlaceholder"
-            :style="styleObject"
-          />
-          <p v-if="timeActive" class="font1 time1">minut</p>
-        </div>
-        <div class="row-table-start flex flex-col">
-          <p v-if="values.category_id" class="text-des-mobile-add">Kategoria</p>
-          <Field name="category_id" as="select" class="base-input-new-quiz" required>
-            <option value="" hidden invalid>Wybierz kategorie</option>
-            <option v-for="single in category" :key="single.id" :value="single.id">
-              <p class="font1">{{ single.name }}</p>
-            </option>
-          </Field>
-        </div>
-        <div class="row-table-end mb-2 -mt-1.5 flex flex-col">
-          <p v-if="values.difficulty" class="text-des-mobile-add">Poziom trudności</p>
-          <Field name="difficulty" as="select" class="base-input-new-quiz" required>
-            <option value="" hidden invalid>Wybierz poziom trudności</option>
-            <option value="easy"><p class="font1">Łatwy</p></option>
-            <option value="medium"><p class="font1">Średni</p></option>
-            <option value="hard"><p class="font1">Trudny</p></option>
-          </Field>
-        </div>
-      </div>
-      <!-- opis quizu -->
       <h2 class="title-h2 mt-14 mb-8">Opis</h2>
-      <div class="white-retangle">
-        <div class="row-table-end -mt-4 -pb-20 flex">
-          <InputTextArea
-            name="description"
-            id="description"
-            type="text"
-            placeholder="Twój opis quizu"
-          />
-        </div>
-      </div>
+        <WhiteRetangleContainer 
+        :array="[...desArray]" 
+        />
       <h2 class="title-h2 mt-14 mb-8">Zdjęcie</h2>
       <LazyModalContentCropImageInput @close="imageModal()" @image-file="handleImage" />
       <h2 class="title-h2 mt-14 mb-8">Pytania</h2>
-
+<!-- tablica z pytaniami -->
       <div v-for="(item, index) in form" :key="index">
         <div
           class="white-retangle"
@@ -315,6 +287,7 @@
         </button>
       </div>
       <!-- koniec formularza -->
+      {{ categories }}
     </Form>
   </NuxtLayout>
 </template>
@@ -327,10 +300,26 @@ import * as Yup from "yup";
 import { Form, Field } from "vee-validate";
 import { onInvalidSubmit, indexBigger } from "@/utils/function";
 
+definePageMeta({
+  middleware: "auth",
+});
+
 const quizStore = useQuiz();
 const { categories, newQuizId, newQuestionId } = storeToRefs(quizStore);
 await quizStore.getCategory();
 let category: any = categories.value;
+
+const seletedCategory = ref(null)
+
+const categoryOption=(select:any) =>{
+  seletedCategory.value = select
+}
+
+const seletedDifficulty = ref(null)
+
+const difficultyOption=(select:any) =>{
+  seletedDifficulty.value = select
+}
 
 let titleQuestion = ref("");
 let answer_1 = ref("");
@@ -341,16 +330,29 @@ let radioCorrect = ref("");
 
 const allQuestion = ref(false);
 
-definePageMeta({
-  middleware: "auth",
-});
 
-const quizArray = reactive([
-    { text: 'raz', des: "Status quizu", template:'addNew', placeholder:'test'},
-    { value:'dwa', wrap: 'soft', select: true },
-    { text: 'raz', des: "Status quizu", template:'addNew' },
-  ]);
+const difficultyArray = [
+  { value: "easy", label: "Łatwy" },
+  { value: "medium", label: "Średni" },
+  { value: "hard", label: "Trudny" }
+];
 
+const categoriesArray = [
+  { value: "1", label: "Option 11" },
+  { value: "2", label: "Option 21" },
+  { value: "3", label: "Option 31" },
+  { value: "4", label: "Option 41" },
+  { value: "5", label: "Option 51" }
+];
+const quizArray = [
+    {type: 'input', template:'addNew', wrap: 'soft', placeholder:'Nawa quizu'},
+    {template:'addNew', type: 'time' },
+    {type: 'select', template:'addNew' },
+    {type: 'select1', template:'addNew' },
+  ];
+  const desArray = [
+    {type: 'input', template:'addNew', wrap: 'soft', placeholder:'Opis quizu'},
+  ];
 const image = ref<any | null>(null);
 const isImageModal = ref(false);
 const imageModal = () => {
@@ -360,6 +362,11 @@ const imageModal = () => {
 const handleImage = (file: File) => {
   image.value = file;
 };
+
+const difficulty1 = ref('')
+
+
+
 
 function isCorrect1(params: any) {
   let results = false;

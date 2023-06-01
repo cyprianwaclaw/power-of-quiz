@@ -53,6 +53,11 @@ export type InvitedUser = {
   avatar_path: null | string,
 }
 
+export type selectOption ={
+  value: string | number,
+  label: string,
+}
+
 export type whiteRetangle = {
   text?: string;
   des?: string;
@@ -60,11 +65,12 @@ export type whiteRetangle = {
   lastIcon?:string;
   firstIcon?:string;
   wrap?:string 
-  select?:any
-  template?: string;
   question?: {
     answer: string,
   }[];
+type?: string,
   placeholder: string,
   value?: any;
+template?:string
   }
+

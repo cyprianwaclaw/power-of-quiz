@@ -17,12 +17,27 @@
         />
         <div class="flex flex-col w-full">
           <p class="text-des-mobile1">{{ item.des }}</p>
-          <h2 class="title-menu-mobile1">
-            {{ truncateText(item.text, 25)?.name }}
-            <span :class="[truncateText(item.text, 25)?.class]">
-              {{ truncateText(item.text, 25)?.symbol }}
+          <h2 class="title-menu-mobile1" v-if="item.text">
+            {{ truncateText(item?.text, 25)?.name }}
+            <span :class="[truncateText(item?.text, 25)?.class]">
+              {{ truncateText(item?.text, 25)?.symbol }}
             </span>
           </h2>
+          <div v-if="newArray[index].template == 'addNew'" class="flex w-full justify-start">
+            <div v-if="item.type == 'input'" class="flex w-full pr-4 py-1">
+            <textarea
+            v-model="item.value"
+            @input="handleInputOwn"
+            :placeholder="item.placeholder"
+            :wrap="item.wrap ? 'soft' : 'off'"
+            rows="1"
+          ></textarea>     
+          </div>
+          <!-- wszystkie sloty, które będziemy gdzieś wykorzystywać -->
+          <slot  name="select" v-if="item.type == 'select'"/>
+          <slot  name="select1" v-if="item.type == 'select1'"/>
+          <slot  name="time" v-if="item.type == 'time'"/>
+          </div>
         </div>
         <div v-if="newArray[index].link" class="w-full flex justify-end">
           <Icon name="ph:caret-right-light" size="20" class="text-gray" />
@@ -36,20 +51,6 @@
             {{ single.answer }}
           </div>
         </div>
-<div v-if="item.template === 'addNew'" class="input-container">
-  <textarea
-  v-model="item.value"
-  @input="handleInputOwn"
-  :placeholder="item.placeholder"
-  :wrap="item.wrap ? 'soft' : 'off'"
-  rows="1"
-></textarea>
-<div>
-
-</div>
-<!-- <slot  name="select" v-if="item.select"/> -->
-</div>
-
     </div>
   </div>
 </template>
@@ -101,6 +102,7 @@ const truncateText = (text:any, maxLength:number) => {
   }
   return results;
 };
+
 </script>
 
 <style scoped lang="scss">
@@ -145,13 +147,16 @@ const truncateText = (text:any, maxLength:number) => {
 
 textarea {
   border: none;
+  width: 100%;
   overflow: auto;
   outline: none;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
 }
-
+textarea::-webkit-resizer {
+  background-color: white;
+}
 textarea:focus {
   border: none;
   overflow: auto;

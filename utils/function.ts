@@ -188,7 +188,7 @@ export const truncateText = (text:any, maxLength:number) => {
       symbol: '',
       class:''
   }
-  if (text.length > maxLength) {
+  if (text?.length > maxLength) {
     results = {
       name:text.slice(0, maxLength),
       symbol: '...',
