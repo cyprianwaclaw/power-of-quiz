@@ -84,25 +84,25 @@ const rowClick = (index: number) => {
   }
 };
 
-const truncateText = (text:any, maxLength:number) => {
-  let results:any={
-      name: '',
-      symbol: '',
-      class:''
-  }
-  if (text.length > maxLength) {
-    results = {
-      name:text.slice(0, maxLength),
-      symbol: '...',
-      class:'text-gray'
-    }
-  } else{
-    results = {
-      name:text,
-    }
-  }
-  return results;
-};
+// const truncateText = (text:any, maxLength:number) => {
+//   let results:any={
+//       name: '',
+//       symbol: '',
+//       class:''
+//   }
+//   if (text.length > maxLength) {
+//     results = {
+//       name:text.slice(0, maxLength),
+//       symbol: '...',
+//       class:'text-gray'
+//     }
+//   } else{
+//     results = {
+//       name:text,
+//     }
+//   }
+//   return results;
+// };
 
 </script>
 

@@ -27,20 +27,28 @@
     {{ allArray }}
   </pre> -->
   <div v-for="(item, index) in allArray" :key="index" class="white-retangle1">
-    <div class="flex justify-between">
-      <p>Pytanie {{ index + 1 }}</p>
-      <Icon v-if="index != 0" name="carbon:close" size="21" @click="isRemoveModal" />
+    <div class="flex flex-col pl-2.5 pr-5 border-own1">
+        <div class="flex justify-between">
+            <p class="font-semibold">Pytanie {{ index + 1 }}</p>
+            <Icon v-if="index != 0" name="carbon:close" size="24" class="close" @click="isRemoveModal" />
+        </div>
+      <textarea
+        type="text"
+        class=" mt-3 mb-5"
+        v-model="item.title"
+        placeholder="Wpisz tytuł pytania"
+        @input="handleInputOwn"
+        wrap="soft"
+        rows="1"
+      />
     </div>
-    <input
-      type="text"
-      class="-ml-4"
-      v-model="item.title"
-      placeholder="Wpisz tytuł pytania"
-    />
-    <div v-for="(question, index) in item.questions" :key="index" class="flex">
+    <div v-for="(question, index) in item.questions" :key="index" 
+    class="flex py-1 place-items-center pl-3"
+    :class="[index==3 ? null : 'border-own1']"
+    >
       <input
         type="checkbox"
-        class="w-5"
+        class="w-9 -ml-1"
         :checked="question.selected"
         @change="select(index, item.questions)"
       />
@@ -55,7 +63,6 @@
 </template>
 
 <script setup lang="ts">
-const isOpen1 = ref(false);
 const isOpen = ref(false);
 const isRemove = ref(false);
 const isRemoveSucessModal = ref(false);
@@ -109,18 +116,75 @@ const checkQuestion=()=>{
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/assets/style/variables.scss";
 .white-retangle1 {
   background-color: white;
   margin-top: 28px;
   border-radius: 16px;
-  padding: 24px;
+  padding: 21px 0px 11px 24px;
 }
+.border-own1 {
+    border-bottom: 1px solid $border;
+  }
 input {
   border: 1px solid white !important;
-  padding: 4px 4px 4px 13px;
+  font-size: 16px;
+  font-weight: 500;
 }
 input:focus {
   border-color: white;
+  font-size: 16px;
+  font-weight: 500;
 }
+input::placeholder {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  textarea {
+  //  padding: 0px 27px 0px 14px;
+  font-size: 16px;
+  font-weight: 500;
+    border: none;
+    width: 100%;
+    overflow: auto;
+    outline: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+  textarea::-webkit-resizer {
+    background-color: white;
+  }
+  textarea:focus {
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    overflow: auto;
+    outline: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    width: 25px;
+    height: 25px;
+    background-color: #fff;
+    background-image: url('@/assets/file/check.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+}
+
+  input[type="checkbox"]:checked {
+      background-image: url('@/assets/file/check1.svg');
+    }
+  
+.close {
+    color: rgb(209, 209, 209);
+  }
 </style>

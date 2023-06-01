@@ -299,7 +299,7 @@ const difficultyOption=(select:any) =>{
   seletedDifficulty.value = select
 }
 
-let titleQuestion = ref("");
+let titleQuestion = ref(""); 
 let answer_1 = ref("");
 let answer_2 = ref("");
 let answer_3 = ref("");
