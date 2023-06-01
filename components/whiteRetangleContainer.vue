@@ -25,16 +25,17 @@
           </h2>
           <div v-if="newArray[index].template == 'addNew'" class="flex w-full justify-start">
             <div v-if="item.type == 'input'" class="flex w-full pr-4 py-1">
-            <textarea
-            v-model="item.value"
-            @input="handleInputOwn"
-            :placeholder="item.placeholder"
-            :wrap="item.wrap ? 'soft' : 'off'"
-            rows="1"
-          ></textarea>     
-          </div>
-          <!-- wszystkie sloty, które będziemy gdzieś wykorzystywać -->
-          <slot  name="select" v-if="item.type == 'select'"/>
+              <textarea
+              v-model="item.value"
+              @input="handleInputOwn"
+              :placeholder="item.placeholder"
+              :wrap="item.wrap ? 'soft' : 'off'"
+              rows="1"
+              ></textarea>     
+            </div>
+            <!-- wszystkie sloty, które będziemy gdzieś wykorzystywać -->
+            <slot  name="select" v-if="item.type == 'select'"/>
+            <slot  name="radio" v-if="item.type == 'radio'"/>
           <slot  name="select1" v-if="item.type == 'select1'"/>
           <slot  name="time" v-if="item.type == 'time'"/>
           </div>

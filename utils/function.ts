@@ -207,3 +207,18 @@ export const handleInputOwn = (event: Event) => {
   target.style.height = 'auto';
   target.style.height = target.scrollHeight + 'px';
 };
+
+export const placeholderAnswer=(index:number)=>{
+  return 'Opowiedż ' + (index+1)
+}
+
+export const addQuestion = (array:any) => {
+  array.push(
+    { title: '', questions: [
+      { name: '', selected: false },
+      { name: '', selected: false },
+      { name: '', selected: false },
+      { name: '', selected: false },
+    ]},
+  );
+};

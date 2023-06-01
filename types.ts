@@ -73,4 +73,3 @@ type?: string,
   value?: any;
 template?:string
   }
-

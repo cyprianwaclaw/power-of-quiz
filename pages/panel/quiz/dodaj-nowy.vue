@@ -1,29 +1,5 @@
 <template>
   <ModalAlert
-    v-if="isOpen"
-    title="Uzupełnij dane"
-    des="Wpisz tytuł pytania, podaj wszystkie odpowiedzi i zaznacz tę, która jest poprawna."
-    closeButton="Uzupełnij"
-    @close="errorAddQuestion()"
-  />
-  <ModalAlert
-    v-if="isRemove"
-    title="Usuń pytanie"
-    des="Czy na pewno chcesz usunąć pytanie? Tej operacji nie będzie można cofnąć"
-    closeButton="Anuluj"
-    actionButton="Usuń"
-    actionButtonClass="text-red-500"
-    @close="isRemoveModal()"
-    @action="remove"
-  />
-  <ModalAlert
-    v-if="isRemoveSucessModal"
-    title="Usunięto pytanie"
-    des="Twoje pytanie zostało usunięte, teraz możesz teraz dodać kolejne"
-    closeButton="Okej"
-    @close="removeSuccess()"
-  />
-  <ModalAlert
   v-if="isSendQuiz"
   title="Wysłano!"
   des="Twój quiz został przesłany do nas w celu weryfikacji, gdy zostanie
@@ -34,10 +10,12 @@
   @close="sendQuiz1()"
 />
   <NuxtLayout name="panel">
-    {{ quizArray }}
+    <!-- {{ quizArray }} -->
     <h1 class="title-h1">Nowy quiz</h1>
    
+<QuizAddNewQuestionAnswer
 
+/>
     <h2 class="title-h2 mt-[52px] mb-8">Podstawowe informacje</h2>
     <WhiteRetangleContainer 
     :array="[...quizArray]" 
@@ -287,8 +265,8 @@
         </button>
       </div>
       <!-- koniec formularza -->
-      {{ categories }}
     </Form>
+    {{ form }}
   </NuxtLayout>
 </template>
 
@@ -328,31 +306,26 @@ let answer_3 = ref("");
 let answer_4 = ref("");
 let radioCorrect = ref("");
 
-const allQuestion = ref(false);
+const categoriesArray = categories.value.map((single:any)=>({
+  value: single.id,
+  label: single.name
+}))
 
 
-const difficultyArray = [
+const difficultyArray = reactive([
   { value: "easy", label: "Łatwy" },
   { value: "medium", label: "Średni" },
   { value: "hard", label: "Trudny" }
-];
-
-const categoriesArray = [
-  { value: "1", label: "Option 11" },
-  { value: "2", label: "Option 21" },
-  { value: "3", label: "Option 31" },
-  { value: "4", label: "Option 41" },
-  { value: "5", label: "Option 51" }
-];
-const quizArray = [
+]);
+const quizArray = reactive([
     {type: 'input', template:'addNew', wrap: 'soft', placeholder:'Nawa quizu'},
     {template:'addNew', type: 'time' },
     {type: 'select', template:'addNew' },
     {type: 'select1', template:'addNew' },
-  ];
-  const desArray = [
+  ])
+  const desArray = reactive([
     {type: 'input', template:'addNew', wrap: 'soft', placeholder:'Opis quizu'},
-  ];
+  ]);
 const image = ref<any | null>(null);
 const isImageModal = ref(false);
 const imageModal = () => {
@@ -405,18 +378,8 @@ function isCorrect4(params: any) {
   return results;
 }
 
-const isOpen = ref(false);
-const isRemove = ref(false);
-const isRemoveSucessModal = ref(false);
 const isSendQuiz = ref(false);
 
-const errorAddQuestion = () => {
-  isOpen.value = !isOpen.value;
-};
-
-const isRemoveModal = () => {
-  isRemove.value = !isRemove.value;
-};
 
 const sendQuiz = () => {
   isSendQuiz.value = !isSendQuiz.value;
@@ -427,17 +390,13 @@ const sendQuiz1 = () => {
   window.location.reload();
 };
 
-const removeSuccess = () => {
-  isRemoveSucessModal.value = !isRemoveSucessModal.value;
-};
-
 const styleObject = reactive({
   width: "100%",
 });
 
 const timeActive = ref(false);
 const timePlaceholder = ref("Szacunkowy czas trwania");
-function isTime() {
+const isTime=()=> {
   (document.getElementById("timeInput") as any).focus();
   timeActive.value = true;
   timePlaceholder.value = "0";
@@ -447,9 +406,7 @@ function isTime() {
 let form = reactive<any>([]);
 
 const remove = (index: any) => {
-  isRemoveModal()
   form.splice(index, 1);
-  removeSuccess();
 };
 
 const newQuestionInput = () => {
