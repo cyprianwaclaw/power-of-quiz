@@ -52,7 +52,8 @@
     }
   );
   </script>
-  <style scoped>
+<style scoped lang="scss">
+@import "@/assets/style/variables.scss";
   .success input {
     border: 2px solid transparent;
     outline: none;
@@ -90,9 +91,8 @@
   }
   input::placeholder {
     font-size: 16px;
-  }
-  input:focus::placeholder {
-    font-size: 0px;
+    font-weight: 400;
+    color:$icon;
   }
 
   .help-message {

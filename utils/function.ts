@@ -222,3 +222,11 @@ export const addQuestion = (array:any) => {
     ]},
   );
 };
+
+// ! zamykanie i otwieranie modalu, gdy mamy tylko jedną wartość 
+export const openModal= (open:boolean)=>{
+  let results:any= ''
+  if(open == true) results = false
+  else results = true
+  return results;
+  }

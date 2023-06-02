@@ -48,21 +48,25 @@
     >
       <input
         type="checkbox"
-        class="w-9 -ml-1"
+        class="w-6 -ml-1"
         :checked="question.selected"
         @change="select(index, item.questions)"
       />
       <input
         type="text"
+        class="pl-2.5"
         v-model="question.name"
         :placeholder="placeholderAnswer(index)"
       />
     </div>
   </div>
-  <button @click="checkQuestion()">Następne pytanie</button>
+  <div class="flex justify-end -mr-3 mt-2">
+      <button @click="checkQuestion()" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</button>
+  </div>
 </template>
 
 <script setup lang="ts">
+const emit = defineEmits(['array'])
 const isOpen = ref(false);
 const isRemove = ref(false);
 const isRemoveSucessModal = ref(false);
@@ -85,7 +89,9 @@ const allArray = reactive([
     ],
   },
 ]);
-
+watch(allArray,(newValue)=>{
+emit('array', newValue);
+})
 const select = (index: any, data: any) => {
   const selectedOption = data[index];
   selectedOption.selected = !selectedOption.selected;
@@ -139,10 +145,10 @@ input:focus {
 }
 input::placeholder {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 400;
+    color:$icon;
   }
   textarea {
-  //  padding: 0px 27px 0px 14px;
   font-size: 16px;
   font-weight: 500;
     border: none;
@@ -152,6 +158,11 @@ input::placeholder {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+  }
+  textarea::placeholder {
+    font-size: 16px;
+    font-weight: 400;
+    color:$icon;
   }
   textarea::-webkit-resizer {
     background-color: white;
@@ -171,8 +182,8 @@ input[type="checkbox"] {
     -webkit-appearance: none;
     -moz-appearance: none;
     outline: none;
-    width: 25px;
-    height: 25px;
+    width: 27px;
+    height: 27px;
     background-color: #fff;
     background-image: url('@/assets/file/check.svg');
     background-repeat: no-repeat;

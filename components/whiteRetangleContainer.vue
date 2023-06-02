@@ -147,6 +147,8 @@ const rowClick = (index: number) => {
 }
 
 textarea {
+  font-size: 16px;
+  font-weight: 500;
   border: none;
   width: 100%;
   overflow: auto;
@@ -154,6 +156,11 @@ textarea {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+}
+textarea::placeholder {
+  font-size: 16px;
+  font-weight: 400;
+  color:$icon;
 }
 textarea::-webkit-resizer {
   background-color: white;

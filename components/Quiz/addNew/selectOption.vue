@@ -37,10 +37,12 @@ watch(selected,(newValue)=>{
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/assets/style/variables.scss";
 select:invalid {
-    color: #a7a2a2;
-    font-size: 16px;
+  font-size: 16px;
+  font-weight: 400;
+  color:$icon;
   }
   
   select::-ms-expand {
@@ -59,7 +61,11 @@ select:invalid {
     background: transparent;
     background-repeat: no-repeat;
   }
-
+  select::placeholder {
+    font-size: 16px;
+    font-weight: 400;
+    color:$icon;
+  }
   .text-des-mobile-add {
     font-size: 14px;
     font-weight: 300;

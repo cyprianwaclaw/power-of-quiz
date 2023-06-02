@@ -1,278 +1,82 @@
 <template>
   <ModalAlert
-  v-if="isSendQuiz"
-  title="Wysłano!"
-  des="Twój quiz został przesłany do nas w celu weryfikacji, gdy zostanie
+    v-if="isSendQuiz"
+    title="Wysłano!"
+    des="Twój quiz został przesłany do nas w celu weryfikacji, gdy zostanie
   zaakceptowany poprawnie, zostaniesz o tym poinformowany"
-  closeButton="Kolejny quiz"
-  actionButton="Home"
-  redirect="/panel"
-  @close="sendQuiz1()"
-/>
+    closeButton="Kolejny quiz"
+    actionButton="Home"
+    redirect="/panel"
+    @close="sendQuiz1()"
+  />
   <NuxtLayout name="panel">
-    <!-- {{ quizArray }} -->
     <h1 class="title-h1">Nowy quiz</h1>
-   
-<QuizAddNewQuestionAnswer
-
-/>
     <h2 class="title-h2 mt-[52px] mb-8">Podstawowe informacje</h2>
-    <WhiteRetangleContainer 
-    :array="[...quizArray]" 
-    >
-    <template #select>
-      <QuizAddNewSelectOption
-      :array="[...difficultyArray]"
-      @select="difficultyOption"
-      header="Poziom trudności" 
-      name="Wybierz poziom trudności"
-      />
-    </template>
-    <template #select1>
-      <QuizAddNewSelectOption
-      :array="[...categoriesArray]"
-      @select="categoryOption"
-      header="Kategoria" 
-      name="Wybierz kategorie"
-      />
-    </template>
-    <template #time>
-      <div class="flex flex-row w-full place-items-center" @click="isTime()">
-        <InputNotBorder
-          name="time"
-          class="time"
-          id="timeInput"
-          type="tel"
-          :placeholder="timePlaceholder"
-          :style="styleObject"
+    <WhiteRetangleContainer :array="[...quizArray]">
+      <template #select>
+        <QuizAddNewSelectOption
+          :array="[...difficultyArray]"
+          @select="difficultyOption"
+          header="Poziom trudności"
+          name="Wybierz poziom trudności"
         />
-        <p v-if="timeActive" class="font-medium pt-2">minut</p>
-      </div>
-      <!-- gdy jest błąd -->
-    </template>
+      </template>
+      <template #select1>
+        <QuizAddNewSelectOption
+          :array="[...categoriesArray]"
+          @select="categoryOption"
+          header="Kategoria"
+          name="Wybierz kategorie"
+        />
+      </template>
+      <template #time>
+        {{ time }}
+        <div class="flex flex-row w-full place-items-center" >
+          <input
+            class="time"
+            v-model="time"
+            />
+            <!-- @click="isTime()"> -->
+            <!-- :placeholder="timePlaceholder"
+            :style="styleObject" -->
+          <p v-if="timeActive" class="font-medium pt-2">minut</p>
+        </div>
+        <!-- gdy jest błąd -->
+      </template>
     </WhiteRetangleContainer>
-    <Form
-      class="mb-24"
-      v-slot="{ values }"
-      @submit="onSubmit"
-      :validation-schema="schema"
-      @invalid-submit="onInvalidSubmit"
-    >
-      <h2 class="title-h2 mt-14 mb-8">Opis</h2>
-        <WhiteRetangleContainer 
-        :array="[...desArray]" 
-        />
-      <h2 class="title-h2 mt-14 mb-8">Zdjęcie</h2>
-      <LazyModalContentCropImageInput @close="imageModal()" @image-file="handleImage" />
-      <h2 class="title-h2 mt-14 mb-8">Pytania</h2>
-<!-- tablica z pytaniami -->
-      <div v-for="(item, index) in form" :key="index">
-        <div
-          class="white-retangle"
-          v-if="form.length > 0"
-          :class="{ margin: indexBigger(form.length) }"
+    <h2 class="title-h2 mt-14 mb-8">Opis</h2>
+    <WhiteRetangleContainer :array="[...desArray]" />
+    <h2 class="title-h2 mt-14 mb-8">Zdjęcie</h2>
+    <LazyModalContentCropImageInput @close="openModal(isImageModal)" @image-file="handleImage" />
+    <h2 class="title-h2 mt-14 mb-8">Pytania</h2>
+    <QuizAddNewQuestionAnswer @array="answerQuestion" />
+    <!-- button do wysłania -->
+    <!-- <button class="button-primary-disabled" disabled id="submit" type="submit">
+      Prześlij quiz do akceptacji
+    </button> -->
+    <!-- <pre>
+      {{ answerQuestionArray }}
+      {{seletedCategory }}
+      {{ image }}
+      {{ desArray[0] }}
+      {{ quizArray[0].value }}
+    </pre> -->
+    <div class="mt-12 justify-end flex mb-[72px]">
+      <button
+        class="button-primary w-full"
+        @click="onSubmit()"
         >
-          <p class="quest-text">Pytanie {{ index + 1 }}</p>
-          <div v-if="form.length >= 1" class="justify-end flex mr-6">
-            <Icon
-              name="carbon:close"
-              size="22"
-              class="red text-xs -mt-7 absolute"
-              @click="isRemoveModal()"
-            />
-          </div>
-          <div class="row-table-end flex place-items-center gap-3 mb-4 mt-1">
-            <div class="">
-              <p class="text-des-mobile-add">Treść pytania</p>
-              <div>
-                <h2 class="font-medium mt-0.5">{{ item.title }}</h2>
-              </div>
-            </div>
-          </div>
-          <div class="row-table-start flex place-items-center gap-3">
-            <div v-if="item.answer1.isCorrect">
-              <Icon name="ph:check-circle-light" size="21" class="green" />
-            </div>
-            <div v-else class="w-5"></div>
-            <div class="">
-              <p class="text-des-mobile-add">Odpowiedź 1</p>
-              <div>
-                <h2 class="font-medium mt-0.5">{{ item.answer1.title }}</h2>
-              </div>
-            </div>
-          </div>
-          <div class="row-table-start flex place-items-center gap-3">
-            <div v-if="item.answer2.isCorrect">
-              <Icon name="ph:check-circle-light" size="21" class="green" />
-            </div>
-            <div v-else class="w-5"></div>
-            <div class="">
-              <p class="text-des-mobile-add">Odpowiedź 2</p>
-              <div>
-                <h2 class="font-medium mt-0.5">{{ item.answer2.title }}</h2>
-              </div>
-            </div>
-          </div>
-          <div class="row-table-start flex place-items-center gap-3">
-            <!--! zmienić we waszystkich -->
-            <div v-if="item.answer3.isCorrect">
-              <Icon name="ph:check-circle-light" size="21" class="green" />
-            </div>
-            <div v-else class="w-5"></div>
-            <div class="">
-              <p class="text-des-mobile-add">Odpowiedź 3</p>
-              <div>
-                <h2 class="font-medium mt-0.5">{{ item.answer3.title }}</h2>
-              </div>
-            </div>
-          </div>
-          <div class="row-table-end flex place-items-center gap-3">
-            <div v-if="item.answer4.isCorrect">
-              <Icon name="ph:check-circle-light" size="21" class="green" />
-            </div>
-            <div v-else class="w-5"></div>
-            <div class="">
-              <p class="text-des-mobile-add">Odpowiedź 4</p>
-              <div>
-                <h2 class="font-medium mt-0.5">{{ item.answer4.title }}</h2>
-              </div>
-            </div>
-          </div>
-          <div class="w-full">
-            <p class="edit-quest primary-color">Edytuj</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="white-retangle" :class="{ margin: indexBigger(form.length) }">
-        <p class="quest-text">Pytanie {{ form.length + 1 }}</p>
-        <div class="row-table-start mt-3 -pb-20 flex">
-          <textarea
-            name="titleQuestion"
-            v-model="titleQuestion"
-            type="text"
-            placeholder="Treść pytania"
-          />
-        </div>
-        <!-- pytania do quizu -->
-        <fieldset id="group">
-          <div class="row-table-start -mt-2 -mb-1 flex place-items-end">
-            <Field type="radio" name="group" v-model="radioCorrect" value="correct1" />
-            <input
-              name="answer_1"
-              v-model="answer_1"
-              type="text"
-              placeholder="Odpowiedź 1"
-            />
-          </div>
-          <div class="row-table-start -mt-2 -mb-1 flex place-items-end">
-            <Field type="radio" name="group" v-model="radioCorrect" value="correct2" />
-            <input
-              name="answer_2"
-              v-model="answer_2"
-              type="text"
-              placeholder="Odpowiedź 2"
-            />
-          </div>
-          <div class="row-table-start -mt-2 -mb-1 flex place-items-end">
-            <Field type="radio" name="group" v-model="radioCorrect" value="correct3" />
-            <input
-              name="answer_3"
-              v-model="answer_3"
-              type="text"
-              placeholder="Odpowiedź 3"
-            />
-          </div>
-          <div class="row-table-end -mt-2 -mb-1 flex place-items-end">
-            <Field type="radio" name="group" v-model="radioCorrect" value="correct4" />
-            <input
-              name="answer_4"
-              v-model="answer_4"
-              type="text"
-              placeholder="Odpowiedź 4"
-            />
-          </div>
-        </fieldset>
-        <div v-if="form.length + 1 == 1">
-          <div
-            class="mr-7 mb-3 mt-8"
-            v-if="
-              titleQuestion.length > 2 &&
-              answer_1.length > 2 &&
-              answer_2.length > 2 &&
-              answer_3.length > 2 &&
-              answer_4.length > 2 &&
-              values.group
-            "
-          >
-            <p @click="newQuestionInput" class="text-end primary-color font-medium">
-              Dodaj pierwsze pytanie
-            </p>
-          </div>
-
-          <div class="mr-7 mb-3 mt-8" v-else>
-            <p @click="errorAddQuestion()" class="text-end primary-color font-medium">
-              Dodaj pierwsze pytanie
-            </p>
-          </div>
-        </div>
-        <div v-else>
-          <div
-            class="mr-7 mb-3 mt-8"
-            v-if="
-              titleQuestion.length > 2 &&
-              answer_1.length > 2 &&
-              answer_2.length > 2 &&
-              answer_3.length > 2 &&
-              answer_4.length > 2 &&
-              values.group
-            "
-          >
-            <p @click="newQuestionInput" class="text-end primary-color font-medium">
-              Dodaj
-            </p>
-          </div>
-
-          <div class="mr-7 mb-3 mt-8" v-else>
-            <p @click="errorAddQuestion()" class="text-end primary-color font-medium">
-              Dodaj
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        class="mt-9 justify-end flex"
-        v-if="
-          values.title &&
-          values.difficulty &&
-          image &&
-          values.category_id &&
-          values.time &&
-          form.length
-            ? false
-            : true
-        "
-      >
-        <button class="button-primary-disabled" disabled id="submit" type="submit">
-          Prześlij quiz do akceptacji
-          <!-- <Icon name="carbon:chevron-right" class="-mr-2" size="24" /> -->
-        </button>
-      </div>
-      <div class="mt-9 justify-end flex" v-else>
-        <button class="button-primary" id="submit" type="submit">
-          Prześlij quiz do akceptacji
-          <!-- <Icon name="carbon:chevron-right" class="-mr-2" size="24" /> -->
-        </button>
-      </div>
-      <!-- koniec formularza -->
-    </Form>
-    {{ form }}
+        <!-- @click="validateReceivedData" -->
+        Prześlij quiz do akceptacji
+      </button>
+    </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { ref, reactive } from "vue";
+import { whiteRetangle } from "@/types";
 import { useQuiz } from "@/store/useQuiz";
 import * as Yup from "yup";
 import { Form, Field } from "vee-validate";
@@ -287,99 +91,77 @@ const { categories, newQuizId, newQuestionId } = storeToRefs(quizStore);
 await quizStore.getCategory();
 let category: any = categories.value;
 
-const seletedCategory = ref(null)
+const seletedCategory = ref();
 
-const categoryOption=(select:any) =>{
-  seletedCategory.value = select
-}
+const categoryOption = (select: any) => {
+  seletedCategory.value = select;
+};
+const seletedDifficulty = ref();
 
-const seletedDifficulty = ref(null)
-
-const difficultyOption=(select:any) =>{
-  seletedDifficulty.value = select
-}
-
-let titleQuestion = ref(""); 
-let answer_1 = ref("");
-let answer_2 = ref("");
-let answer_3 = ref("");
-let answer_4 = ref("");
-let radioCorrect = ref("");
-
-const categoriesArray = categories.value.map((single:any)=>({
+const difficultyOption = (select: any) => {
+  seletedDifficulty.value = select;
+};
+const categoriesArray = categories.value.map((single: any) => ({
   value: single.id,
-  label: single.name
-}))
-
+  label: single.name,
+}));
 
 const difficultyArray = reactive([
   { value: "easy", label: "Łatwy" },
   { value: "medium", label: "Średni" },
-  { value: "hard", label: "Trudny" }
+  { value: "hard", label: "Trudny" },
 ]);
-const quizArray = reactive([
-    {type: 'input', template:'addNew', wrap: 'soft', placeholder:'Nawa quizu'},
-    {template:'addNew', type: 'time' },
-    {type: 'select', template:'addNew' },
-    {type: 'select1', template:'addNew' },
-  ])
-  const desArray = reactive([
-    {type: 'input', template:'addNew', wrap: 'soft', placeholder:'Opis quizu'},
-  ]);
+const quizArray = reactive<any>([
+  { type: "input", template: "addNew", wrap: "soft", placeholder: "Nazwa quizu", value: '' },
+  { template: "addNew", type: "time" },
+  { type: "select", template: "addNew" },
+  { type: "select1", template: "addNew" },
+]);
+const desArray = reactive([
+  { type: "input", template: "addNew", wrap: "soft", placeholder: "Opis quizu", value: '' },
+]);
 const image = ref<any | null>(null);
 const isImageModal = ref(false);
-const imageModal = () => {
-  isImageModal.value = !isImageModal.value;
-};
+const isOpen = ref(false);
+
+
+const openModal= (open:boolean)=>{
+let results:boolean= false
+if(open == true) results = false
+else results = true
+return results;
+}
 
 const handleImage = (file: File) => {
   image.value = file;
 };
 
-const difficulty1 = ref('')
+const answerQuestionArray = ref();
+const answerQuestion = (allArray: any) => {
+ answerQuestionArray.value = allArray;
+};
 
+const validateData = (allArray:any) => {
+  if (
+    allArray?.title == 'kk'
+    ) {
+    console.log(allArray);
+    console.log('Jest błąd');
+  } else {
+    console.log(allArray);
+    console.log("Wyślij quiz");
+  }
+};
 
+const validateReceivedData = () => {
+   validateData(answerQuestionArray.value)
+};
 
-
-function isCorrect1(params: any) {
-  let results = false;
-  if (params == "correct1") {
-    results = true;
-  } else {
-    results = false;
-  }
-  return results;
-}
-function isCorrect2(params: any) {
-  let results = false;
-  if (params == "correct2") {
-    results = true;
-  } else {
-    results = false;
-  }
-  return results;
-}
-function isCorrect3(params: any) {
-  let results = false;
-  if (params == "correct3") {
-    results = true;
-  } else {
-    results = false;
-  }
-  return results;
-}
-function isCorrect4(params: any) {
-  let results = false;
-  if (params == "correct4") {
-    results = true;
-  } else {
-    results = false;
-  }
-  return results;
-}
+const styleObject = reactive({
+  width: "100%",
+});
 
 const isSendQuiz = ref(false);
-
 
 const sendQuiz = () => {
   isSendQuiz.value = !isSendQuiz.value;
@@ -390,111 +172,37 @@ const sendQuiz1 = () => {
   window.location.reload();
 };
 
-const styleObject = reactive({
-  width: "100%",
-});
-
+const time = ref()
 const timeActive = ref(false);
 const timePlaceholder = ref("Szacunkowy czas trwania");
-const isTime=()=> {
+const isTime = () => {
   (document.getElementById("timeInput") as any).focus();
   timeActive.value = true;
   timePlaceholder.value = "0";
   styleObject.width = "30px";
-}
-
-let form = reactive<any>([]);
-
-const remove = (index: any) => {
-  form.splice(index, 1);
 };
 
-const newQuestionInput = () => {
-  let formL = form.length;
-
-  form.push({
-    title: titleQuestion.value,
-    answer1: {
-      title: answer_1.value,
-      isCorrect: isCorrect1(radioCorrect.value),
-    },
-    answer2: {
-      title: answer_2.value,
-      isCorrect: isCorrect2(radioCorrect.value),
-    },
-    answer3: {
-      title: answer_3.value,
-      isCorrect: isCorrect3(radioCorrect.value),
-    },
-    answer4: {
-      title: answer_4.value,
-      isCorrect: isCorrect4(radioCorrect.value),
-    },
-  });
-
-  titleQuestion.value = "";
-  answer_1.value = "";
-  answer_2.value = "";
-  answer_3.value = "";
-  answer_4.value = "";
-  radioCorrect.value = "";
-};
-
-const schema = Yup.object().shape({
-  title: Yup.string().max(80, "Ups! nazwa jest zbyt długa"),
-  time: Yup.string()
-    .matches(/^[0-9]*$/, "Wpisz liczbę")
-    .max(2, "Quiz nie może być dłuższy niż 99 minut"),
-});
-
-async function onSubmit(values: any) {
-  // !dodać obraz
-
-  let { title, time, category_id, difficulty, description } = values;
-
-  // !działa już dodawanie quizu
-  await quizStore.postNewQuiz(
-    title,
-    time,
-    category_id,
-    difficulty,
-    description,
-    image.value
-  );
-  let quziId = newQuizId.value;
-
-  // console.log(newQuizId.value)
-  form.forEach(async (answer: any) => {
-    await quizStore.postNewQuestion(answer.title, quziId);
-
-    let questionId = newQuestionId.value;
-
-    await quizStore.postNewAnswer(
-      answer.answer1.title,
-      questionId,
-      answer.answer1.isCorrect
-    );
-    await quizStore.postNewAnswer(
-      answer.answer2.title,
-      questionId,
-      answer.answer2.isCorrect
-    );
-    await quizStore.postNewAnswer(
-      answer.answer3.title,
-      questionId,
-      answer.answer3.isCorrect
-    );
-    await quizStore.postNewAnswer(
-      answer.answer4.title,
-      questionId,
-      answer.answer4.isCorrect
-    );
-  }),
-
-    //gdy wysłano quiz
-    sendQuiz()
-
-}
+const onSubmit=async()=> {
+   await quizStore.postNewQuiz(
+    quizArray[0].value,
+     time.value,
+     seletedCategory.value,
+     seletedDifficulty.value,
+     desArray[0].value,
+     image.value
+   );
+   let quziId = newQuizId.value
+   answerQuestionArray.value.forEach(async (answer: any) => {
+     await quizStore.postNewQuestion(answer.title, quziId)
+     let questionId = newQuestionId.value
+     answer.questions.forEach(async (question: any) =>{
+       await quizStore.postNewAnswer(
+        question.name,
+         questionId,
+         question.selected
+       )})
+    })
+ }
 </script>
 <style scoped lang="scss">
 .row-table-start {
