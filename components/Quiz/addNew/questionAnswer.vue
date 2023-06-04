@@ -1,10 +1,10 @@
 <template>
   <LazyModalAlert
     v-if="isOpen"
-    title="Uzupełnij dane"
+    title="Uzupełnij pytanie"
     des="Aby dodać kolejne pytanie, wpisz tytuł poprzedniego pytania oraz  podaj wszystkie jego  odpowiedzi i zaznacz tę, która jest poprawna"
     closeButton="Uzupełnij"
-    @close="isOpen =! isOpen"
+    @close="isOpenModal()"
   />
   <LazyModalAlert
     v-if="isRemove"
@@ -26,7 +26,9 @@
   <!-- <pre>
     {{ allArray }}
   </pre> -->
-  <div v-for="(item, index) in allArray" :key="index" class="white-retangle1">
+  <div v-for="(item, index) in allArray" :key="index" class="white-retangle1"
+  :class="[index != 0 ? 'margin-top-owm' : null]"
+  >
     <div class="flex flex-col pl-2.5 pr-5 border-own1">
         <div class="flex justify-between">
             <p class="font-semibold">Pytanie {{ index + 1 }}</p>
@@ -73,6 +75,9 @@ const isRemoveSucessModal = ref(false);
 ;
 const isRemoveModal = () => {
   isRemove.value = !isRemove.value;
+};
+const isOpenModal = () => {
+  isOpen.value = !isOpen.value;
 };
 const removeSuccess = () => {
   isRemoveSucessModal.value = !isRemoveSucessModal.value;
@@ -126,9 +131,11 @@ const checkQuestion=()=>{
 @import "@/assets/style/variables.scss";
 .white-retangle1 {
   background-color: white;
-  margin-top: 28px;
   border-radius: 16px;
   padding: 21px 0px 11px 24px;
+}
+.margin-top-owm{
+    margin-top: 28px;
 }
 .border-own1 {
     border-bottom: 1px solid $border;

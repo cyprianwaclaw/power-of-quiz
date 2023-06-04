@@ -51,7 +51,7 @@ let mapCategory = (allCategories.value = category.map((single: any) => ({
   selected: false,
 })));
 
-let populars = quizesValue(popularQuiz.value, mapCategory)
+// let populars = quizesValue(popularQuiz.value, mapCategory)
 
 const searchInput: any = computed(() => {
   return allQuizName.value.filter((quiz: any) =>

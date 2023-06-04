@@ -1,99 +1,52 @@
+<script setup lang="ts">
+import { Form } from 'vee-validate';
+import * as yup from 'yup';
+import CustomField from '@/components/CustomField.vue';
+
+function onSubmit(values) {
+  alert(JSON.stringify(values, null, 2));
+}
+
+const schema = yup.object({
+  email: yup.string().email().required(),
+});
+</script>
+
 <template>
   <div>
-    <button @click="sort">Sort</button>
-    <div>
-      <div>
-        <h2>Time</h2>
-        <div v-for="(item, index) in timeOptions" :key="index">
-          <input type="checkbox" v-model="item.selected" @click="selectOption(index, 'time')">{{ item.name }}
-        </div>
-      </div>
-      <div>
-        <h2>Difficulty</h2>
-        <div v-for="(item, index) in difficultyOptions" :key="index">
-          <input type="checkbox" v-model="item.selected" @click="selectOption(index, 'difficulty')">{{ item.name }}
-        </div>
-      </div>
-    </div>
-    <div v-for="(quiz, index) in allQuiz" :key="index">
-      {{ quiz.title }}
-      czas: {{ quiz.time }}
-      {{ quiz.difficulty }}
-    </div>
+    <h1>vee-validate Dynamic validation Triggers</h1>
+    <p>
+      This input can customize the validation triggers using "interaction
+      modes". Try passing either `passive`, `aggressive`, `lazy` or `eager` and
+      see how it changes the validation behavior.
+    </p>
+
+    <Form @submit="onSubmit" :validation-schema="schema">
+      <label for="email">Email</label>
+      <CustomField name="email" type="email" mode="aggressive" />
+
+      <button type="submit">Submit</button>
+    </Form>
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, reactive } from "vue";
-import { useQuiz } from "@/store/useQuiz";
-import {storeToRefs} from 'pinia'
-
-const sorting = reactive([
-  { name: "Czas rosnąco", value: "medium", selected:false, api: "sort[0]=time,desc", category: "time"   },
-  { name: "Czas malejąco", value: "medium", selected:false,  api: "sort[0]=time,asc", category: "time" },
-  { name: "Trudność", value: "easy", selected: false, des: "( łatwe, trudne )", category: "difficulty" },
-  { name: "Trudność", value: "easy", selected:false, des: "( trudne, łatwe )", category: "difficulty" }
-]);
-
-const data1 = ref(sorting);
-
-const timeOptions = computed(() => {
-  return data1.value.filter((option) => option.category === "time");
-});
-
-const difficultyOptions = computed(() => {
-  return data1.value.filter((option) => option.category === "difficulty");
-});
-
-onMounted(() => {
-  const selectedOptions = JSON.parse(localStorage.getItem("selectedOptions"));
-  if (selectedOptions) {
-    data1.value.forEach((option, index) => {
-      option.selected = selectedOptions[index];
-    });
-  }
-});
-
-function selectOption(index, category) {
-  const categoryOptions = category === "time" ? timeOptions : difficultyOptions;
-  const selectedOption = categoryOptions.value[index];
-  selectedOption.selected = !selectedOption.selected;
-
-  categoryOptions.value.forEach((option, i) => {
-    if (i !== index) {
-      option.selected = false;
-    }
-  });
-
-  const selectedOptions = data1.value.map((option) => option.selected);
-  localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
+<style scoped>
+#app {
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 500px;
 }
 
-const selectedItems = computed(() => {
-  return data1.value.filter((item) => item.selected);
-});
-
-const quiz = useQuiz();
-const fetchData = async () => {
-  const allQuizFromStorage = JSON.parse(localStorage.getItem('allQuiz'));
-  if (allQuizFromStorage) {
-    quiz.allQuiz.value = allQuizFromStorage;
-  } else {
-    await quiz.getAllQuiz(24, null);
-  }
+input {
+  display: block;
+  margin-bottom: 20px;
 }
 
-const { allQuiz, categories } = storeToRefs(quiz);
+button {
+  display: block;
+}
 
-const sort = async () => {
-  const selectedOptions = JSON.parse(localStorage.getItem("selectedOptions"));
-  const selectedSortOptions = data1.value.filter(option => option.selected);
-  const sortApiParams = selectedSortOptions.map(option => option.api).join('&');
-  await quiz.getAllQuiz(2, sortApiParams);
-};
-
-onMounted(async () => {
-  await fetchData();
-});
-
-</script>
+form {
+  padding: 20px;
+  border: 1px solid black;
+}
+</style>
