@@ -1,6 +1,6 @@
 <template>
   <ModalAlert
-    v-if="isOpen"
+    :modalActive="isOpen"
     title="Usuń quiz"
     des="Czy na pewno chcesz usunąć quiz? Tej operacji nie będzie można cofnąć"
     closeButton="Anuluj"
@@ -10,7 +10,7 @@
     @action="removeQuiz"
   />
   <ModalAlert
-    v-if="isRemoveSucessModal"
+    :modalActive="isRemoveSucessModal"
     title="Usunięto quiz"
     des="Twój quiz został usunięty"
     closeButton="Okej"
@@ -105,11 +105,12 @@ const answerByIdArray = (id:number)=>{
  const filtered:any = answerNew.filter((element:any) =>element.question_id === id)
  return filtered
 }
-const questionArray = question.map((element: any) => ({
+const questionArray = question.map((element: any, index: number) => ({
   //  des: element.id,
   template: 'question',
-  text: element.question,
-question: answerByIdArray(element.id),
+  text: 'Pytanie ' + (index + 1),
+  answer: answerByIdArray(element.id),
+question:  element.question,
 }));
 //{ text: "testowa ikona", template: true,  link: "/",  firstIcon:"ph:gear-light"},
 </script>

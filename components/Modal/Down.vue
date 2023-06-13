@@ -28,6 +28,10 @@ const props = defineProps({
     name: String,
     required: true,
   },
+  modalActive: {
+    name: String,
+    required: true,
+  },
 });
 const emit = defineEmits<{
   (e: "close", value: any): void;

@@ -1,13 +1,14 @@
 <template>
+
   <LazyModalAlert
-    v-if="isOpen"
+  :modalActive="isOpen"
     title="Uzupełnij pytanie"
     des="Aby dodać kolejne pytanie, wpisz tytuł poprzedniego pytania oraz  podaj wszystkie jego  odpowiedzi i zaznacz tę, która jest poprawna"
     closeButton="Uzupełnij"
     @close="isOpenModal()"
   />
   <LazyModalAlert
-    v-if="isRemove"
+    :modalActive="isRemove"
     title="Usuń pytanie"
     des="Czy na pewno chcesz usunąć pytanie? Tej operacji nie będzie można cofnąć"
     closeButton="Anuluj"
@@ -17,7 +18,7 @@
     @action="removeQuestion"
   />
   <LazyModalAlert
-    v-if="isRemoveSucessModal"
+    :modalActive="isRemoveSucessModal"
     title="Usunięto pytanie"
     des="Twoje pytanie zostało usunięte, teraz możesz teraz dodać kolejne"
     closeButton="Okej"
@@ -63,7 +64,7 @@
     </div>
   </div>
   <div class="flex justify-end -mr-3 mt-2">
-      <button @click="checkQuestion()" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</button>
+      <button @click="checkQuestion" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</button>
   </div>
 </template>
 

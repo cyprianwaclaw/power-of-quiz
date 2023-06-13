@@ -10,11 +10,7 @@
       ]"
     >
       <div class="row-table1 place-items-center">
-        <Icon
-          size="26"
-          class="primary-color mr-2"
-          v-if="newArray[index].firstIcon"
-        />
+        <Icon size="26" class="primary-color mr-2" v-if="newArray[index].firstIcon" />
         <div class="flex flex-col w-full">
           <p class="text-des-mobile1">{{ item.des }}</p>
           <h2 class="title-menu-mobile1" v-if="item.text">
@@ -23,44 +19,73 @@
               {{ truncateText(item?.text, 25)?.symbol }}
             </span>
           </h2>
-          <div v-if="newArray[index].template == 'addNew'" class="flex w-full justify-start">
+          <div
+            v-if="newArray[index].template == 'addNew'"
+            class="flex w-full justify-start"
+          >
             <div v-if="item.type == 'input'" class="flex w-full pr-4 py-1">
               <textarea
-              v-model="item.value"
-              @input="handleInputOwn"
-              :placeholder="item.placeholder"
-              :wrap="item.wrap ? 'soft' : 'off'"
-              rows="1"
-              ></textarea>     
+                v-model="item.value"
+                @input="handleInputOwn"
+                :placeholder="item.placeholder"
+                :wrap="item.wrap ? 'soft' : 'off'"
+                rows="1"
+              ></textarea>
             </div>
             <!-- wszystkie sloty, które będziemy gdzieś wykorzystywać -->
-            <slot  name="select" v-if="item.type == 'select'"/>
-            <slot  name="radio" v-if="item.type == 'radio'"/>
-          <slot  name="select1" v-if="item.type == 'select1'"/>
-          <slot  name="time" v-if="item.type == 'time'"/>
+            <slot name="select" v-if="item.type == 'select'" />
+            <slot name="radio" v-if="item.type == 'radio'" />
+            <slot name="select1" v-if="item.type == 'select1'" />
+            <slot name="time" v-if="item.type == 'time'" />
           </div>
         </div>
         <div v-if="newArray[index].link" class="w-full flex justify-end">
           <Icon name="ph:caret-right-light" size="20" class="text-gray" />
         </div>
-        <div v-if="newArray[index].template === 'question'" class="flex justify-end w-full">
-          <Icon name="ph:caret-down-light" size="20" class="text-gray rotate-icon"   :class="{'reversed': openIndex === index }"/>
+        <!-- all question and answer quiz -->
+        <div
+          v-if="newArray[index].template === 'question'"
+          class="flex justify-end w-full"
+        >
+          <Icon
+            name="ph:caret-down-light"
+            size="20"
+            class="text-gray rotate-icon"
+            :class="{ reversed: openIndex === index }"
+          />
         </div>
       </div>
-        <div v-if="openIndex === index && item.template" class="flex flex-col">
-          <div v-for="(single, index) in item.question" :key="index">
-            {{ single.answer }}
+      <div
+        v-if="openIndex === index && item.template == 'question'"
+        class="flex flex-col ml-2.5 mt-[-4px] mb-4"
+      >
+        <p class="font-medium mb-1">{{ item.question }}</p>
+        <div
+          v-for="(single, index) in item.answer"
+          :key="index"
+          class="pl-2 py-[6px] flex flex-row place-items-center"
+          :class="index == 3 ? null : 'border-own1'"
+        >
+          <div>
+            <img
+              src="@/assets/file/check.svg"
+              v-if="single.correct == 0 ? true : false"
+              class="w-[20px]"
+            />
+            <img src="@/assets/file/check1.svg" class="w-[20px]" v-else />
           </div>
+          <p class="ml-2 text-[14px] pb-[2px]">{{ single.answer }}</p>
         </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { whiteRetangle } from "@/types";
-import { defineEmits, defineProps, ref } from 'vue';
+import { defineEmits, defineProps, ref } from "vue";
 
-const emit = defineEmits(['open']);
+const emit = defineEmits(["open"]);
 const props = defineProps({
   array: {
     type: Array as () => whiteRetangle[],
@@ -78,8 +103,8 @@ const rowClick = (index: number) => {
     const item = filteredArray[0];
     if (item.link) {
       navigateTo(item.link);
-    } else if (item.template === 'question') {
-      emit('open');
+    } else if (item.template === "question") {
+      emit("open");
     }
   }
 };
@@ -103,7 +128,6 @@ const rowClick = (index: number) => {
 //   }
 //   return results;
 // };
-
 </script>
 
 <style scoped lang="scss">
@@ -160,7 +184,7 @@ textarea {
 textarea::placeholder {
   font-size: 16px;
   font-weight: 400;
-  color:$icon;
+  color: $icon;
 }
 textarea::-webkit-resizer {
   background-color: white;

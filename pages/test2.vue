@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { Form } from 'vee-validate';
 import * as yup from 'yup';
-import CustomField from '@/components/CustomField.vue';
 
-function onSubmit(values) {
+function onSubmit(values:any) {
   alert(JSON.stringify(values, null, 2));
 }
 
@@ -23,7 +22,9 @@ const schema = yup.object({
 
     <Form @submit="onSubmit" :validation-schema="schema">
       <label for="email">Email</label>
-      <CustomField name="email" type="email" mode="aggressive" />
+      <CustomField name="email" type="email" mode="aggressive"
+      placeholder="tet"
+      />
 
       <button type="submit">Submit</button>
     </Form>

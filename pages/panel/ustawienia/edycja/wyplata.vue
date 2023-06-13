@@ -1,13 +1,13 @@
 <template>
   <ModalAlert
-    v-if="isOpenSuccess"
+    :modalActive="isOpenSuccess"
     title="Zapisano dane"
     des="Wprowadzone dane zostały pomyślnie zapisane"
     closeButton="Okej"
     @close="ModalSuccess()"
   />
   <ModalAlert
-  v-if="isOpenError"
+  :modalActive="isOpenError"
   title="Uups!"
   des="Wprowdzone dane są błędne, zweryfikuj ich poprawność i spróbuj ponownie"
   closeButton="Próbuje dalej"

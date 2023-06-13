@@ -65,8 +65,10 @@ export type whiteRetangle = {
   lastIcon?:string;
   firstIcon?:string;
   wrap?:string 
-  question?: {
+  question?: string
+  answer?: {
     answer: string,
+    correct: number,
   }[];
 type?: string,
   placeholder: string,

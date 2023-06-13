@@ -1,7 +1,9 @@
 <template>
-  <div class="fixed z-50 left-0 bottom-0 w-full">
-    <div class="blur-background-update"></div>
-    <div class="modal-view-update">
+  <!-- <div v-if="props.modalActive"> -->
+    <div class="fixed z-50 left-0 bottom-0 w-full" v-show="is_active">
+      <div class="blur-background-update" ref="background"></div>
+    <!-- <transition> -->
+    <div class="modal-view-update" ref="modal">
       <div class="flex justify-end pr-4 pt-3">
         <Icon
           name="carbon:close"
@@ -18,11 +20,11 @@
       </div>
       <div
         class="flex mx-5 mb-7 place-items-center justify-end"
-        :class="[actionButton ? 'justify-is-two' : null]"
-      >
+        >
+        <!-- :class="[actionButton ? 'justify-is-two' : null]" -->
         <NuxtLink :to="`${redirect}`" v-if="redirect">
           <button class="ml-[-8px]">
-         <p class="action-button primary-color">{{ actionButton }}</p>
+            <p class="action-button primary-color">{{ actionButton }}</p>
           </button>
         </NuxtLink>
         <button @click="$emit('action')" v-else class="action-button">
@@ -35,9 +37,12 @@
         </button>
       </div>
     </div>
+    <!-- </transition> -->
   </div>
+<!-- </div> -->
 </template>
 <script setup lang="ts">
+import gsap from 'gsap'
 const emit = defineEmits<{
   (e: "close", value: any): void;
   (e: "action", value: any): void;
@@ -56,6 +61,10 @@ const props = defineProps({
     name: String,
     required: true,
   },
+  modalActive: {
+    name: String,
+    required: true,
+  },
   actionButton: {
     name: String,
     required: false,
@@ -69,6 +78,55 @@ const props = defineProps({
     required: false,
   },
 });
+const is_active = ref(false)
+const open = ()=>{
+  is_active.value =! is_active.value
+}
+const background = ref()
+const modal = ref()
+// let animation = gsap.timeline({paused: true, onReverseComplete: open}) 
+// onMounted(()=>{
+// animation.from(background.value,{
+//   opacity: 0,
+//   duration: 0.1,
+// })
+// .to(background.value,{
+//   y: 200,
+//   duration: 0.5,
+// })
+// .from(modal.value,{
+//   opacity: 0,
+//   y: 20,
+//   duration: 0.5,
+// })
+// })
+
+let animation = gsap.timeline({ paused: true, onReverseComplete: open });
+onMounted(() => {
+    animation
+      .from(background.value, {
+        opacity: 0,
+        duration: 0.1,
+      })
+      .to(background.value, {
+        y: 200,
+        duration: 0.5,
+      })
+      .from(modal.value, {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+      });
+});
+
+watch(props,(newValue) =>{
+  if(newValue.modalActive == true){
+    open()
+    animation.play()
+  } else{
+    animation.reverse()
+  }
+})
 </script>
 
 <style scoped lang="scss">
@@ -78,7 +136,7 @@ const props = defineProps({
   letter-spacing: 0.05em;
   font-size: 15px;
   font-weight: 600;
-  margin-left: 8px;
+  margin-right: 24px;
 }
 .edit-message-modal {
   margin: 10px 8px 0px 8px;
@@ -88,11 +146,9 @@ const props = defineProps({
   text-align: center;
 }
 
-.justify-is-two {
-  justify-content: space-between;
-}
 
 .close {
   color: rgb(209, 209, 209);
 }
+
 </style>

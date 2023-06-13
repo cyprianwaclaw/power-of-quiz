@@ -1,7 +1,7 @@
 <template>
-    <div>
-      <input type="text" v-on="handlers" :value="value" />
-      <span>{{ errorMessage }}</span>
+    <div class="relative">
+      <input type="text" v-on="handlers" :value="value" :placeholder="placeholder" />
+      <span class="errorM">{{ errorMessage }}</span>
     </div>
   </template>
   
@@ -12,6 +12,9 @@
   
   const props = defineProps({
     name: {
+      type: String,
+    },
+    placeholder: {
       type: String,
     },
     mode: {
@@ -58,4 +61,30 @@
     return on;
   });
   </script>
+
+<style scoped lang="scss">
+@import "@/assets/style/variables.scss";
+input{
+  border: 1px solid white;
+  margin: 0px;
+  padding: 7px 0px 0px 0px;
+  font-size: 16px;
+  font-weight: 500;
+}
+input::placeholder {
+  font-size: 16px;
+  font-weight: 400;
+  color:$icon;
+}
+.errorM{
+  position: absolute;
+ // margin-top: -3px;
+ // margin-bottom: 8px;
+  font-size: 12px;
+  width: 100vh;
+  left: 0px;
+  bottom: -14px;
+color: $color-error;
+}
+</style>
   
