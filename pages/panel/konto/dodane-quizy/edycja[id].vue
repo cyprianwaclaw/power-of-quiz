@@ -72,9 +72,7 @@
         <button @click="isModal()">
           <p class="action-button red">Usuń</p>
         </button>
-        <NuxtLink :to="`/panel/konto/dodane-quizy/edycja${route.params.id}`">
           <button class="button-primary-small">Zapisz zmiany</button>
-        </NuxtLink>
       </div>
     </Form>
   </NuxtLayout>
@@ -101,7 +99,7 @@ const schema = yup.object({
     .matches(/^[0-9]*$/, "Wpisz liczbę")
     .max(2, "Quiz nie może być dłuższy niż 99 minut"),
 });
-const {singleQuiz, allQuestion, answerById, categories}= storeToRefs(quizStore);
+const {singleQuiz, allQuestion, answerById, categories, newQuestionId}= storeToRefs(quizStore);
 await quizStore.getCategory();
 let category: any = categories.value;
 let single = singleQuiz.value
@@ -155,6 +153,7 @@ const answerByIdArray = (id:number)=>{
  return filtered
 }
 const questionArray = question.map((element: any, index: number) => ({
+  id:element.id,
   title:  element.question,
   answers: answerByIdArray(element.id),
 }));
@@ -238,6 +237,18 @@ const isTime = () => {
   timeActive.value = true;
   styleObject.width = "30px";
 };
+
+const onSubmit = async () => {
+  console.log('tets')
+    let quziId: any = route.params.id;
+    answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
+    await quizStore.postNewQuestion(answerQuestion.title, quziId);
+    let questionId = newQuestionId.value;
+    answerQuestion.answers.forEach(async (answer: any) => {
+      await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
+    });
+  });
+}
 
 // const onSubmit = async () => {
 //   await quizStore.postNewQuiz(

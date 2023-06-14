@@ -327,6 +327,17 @@ export const useQuiz = defineStore('quiz', {
                 console.log(e)
             }
         },
+
+        //!Usuwania pytania
+        //usuwanie odpowiedzi do danego pytania
+        async deleteQuestion(id:any){
+            try{
+                await axiosInstance.delete(`/questions/${id}/answers`)
+                await axiosInstance.delete(`/questions/${id}`)
+            } catch (e) {
+                console.log(e)
+            }
+        }
     }
 
 })

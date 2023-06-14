@@ -57,20 +57,8 @@
       />
       <h2 class="title-h2 mt-10 -mb-1.5">Pytania</h2>
       <LazyQuizAddNewQuestionAnswer @array="answerQuestion" />
-      <!-- button do wysłania -->
-      <!-- <button class="button-primary-disabled" disabled id="submit" type="submit">
-      Prześlij quiz do akceptacji
-    </button> -->
-      <!-- <pre>
-      {{ answerQuestionArray }}
-      {{seletedCategory }}
-      {{ image }}
-      {{ desArray[0] }}
-      {{ quizArray[0].value }}
-    </pre> -->
       <div class="mt-12 justify-end flex mb-[72px]">
         <button class="button-primary w-full" id="submit" type="submit">
-          <!-- @click="validateReceivedData" -->
           Prześlij quiz do akceptacji
         </button>
       </div>

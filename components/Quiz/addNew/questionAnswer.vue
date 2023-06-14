@@ -199,6 +199,7 @@ const select = (index: any, data: any) => {
 const removeQuestion = (index: any) => {
   isRemoveModal();
   array.splice(index, 1);
+  removeSuccess()
 }
 
 const checkQuestion=()=>{

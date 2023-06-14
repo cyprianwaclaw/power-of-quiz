@@ -215,6 +215,7 @@ export const placeholderAnswer=(index:number)=>{
 export const addQuestion = (array:any) => {
   array.push(
 {
+  type: 'array',
   title: "",
   answers: [
     { answer: "", correct: false },
