@@ -19,7 +19,7 @@
         <template #select>
           <QuizAddNewSelectOption
             :array="[...difficultyArray]"
-            @select="difficultyOption"
+            @selected="difficultyOption"
             header="Poziom trudności"
             name="Wybierz poziom trudności"
           />
@@ -27,7 +27,7 @@
         <template #select1>
           <QuizAddNewSelectOption
             :array="[...categoriesArray]"
-            @select="categoryOption"
+            @selected="categoryOption"
             header="Kategoria"
             name="Wybierz kategorie"
           />
