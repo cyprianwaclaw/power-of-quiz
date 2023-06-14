@@ -8,20 +8,22 @@ export const axiosInstance = axios.create({
     headers: {
         "Content-Type": "application/json",
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers':  'Content-Type, X-Auth-Token, Authorization, Origin',
+        'Access-Control-Allow-Headers':  '*',
+        'Access-Control-Allow-Credentials': 'true',
         Accept: "application/json",
-        withCredentials: true,
+        withCredentials: false,
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-    
+        
 }
 })
 
 export const axiosData = axios.create({
     baseURL: API_URL,
     headers: {
-       // 'Access-Control-Allow-Origin': 'https://power-of-quiz-new.vercel.app',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers':  'Content-Type, X-Auth-Token, Authorization, Origin',
+        // 'Access-Control-Allow-Origin': 'https://powerofquizlogin.com.pl/api',
+         'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers':  '*',
+        'Access-Control-Allow-Credentials': 'true',
         'Content-Type': 'multipart/form-data',
         Accept: "multipart/form-data",
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
