@@ -55,7 +55,7 @@
         @close="openModal(isImageModal)"
         @image-file="handleImage"
       />
-      <h2 class="title-h2 mt-10 mb-4">Pytania</h2>
+      <h2 class="title-h2 mt-10 -mb-1.5">Pytania</h2>
       <LazyQuizAddNewQuestionAnswer @array="answerQuestion" />
       <!-- button do wysłania -->
       <!-- <button class="button-primary-disabled" disabled id="submit" type="submit">

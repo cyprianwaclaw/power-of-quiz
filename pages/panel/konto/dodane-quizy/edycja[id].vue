@@ -1,5 +1,5 @@
 <template>
-  <!-- v-if="isSendQuiz" -->
+ 
   <ModalAlert
     :modalActive="isSendQuiz"
     title="Wysłano!"
@@ -17,9 +17,6 @@
       <p class="go primary-color">Powrót</p>
     </NuxtLink>
     </div>
-    <!-- <p class="text-[22px] font-medium mr-8 mt-4 mb-10">
-      {{singleQuiz.title }}
-    </p> -->
     <div v-if="!image">
       <img :src="single.image" class="image-single" />
 </div>
@@ -66,32 +63,11 @@
       </WhiteRetangleContainer>
       <h2 class="title-h2 mt-10 mb-4">Opis</h2>
       <LazyWhiteRetangleContainer :array="[...desArray]" />
-      <h2 class="title-h2 mt-10 mb-4">Pytania</h2>
+      <h2 class="title-h2 mt-10 -mb-1.5">Pytania</h2>
       <LazyQuizAddNewQuestionAnswer 
       @array="answerQuestion" 
       :array="questionArray"
       />
-      <!-- button do wysłania -->
-      <!-- <button class="button-primary-disabled" disabled id="submit" type="submit">
-      Prześlij quiz do akceptacji
-    </button> -->
-      <!-- <pre>
-      {{ answerQuestionArray }}
-      {{seletedCategory }}
-      {{ image }}
-      {{ desArray[0] }}
-      {{ quizArray[0].value }}
-    </pre> -->
-      <!-- <div class="mt-12 justify-end flex mb-[72px]">
-        <button class="button-primary w-full" id="submit" type="submit">
-          Prześlij quiz do akceptacji
-        </button>
-      </div> -->
-<!-- <pre>
-  {{ allQuestion }}
-  tablica cała
-{{questionArray}}
-</pre> -->
       <div class="mt-12 flex gap-6 mb-[72px] justify-end">
         <button @click="isModal()">
           <p class="action-button red">Usuń</p>

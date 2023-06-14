@@ -23,14 +23,67 @@
     closeButton="Okej"
     @close="removeSuccess()"
   />
-  <div v-for="(item, index) in allArray()" :key="index" class="white-retangle1"
-  :class="[index != 0 ? 'margin-top-owm' : null]"
+  <div v-if="props.array">
+    <div v-for="(item, index) in props.array" :key="index" class="white-retangle1 mt-6"
+    >
+    <!-- :class="[index != 0 ? 'margin-top-owm' : null]" -->
+      <div class="flex flex-col pl-2.5 pr-5 border-own1">
+          <div class="flex justify-between">
+              <p class="font-semibold">Pytanie {{ index + 1 }}</p>
+              <Icon v-if="index != 0" name="carbon:close" size="24" class="close" @click="isRemoveModal" />
+          </div>
+        <textarea
+          type="text"
+          class=" mt-3 mb-5 pr-2"
+          v-model="item.title"
+          placeholder="Wpisz tytuł pytania"
+          @input="handleInputOwn"
+          wrap="soft"
+          rows="1"
+          :maxlength="maxLetter"
+          />
+        <p class="justify-end flex mb-3 mr-[10px] text-[12px] -mt-1"
+        v-if="item.title.length"
+        :class="[item.title.length === maxLetter ? 'text-red-500' : 'text-gray' ]"
+        >{{ item.title.length }} / {{ maxLetter }} </p>
+      </div>
+      <div v-for="(answer, index) in item.answers" :key="index" 
+      class="flex py-2 place-items-center pl-3"
+      :class="[index==3 ? null : 'border-own1']"
+      >
+      <input
+      type="checkbox"
+      class="w-6 -ml-1"
+      :checked="answer.correct"
+      @change="select(index, item.answers)"
+      />
+      <textarea
+      type="text"
+      class="pl-2.5 pr-7"
+      v-model="answer.answer"
+      @input="handleInputOwn"
+      wrap="soft"
+      rows="1"
+      :placeholder="placeholderAnswer(index)"
+      />
+    </div>
+  </div>
+  <div class="flex justify-end -mr-3 mt-2" v-if="!isArray">
+    <p @click="isArray = true" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Dodaj pytanie</p>
+  </div>
+  </div>
+<div v-if="isArray">
+  <div v-for="(item, index) in array" :key="index" class="white-retangle1 mt-6"
   >
     <div class="flex flex-col pl-2.5 pr-5 border-own1">
-        <div class="flex justify-between">
-            <p class="font-semibold">Pytanie {{ index + 1 }}</p>
-            <Icon v-if="index != 0" name="carbon:close" size="24" class="close" @click="isRemoveModal" />
+      <div class="flex justify-between" v-if="props?.array">
+            <p class="font-semibold">Pytanie {{ props?.array?.length + 1 }}</p>
+            <Icon name="carbon:close" size="24" class="close" @click="isRemoveModal" />
         </div>
+        <div class="flex justify-between" v-else>
+          <p class="font-semibold">Pytanie {{ index + 1 }}</p>
+          <Icon v-if="index != 0" name="carbon:close" size="24" class="close" @click="isRemoveModal" />
+      </div>
       <textarea
         type="text"
         class=" mt-3 mb-5 pr-2"
@@ -50,26 +103,30 @@
     class="flex py-2 place-items-center pl-3"
     :class="[index==3 ? null : 'border-own1']"
     >
-      <input
-        type="checkbox"
-        class="w-6 -ml-1"
-        :checked="answer.correct"
-        @change="select(index, item.answers)"
-      />
-      <textarea
-        type="text"
-        class="pl-2.5 pr-7"
-        v-model="answer.answer"
-        @input="handleInputOwn"
-        wrap="soft"
-        rows="1"
-        :placeholder="placeholderAnswer(index)"
-      />
-    </div>
+    <input
+    type="checkbox"
+    class="w-6 -ml-1"
+    :checked="answer.correct"
+    @change="select(index, item.answers)"
+    />
+    <textarea
+    type="text"
+    class="pl-2.5 pr-7"
+    v-model="answer.answer"
+    @input="handleInputOwn"
+    wrap="soft"
+    rows="1"
+    :placeholder="placeholderAnswer(index)"
+    />
   </div>
-  <div class="flex justify-end -mr-3 mt-2">
-      <p @click="checkQuestion" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
-  </div>
+</div>
+<div class="flex justify-end -mr-3 mt-2">
+  <p @click="checkQuestion" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
+</div>
+</div>
+
+
+
 </template>
 
 <script setup lang="ts">
@@ -117,13 +174,16 @@ const array = reactive([
   },
 ]);
 
+const isArray = ref();
 const allArray = ()=>{
-  if(props.array?.length){
-    return props.array;
-  } else{
-    return array;
+  if(props.array){
+   isArray.value = false
+  } else {
+    isArray.value = true
   }
 }
+allArray()
+
 watch(array,(newValue)=>{
 emit('array', newValue);
 })
@@ -143,16 +203,19 @@ const removeQuestion = (index: any) => {
 
 const checkQuestion=()=>{
     let lastQuestion = array[array.length - 1]
+    // let arrayProps = props?.array
     if(
+      // arrayProps ||
         lastQuestion.answers.every((single:any)=> single.correct == false)
         || lastQuestion.answers.some((single:any)=> single.name == '')
         || lastQuestion.title == ''
-         ){
-        // console.log('brakuje odpowiedzi')
-        isOpen.value = !isOpen.value;
-    } else{
-        addQuestion(array)
-        // console.log('jest poprawnie')
+        ){
+          // console.log('brakuje odpowiedzi')
+       isOpen.value = !isOpen.value;
+    } else {
+      // addQuestion(allArray())
+      addQuestion(array)
+      // console.log('jest poprawnie')
     }
 }
 </script>
