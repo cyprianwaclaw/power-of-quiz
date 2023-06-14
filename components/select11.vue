@@ -37,7 +37,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['selected']);
+const emit = defineEmits(['selectedOption']);
 
 watchEffect(() => {
   if (!selected.value && props.defaultOption) {
@@ -46,47 +46,18 @@ watchEffect(() => {
 });
 
 function handleSelection() {
-  emit('selected', selected.value);
+  emit('selectedOption', selected.value);
 }
 </script>
+
 <style scoped lang="scss">
-@import "@/assets/style/variables.scss";
-select:invalid {
-  font-size: 16px;
-  font-weight: 400;
-  color:$icon;
-  }
-  
-  select::-ms-expand {
-    display: none;
-  }
-  select {
-    overflow: hidden !important;
-    overflow: -moz-hidden-unscrollable !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    font-size: 16px;
-    font-weight: 500;
-    box-shadow: none;
-    outline: none;
-    background: transparent;
-    background-repeat: no-repeat;
-  }
-  select::placeholder {
-    font-size: 16px;
-    font-weight: 400;
-    color:$icon;
-  }
-  .text-des-mobile-add {
-    font-size: 14px;
-    font-weight: 300;
-    color: #a7a2a2;
-    margin-top: 2px;
-    margin-bottom: -2px;
-  }
-  .font1 {
-    font-size: 16px;
-    font-weight: 500;
-  }
+// Style definitions
+
+.text-des-mobile-add {
+  font-size: 14px;
+  font-weight: 300;
+  color: #a7a2a2;
+  margin-top: 2px;
+  margin-bottom: -2px;
+}
 </style>

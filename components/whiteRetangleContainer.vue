@@ -23,14 +23,18 @@
             v-if="newArray[index].template == 'addNew'"
             class="flex w-full justify-start"
           >
-            <div v-if="item.type == 'input'" class="flex w-full pr-4 py-1">
+            <div v-if="item.type == 'input'" class="flex w-full pr-4 py-1 flex-col">
               <textarea
                 v-model="item.value"
                 @input="handleInputOwn"
                 :placeholder="item.placeholder"
                 :wrap="item.wrap ? 'soft' : 'off'"
+                :maxlength="item.maxlength"
                 rows="1"
               ></textarea>
+              <p class="justify-end flex -mb-1 -mr-[6px] text-[12px] mt-3" v-if="item.value.length"
+              :class="[item.value.length === item.maxlength ? 'text-red-500' : 'text-gray' ]"
+              >{{item.value.length}} / {{item.maxlength}}</p>
             </div>
             <!-- wszystkie sloty, które będziemy gdzieś wykorzystywać -->
             <slot name="select" v-if="item.type == 'select'" />

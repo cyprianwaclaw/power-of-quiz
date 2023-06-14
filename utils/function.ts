@@ -214,12 +214,15 @@ export const placeholderAnswer=(index:number)=>{
 
 export const addQuestion = (array:any) => {
   array.push(
-    { title: '', questions: [
-      { name: '', selected: false },
-      { name: '', selected: false },
-      { name: '', selected: false },
-      { name: '', selected: false },
-    ]},
+{
+  title: "",
+  answers: [
+    { answer: "", correct: false },
+    { answer: "", correct: false },
+    { answer: "", correct: false },
+    { answer: "", correct: false },
+  ],
+}
   );
 };
 

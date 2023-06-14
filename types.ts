@@ -60,8 +60,10 @@ export type selectOption ={
 
 export type whiteRetangle = {
   text?: string;
+  mode?: string;
   des?: string;
   link?: string;
+  maxlength?: number;
   lastIcon?:string;
   firstIcon?:string;
   wrap?:string 

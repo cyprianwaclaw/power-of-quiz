@@ -8,7 +8,7 @@
   <script setup lang="ts">
   import { computed, toRef } from 'vue';
   import { useField } from 'vee-validate';
-  import { modes } from '../interactionModes';
+  import { modes } from '@/interactionModes';
   
   const props = defineProps({
     name: {

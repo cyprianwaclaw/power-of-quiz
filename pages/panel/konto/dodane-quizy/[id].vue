@@ -127,7 +127,7 @@ question:  element.question,
 }
 .image-single {
   border: 1px solid $border;
-  border-radius: 12px;
+  border-radius: 16px;
   height: 240px;
 }
 

@@ -32,6 +32,8 @@
             name="Wybierz kategorie"
           />
         </template>
+
+        {{ time }}
         <template #time>
           <div class="flex flex-row w-full place-items-center" @click="isTime()">
             <CustomField
@@ -127,6 +129,7 @@ const quizArray = reactive<any>([
     wrap: "soft",
     placeholder: "Nazwa quizu",
     value: "",
+    maxlength: 80,
   },
   { template: "addNew", type: "time" },
   { type: "select", template: "addNew" },
@@ -138,6 +141,7 @@ const desArray = reactive([
     template: "addNew",
     wrap: "soft",
     placeholder: "Opis quizu",
+    maxlength: 400,
     value: "",
   },
 ]);
@@ -159,6 +163,7 @@ const handleImage = (file: File) => {
 const answerQuestionArray = ref();
 const answerQuestion = (allArray: any) => {
   answerQuestionArray.value = allArray;
+  console.log(allArray);
 };
 
 const validateData = (allArray: any) => {
@@ -209,11 +214,11 @@ const onSubmit = async () => {
     image.value
   );
   let quziId = newQuizId.value;
-  answerQuestionArray.value?.forEach(async (answer: any) => {
-    await quizStore.postNewQuestion(answer.title, quziId);
+  answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
+    await quizStore.postNewQuestion(answerQuestion.title, quziId);
     let questionId = newQuestionId.value;
-    answer.questions.forEach(async (question: any) => {
-      await quizStore.postNewAnswer(question.name, questionId, question.selected);
+    answerQuestion.answers.forEach(async (answer: any) => {
+      await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
     });
   });
 };

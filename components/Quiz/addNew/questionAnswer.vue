@@ -1,5 +1,4 @@
 <template>
-
   <LazyModalAlert
   :modalActive="isOpen"
     title="Uzupełnij pytanie"
@@ -24,10 +23,7 @@
     closeButton="Okej"
     @close="removeSuccess()"
   />
-  <!-- <pre>
-    {{ allArray }}
-  </pre> -->
-  <div v-for="(item, index) in allArray" :key="index" class="white-retangle1"
+  <div v-for="(item, index) in allArray()" :key="index" class="white-retangle1"
   :class="[index != 0 ? 'margin-top-owm' : null]"
   >
     <div class="flex flex-col pl-2.5 pr-5 border-own1">
@@ -37,39 +33,62 @@
         </div>
       <textarea
         type="text"
-        class=" mt-3 mb-5"
+        class=" mt-3 mb-5 pr-2"
         v-model="item.title"
         placeholder="Wpisz tytuł pytania"
         @input="handleInputOwn"
         wrap="soft"
         rows="1"
+        :maxlength="maxLetter"
       />
+      <p class="justify-end flex mb-3 mr-[10px] text-[12px] -mt-1"
+      v-if="item.title.length"
+      :class="[item.title.length === maxLetter ? 'text-red-500' : 'text-gray' ]"
+      >{{ item.title.length }} / {{ maxLetter }} </p>
     </div>
-    <div v-for="(question, index) in item.questions" :key="index" 
-    class="flex py-1 place-items-center pl-3"
+    <div v-for="(answer, index) in item.answers" :key="index" 
+    class="flex py-2 place-items-center pl-3"
     :class="[index==3 ? null : 'border-own1']"
     >
       <input
         type="checkbox"
         class="w-6 -ml-1"
-        :checked="question.selected"
-        @change="select(index, item.questions)"
+        :checked="answer.correct"
+        @change="select(index, item.answers)"
       />
-      <input
+      <textarea
         type="text"
-        class="pl-2.5"
-        v-model="question.name"
+        class="pl-2.5 pr-7"
+        v-model="answer.answer"
+        @input="handleInputOwn"
+        wrap="soft"
+        rows="1"
         :placeholder="placeholderAnswer(index)"
       />
     </div>
   </div>
   <div class="flex justify-end -mr-3 mt-2">
-      <button @click="checkQuestion" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</button>
+      <p @click="checkQuestion" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
   </div>
 </template>
 
 <script setup lang="ts">
 const emit = defineEmits(['array'])
+
+type questionAnswerArray= {
+  title: string,
+   answers: [
+      { answer: string | number, 
+      correct: boolean | number,
+    },
+]
+}
+const props = defineProps({
+  array: {
+    type: Array as () => questionAnswerArray[],
+    required: false,
+  },
+});
 const isOpen = ref(false);
 const isRemove = ref(false);
 const isRemoveSucessModal = ref(false);
@@ -84,45 +103,55 @@ const removeSuccess = () => {
   isRemoveSucessModal.value = !isRemoveSucessModal.value;
 };
 
-const allArray = reactive([
+const maxLetter = ref(50)
+
+const array = reactive([
   {
-    title: "",
-    questions: [
-      { name: "", selected: false },
-      { name: "", selected: false },
-      { name: "", selected: false },
-      { name: "", selected: false },
+  title: "",
+   answers: [
+      { answer: "", correct: false },
+      { answer: "", correct: false },
+      { answer: "", correct: false },
+      { answer: "", correct: false },
     ],
   },
 ]);
-watch(allArray,(newValue)=>{
+
+const allArray = ()=>{
+  if(props.array?.length){
+    return props.array;
+  } else{
+    return array;
+  }
+}
+watch(array,(newValue)=>{
 emit('array', newValue);
 })
 const select = (index: any, data: any) => {
-  const selectedOption = data[index];
-  selectedOption.selected = !selectedOption.selected;
+  const correctOption = data[index];
+  correctOption.correct = !correctOption.correct;
   data.forEach((option: any, i: any) => {
     if (i !== index) {
-      option.selected = false;
+      option.correct = false;
     }
   })
 }
 const removeQuestion = (index: any) => {
   isRemoveModal();
-  allArray.splice(index, 1);
+  array.splice(index, 1);
 }
 
 const checkQuestion=()=>{
-    let lastQuestion = allArray[allArray.length - 1]
+    let lastQuestion = array[array.length - 1]
     if(
-        lastQuestion.questions.every((single:any)=> single.selected == false)
-        || lastQuestion.questions.some((single:any)=> single.name == '')
+        lastQuestion.answers.every((single:any)=> single.correct == false)
+        || lastQuestion.answers.some((single:any)=> single.name == '')
         || lastQuestion.title == ''
          ){
         // console.log('brakuje odpowiedzi')
         isOpen.value = !isOpen.value;
     } else{
-        addQuestion(allArray)
+        addQuestion(array)
         // console.log('jest poprawnie')
     }
 }

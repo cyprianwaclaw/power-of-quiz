@@ -10,33 +10,59 @@
       </template>
     </ModalDown>
   </div>
-  <div class="white-retangle-image" @click="imageModal()" v-if="!croppedImageNew">
-    <label class="image-retangle">
-      <Icon
-        name="carbon:cloud-upload"
-        size="38"
-        color="9F9F9F"
-        class="justify-center flex w-full mb-2"
-      />
-      <div class="default-file-input" />
-      <h1>Dodaj zdjęcie</h1>
-    </label>
-  </div>
-  <div v-else>
-    <img :src="croppedImageNew" class="after-upload" />
-    <div class="flex justify-between mt-[16px] mb-[5px]">
-      <button @click="removeImage()">
-        <p class="font-semibold text-sm red">Usuń</p>
-      </button>
-      <button @click="changeImage()">
-        <p class="font-semibold text-sm primary-color">Zmień zdjęcie</p>
-      </button>
+    <div v-if="props.image">
+      <div class="flex justify-end mt-[14px]" v-if="!croppedImageNew">
+        <button @click="changeImage()">
+          <p class="font-semibold text-sm primary-color ">Zmień zdjęcie</p>
+        </button>
+      </div>
+      <div v-else>
+        <img :src="croppedImageNew" class="after-upload" />
+        <div class="flex justify-between mt-[14px] mb-[5px]">
+          <button @click="removeImage()">
+            <p class="font-semibold text-sm red">Usuń</p>
+          </button>
+          <button @click="changeImage()">
+            <p class="font-semibold text-sm primary-color">Zmień zdjęcie</p>
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
+      <div v-else>
+        <div class="white-retangle-image" @click="imageModal()" v-if="!croppedImageNew">
+          <label class="image-retangle">
+            <Icon
+            name="carbon:cloud-upload"
+            size="38"
+            color="9F9F9F"
+            class="justify-center flex w-full mb-2"
+            />
+            <div class="default-file-input" />
+            <h1>Dodaj zdjęcie</h1>
+          </label>
+        </div>
+        <div v-else>
+          <img :src="croppedImageNew" class="after-upload" />
+          <div class="flex justify-between mt-[16px] mb-[5px]">
+            <button @click="removeImage()">
+              <p class="font-semibold text-sm red">Usuń</p>
+            </button>
+            <button @click="changeImage()">
+              <p class="font-semibold text-sm primary-color">Zmień zdjęcie</p>
+            </button>
+          </div>
+        </div>
+      </div>
 </template>
 
 <script setup lang="ts">
 const emit = defineEmits(["close", "imageFile"]);
+const props = defineProps({
+  image:{
+    type: Boolean,
+    default: false
+  }
+})
 const isImageModal = ref(false);
 const imageModal = () => {
   isImageModal.value = !isImageModal.value;
@@ -181,7 +207,6 @@ input[type="radio"] {
 
 .after-upload {
     border: 1px solid $border;
-    margin-top: -10px;
     border-radius: 16px;
     display: flex;
     justify-content: center;
