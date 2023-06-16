@@ -23,10 +23,13 @@
     closeButton="Okej"
     @close="removeSuccess()"
   />
-<!-- <pre>
-  {{propsArray}}
-  {{ array }}
-</pre> -->
+<!-- <pre> -->
+  <div v-if="propsArray === undefined?true:false">
+test
+  </div>
+  <!-- {{propsArray === undefined ? 'true': 'false'}} -->
+  <!-- {{ array }} -->
+<!-- </pre> -->
 <!-- {{ array.length }}
 {{ propsArray?.length > 0  }} -->
   <div v-if="props.array">
@@ -96,7 +99,7 @@ v-if="index === 0 && array.length === 0"
         </div>
         <div class="flex justify-between" v-else>
           <p class="font-semibold">Pytanie {{ index + 1 }}</p>
-          <Icon v-if="index != 0 " name="carbon:close" size="24" class="close" @click="isRemoveModal" />
+          <Icon v-if="array.length !== 1" name="carbon:close" size="24" class="close" @click="isRemoveModal" />
       </div>
       <textarea
         type="text"
