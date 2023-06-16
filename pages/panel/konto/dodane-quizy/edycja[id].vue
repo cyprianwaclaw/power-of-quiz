@@ -135,7 +135,6 @@ const categoryOption = (select: any) => {
 }
 
 const allAnswer = allQuestion.value.forEach(async(single: any) =>{
-console.log(single)
   await quizStore.getAnswerById(single.id);
 })
 
@@ -239,7 +238,6 @@ const isTime = () => {
 };
 
 const onSubmit = async () => {
-  console.log('tets')
     let quziId: any = route.params.id;
     answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
     await quizStore.postNewQuestion(answerQuestion.title, quziId);

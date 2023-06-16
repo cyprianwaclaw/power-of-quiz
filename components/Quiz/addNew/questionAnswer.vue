@@ -23,14 +23,27 @@
     closeButton="Okej"
     @close="removeSuccess()"
   />
+<!-- <pre>
+  {{propsArray}}
+  {{ array }}
+</pre> -->
+<!-- {{ array.length }}
+{{ propsArray?.length > 0  }} -->
   <div v-if="props.array">
-    <div v-for="(item, index) in props.array" :key="index" class="white-retangle1 mt-6"
+    <div v-for="(item, index) in propsArray" :key="index" class="white-retangle1 mt-6"
     >
     <!-- :class="[index != 0 ? 'margin-top-owm' : null]" -->
       <div class="flex flex-col pl-2.5 pr-5 border-own1">
           <div class="flex justify-between">
-              <p class="font-semibold">Pytanie {{ index + 1 }}</p>
-              <Icon v-if="index != 0" name="carbon:close" size="24" class="close" @click="isRemoveModal" />
+            <!-- {{ showRemoveButton(index) }} -->
+            <p class="font-semibold">Pytanie {{ index + 1 }}</p>
+            <!-- <Icon v-if=" index > 0 || array.length === 0 && index >= 0" name="carbon:close" size="24" class="close" @click="removePropsArray(index)" /> -->
+              <Icon v-if="showRemoveButton(index)" name="carbon:close" size="24" class="close" @click="removePropsArray(index)" />
+            <!-- <div
+v-if="index === 0 && array.length === 0"
+>
+  test
+</div> -->
           </div>
         <textarea
           type="text"
@@ -69,6 +82,7 @@
     </div>
   </div>
   <div class="flex justify-end -mr-3 mt-2" v-if="!isArray">
+    <!-- <p @click="addQuestion(array)" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Dodaj pytanie</p> -->
     <p @click="isArray = true" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Dodaj pytanie</p>
   </div>
   </div>
@@ -77,12 +91,12 @@
   >
     <div class="flex flex-col pl-2.5 pr-5 border-own1">
       <div class="flex justify-between" v-if="props?.array">
-            <p class="font-semibold">Pytanie {{ props?.array?.length + 1 }}</p>
-            <Icon name="carbon:close" size="24" class="close" @click="isRemoveModal" />
+            <p class="font-semibold">Pytanie {{  props?.array?.length + 1 }}</p>
+              <Icon v-if="showRemoveButtonArray(index)" name="carbon:close" size="24" class="close" @click="isRemoveModal" />
         </div>
         <div class="flex justify-between" v-else>
           <p class="font-semibold">Pytanie {{ index + 1 }}</p>
-          <Icon v-if="index != 0" name="carbon:close" size="24" class="close" @click="isRemoveModal" />
+          <Icon v-if="index != 0 " name="carbon:close" size="24" class="close" @click="isRemoveModal" />
       </div>
       <textarea
         type="text"
@@ -120,18 +134,17 @@
     />
   </div>
 </div>
-<div class="flex justify-end -mr-3 mt-2">
-  <p @click="checkQuestion" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
+  <div class="flex justify-end -mr-3 mt-2">
+    <p @click="checkQuestion" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
+  </div>
 </div>
-</div>
-
-
 
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(['array'])
-
+const emit = defineEmits(['array', 'newArray'])
+const route = useRoute()
+console.log(route.params)
 type questionAnswerArray= {
   title: string,
    answers: [
@@ -162,17 +175,19 @@ const removeSuccess = () => {
 
 const maxLetter = ref(50)
 
+
+
 const array = reactive([
   {
   title: "",
-   answers: [
+  answers: [
       { answer: "", correct: false },
       { answer: "", correct: false },
       { answer: "", correct: false },
       { answer: "", correct: false },
     ],
   },
-]);
+])
 
 const isArray = ref();
 const allArray = ()=>{
@@ -184,8 +199,11 @@ const allArray = ()=>{
 }
 allArray()
 
+const propsArray = ref()
+propsArray.value = props.array
+
 watch(array,(newValue)=>{
-emit('array', newValue);
+  emit('array', newValue);
 })
 const select = (index: any, data: any) => {
   const correctOption = data[index];
@@ -201,15 +219,19 @@ const removeQuestion = (index: any) => {
   array.splice(index, 1);
   removeSuccess()
 }
-
+const removePropsArray = (index: any) => {
+  // isRemoveModal();
+  propsArray.value.splice(index, 1);
+  // removeSuccess()
+}
 const checkQuestion=()=>{
-    let lastQuestion = array[array.length - 1]
+  let lastQuestion = array[array.length - 1]
     // let arrayProps = props?.array
     if(
       // arrayProps ||
-        lastQuestion.answers.every((single:any)=> single.correct == false)
-        || lastQuestion.answers.some((single:any)=> single.name == '')
-        || lastQuestion.title == ''
+        lastQuestion?.answers.every((single:any)=> single.correct == false)
+        || lastQuestion?.answers.some((single:any)=> single.name == '')
+        || lastQuestion?.title == ''
         ){
           // console.log('brakuje odpowiedzi')
        isOpen.value = !isOpen.value;
@@ -218,6 +240,31 @@ const checkQuestion=()=>{
       addQuestion(array)
       // console.log('jest poprawnie')
     }
+}
+
+const showRemoveButton =(index:number) =>{
+  let propsArray:any = props?.array
+if(propsArray?.length === 1 && !isArray.value){
+  return false
+}
+if(array.length && index === 0){
+  return true
+}
+if(index >= 0 ){
+    return true
+  }
+}
+const showRemoveButtonArray =(index:number) =>{
+  let propsArray:any = props?.array
+if(array.length === 1 && !propsArray?.length ){
+  return false
+}
+if(propsArray?.length && index === 0){
+  return true
+}
+if(index >= 0 ){
+    return true
+  }
 }
 </script>
 
