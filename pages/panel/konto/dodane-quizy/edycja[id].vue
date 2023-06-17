@@ -1,5 +1,4 @@
 <template>
- 
   <ModalAlert
     :modalActive="isSendQuiz"
     title="Wysłano!"
@@ -11,26 +10,31 @@
     @close="sendQuiz1()"
   />
   <NuxtLayout name="panel">
-    <div class="mb-12 flex justify-end  -mr-3">
-      <NuxtLink :to="`/panel/konto/dodane-quizy/${route.params.id}`" class="flex border-transparent rounded-lg py-2 px-3">
-      <Icon name="ph:caret-right-bold" size="22" class="primary-color back-arrow" />
-      <p class="go primary-color">Powrót</p>
-    </NuxtLink>
+    <!-- {{ questionArray}} -->
+    <!-- {{ questionArray }} -->
+    <div class="mb-12 flex justify-end -mr-3">
+      <NuxtLink
+        :to="`/panel/konto/dodane-quizy/${route.params.id}`"
+        class="flex border-transparent rounded-lg py-2 px-3"
+      >
+        <Icon name="ph:caret-right-bold" size="22" class="primary-color back-arrow" />
+        <p class="go primary-color">Powrót</p>
+      </NuxtLink>
     </div>
     <div v-if="!image">
       <img :src="single.image" class="image-single" />
-</div>
+    </div>
     <LazyModalContentCropImageInput
-    image=true
-    @close="openModal(isImageModal)"
-    @image-file="handleImage"
-  />
+      image="true"
+      @close="openModal(isImageModal)"
+      @image-file="handleImage"
+    />
     <Form @submit="onSubmit" :validation-schema="schema">
       <WhiteRetangleContainer :array="[...quizArray]" class="mt-10">
         <template #select>
           <QuizAddNewSelectOption
-          v-model="selectedDifficulty" 
-          :defaultOption="defaultDifficulty" 
+            v-model="selectedDifficulty"
+            :defaultOption="defaultDifficulty"
             :array="[...difficultyArray]"
             @selected="DifficultyOption"
             header="Poziom truności"
@@ -38,8 +42,8 @@
         </template>
         <template #select1>
           <QuizAddNewSelectOption
-          v-model="selectedCategory" 
-          :defaultOption="defaultCategory" 
+            v-model="selectedCategory"
+            :defaultOption="defaultCategory"
             :array="[...categoriesArray]"
             @selected="categoryOption"
             header="Kategoria"
@@ -50,7 +54,7 @@
         <template #time>
           <div class="flex flex-row w-full place-items-center" @click="isTime()">
             <CustomField
-            class="w-2"
+              class="w-2"
               name="time"
               mode="aggressive"
               v-model="time"
@@ -64,15 +68,13 @@
       <h2 class="title-h2 mt-10 mb-4">Opis</h2>
       <LazyWhiteRetangleContainer :array="[...desArray]" />
       <h2 class="title-h2 mt-10 -mb-1.5">Pytania</h2>
-      <LazyQuizAddNewQuestionAnswer 
-      @array="answerQuestion" 
-      :array="questionArray"
-      />
+      <LazyQuizAddNewQuestionAnswer @array="answerQuestion" :array="questionArray" />
+      <!-- @newArray="newAnswerQuestion"  -->
       <div class="mt-12 flex gap-6 mb-[72px] justify-end">
         <button @click="isModal()">
           <p class="action-button red">Usuń</p>
         </button>
-          <button class="button-primary-small">Zapisz zmiany</button>
+        <button class="button-primary-small">Zapisz zmiany</button>
       </div>
     </Form>
   </NuxtLayout>
@@ -95,17 +97,20 @@ await quizStore.getSingleQuiz(route.params.id);
 await quizStore.getQuestion(route.params.id);
 
 const schema = yup.object({
-  time: yup.string()
+  time: yup
+    .string()
     .matches(/^[0-9]*$/, "Wpisz liczbę")
     .max(2, "Quiz nie może być dłuższy niż 99 minut"),
 });
-const {singleQuiz, allQuestion, answerById, categories, newQuestionId}= storeToRefs(quizStore);
+const { singleQuiz, allQuestion, answerById, categories, newQuestionId } = storeToRefs(
+  quizStore
+);
 await quizStore.getCategory();
 let category: any = categories.value;
-let single = singleQuiz.value
+let single = singleQuiz.value;
 let question: any = allQuestion.value;
 
-const defaultDifficulty = single.difficulty
+const defaultDifficulty = single.difficulty;
 const seletedDifficulty = ref();
 const difficultyArray = reactive([
   { value: "easy", label: "Łatwy" },
@@ -116,15 +121,15 @@ const difficultyOption = (select: any) => {
   seletedDifficulty.value = select;
 };
 
-const quizDesc = ()=>{
-  if(singleQuiz.value.description){
+const quizDesc = () => {
+  if (singleQuiz.value.description) {
     return singleQuiz.value.description;
-  } else{
-  return ''
+  } else {
+    return "";
   }
-}
+};
 
-const defaultCategory = single.category_id
+const defaultCategory = single.category_id;
 const seletedCategory = ref();
 const categoriesArray = categories.value.map((single: any) => ({
   value: single.id,
@@ -132,30 +137,31 @@ const categoriesArray = categories.value.map((single: any) => ({
 }));
 const categoryOption = (select: any) => {
   seletedCategory.value = select;
-}
+};
 
-const allAnswer = allQuestion.value.forEach(async(single: any) =>{
+const allAnswer = allQuestion.value.forEach(async (single: any) => {
   await quizStore.getAnswerById(single.id);
-})
-
+});
 
 const answers: any[] = reactive([]);
-  
-for (let quest of question) {
-    await quizStore.getAnswerById(quest.id);
-    answers.push(answerById.value);
-  }
 
-const answerByIdArray = (id:number)=>{
-  const answerNew = answers.flat()
- const filtered:any = answerNew.filter((element:any) =>element.question_id === id)
- return filtered
+for (let quest of question) {
+  await quizStore.getAnswerById(quest.id);
+  answers.push(answerById.value);
 }
-const questionArray = question.map((element: any, index: number) => ({
-  id:element.id,
-  title:  element.question,
-  answers: answerByIdArray(element.id),
-}));
+
+const answerByIdArray = (id: number) => {
+  const answerNew = answers.flat();
+  const filtered: any = answerNew.filter((element: any) => element.question_id === id);
+  return filtered;
+};
+const questionArray = ref(
+  question.map((element: any, index: number) => ({
+    id: element.id,
+    title: element.question,
+    answers: answerByIdArray(element.id),
+  }))
+);
 const quizArray = reactive<any>([
   {
     type: "input",
@@ -176,7 +182,7 @@ const desArray = reactive([
     wrap: "soft",
     placeholder: "Opis quizu",
     maxlength: 400,
-    value:quizDesc(),
+    value: quizDesc(),
   },
 ]);
 const image = ref<any | null>(null);
@@ -193,8 +199,6 @@ const openModal = (open: boolean) => {
 const handleImage = (file: File) => {
   image.value = file;
 };
-
-
 
 const answerQuestionArray = ref();
 const answerQuestion = (allArray: any) => {
@@ -238,15 +242,19 @@ const isTime = () => {
 };
 
 const onSubmit = async () => {
-    let quziId: any = route.params.id;
-    answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
+  // if(newAnswerQuestionArray.value.length == 1) {
+  //   console.log("tesdt")
+  // }
+  console.log(quizQuestionForRemove(allQuestion, questionArray))
+  let quziId: any = route.params.id;
+  answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
     await quizStore.postNewQuestion(answerQuestion.title, quziId);
     let questionId = newQuestionId.value;
     answerQuestion.answers.forEach(async (answer: any) => {
       await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
     });
   });
-}
+};
 
 // const onSubmit = async () => {
 //   await quizStore.postNewQuiz(

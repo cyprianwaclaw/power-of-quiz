@@ -330,9 +330,15 @@ export const useQuiz = defineStore('quiz', {
 
         //!Usuwania pytania
         //usuwanie odpowiedzi do danego pytania
-        async deleteQuestion(id:any){
+        async deleteQuestionAnswer(id:any){
             try{
                 await axiosInstance.delete(`/questions/${id}/answers`)
+            } catch (e) {
+                console.log(e)
+            }
+        },
+        async deleteQuestion(id:any){
+            try{
                 await axiosInstance.delete(`/questions/${id}`)
             } catch (e) {
                 console.log(e)

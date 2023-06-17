@@ -234,3 +234,18 @@ export const openModal= (open:boolean)=>{
   else results = true
   return results;
   }
+
+
+
+  export const quizQuestionForRemove = (allQuestion:any, questionArray:any) => {
+    let APIquestions = allQuestion.value;
+    let formatedArrayFromProps = questionArray.value;
+  
+    const filteredQuestionToRemoveFromArray  = APIquestions.filter((APIarrayElemnt: any) => {
+      return !formatedArrayFromProps.some((newArrayFormated: any) => {
+        return newArrayFormated.id === APIarrayElemnt.id;
+      });
+    });
+  
+    return filteredQuestionToRemoveFromArray
+  }

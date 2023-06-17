@@ -98,7 +98,6 @@ const props = defineProps({
 });
 
 const openIndex = ref(-1);
-const isTextareaFocused = ref(false);
 const newArray: whiteRetangle[] = props.array;
 const rowClick = (index: number) => {
   openIndex.value = openIndex.value === index ? -1 : index;

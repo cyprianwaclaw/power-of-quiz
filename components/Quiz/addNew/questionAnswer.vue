@@ -32,6 +32,7 @@ test
 <!-- </pre> -->
 <!-- {{ array.length }}
 {{ propsArray?.length > 0  }} -->
+<!-- {{ propsArray }} -->
   <div v-if="props.array">
     <div v-for="(item, index) in propsArray" :key="index" class="white-retangle1 mt-6"
     >
@@ -147,10 +148,9 @@ v-if="index === 0 && array.length === 0"
 <script setup lang="ts">
 const emit = defineEmits(['array', 'newArray'])
 const route = useRoute()
-console.log(route.params)
 type questionAnswerArray= {
   title: string,
-   answers: [
+   answers: [ 
       { answer: string | number, 
       correct: boolean | number,
     },
@@ -207,7 +207,13 @@ propsArray.value = props.array
 
 watch(array,(newValue)=>{
   emit('array', newValue);
+  console.log(newValue)
+
 })
+// watch(propsArray,(newValue)=>{
+//   console.log(newValue)
+//   emit('array', newValue);
+// })
 const select = (index: any, data: any) => {
   const correctOption = data[index];
   correctOption.correct = !correctOption.correct;
@@ -225,6 +231,8 @@ const removeQuestion = (index: any) => {
 const removePropsArray = (index: any) => {
   // isRemoveModal();
   propsArray.value.splice(index, 1);
+  // console.log(propsArray.value)
+  emit('newArray', propsArray.value);
   // removeSuccess()
 }
 const checkQuestion=()=>{
