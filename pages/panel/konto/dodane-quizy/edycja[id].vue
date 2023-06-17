@@ -21,6 +21,7 @@
         <p class="go primary-color">Powrót</p>
       </NuxtLink>
     </div>
+    <button @click="consoleQuiz()">console.log</button>
     <div v-if="!image">
       <img :src="single.image" class="image-single" />
     </div>
@@ -242,43 +243,41 @@ const isTime = () => {
 };
 
 const onSubmit = async () => {
-  // if(newAnswerQuestionArray.value.length == 1) {
-  //   console.log("tesdt")
-  // }
-  console.log(quizQuestionForRemove(allQuestion, questionArray))
-  quizQuestionForRemove(allQuestion, questionArray).forEach( async(questionsToRemove:any) => {
-    console.log(questionsToRemove.id)
-    await quizStore.deleteQuestionAnswer(questionsToRemove.id)
-    await quizStore.deleteQuestion(questionsToRemove.id)
+  let quizId: any = route.params.id;
+  await quizStore.updateQuiz(
+    quizId,
+    quizArray[0].value,
+    // time.value,
+    seletedCategory.value,
+    // seletedDifficulty.value,
+    desArray[0].value
+    // image.value
+  );
+  quizQuestionForRemove(allQuestion, questionArray).forEach(
+    async (questionsToRemove: any) => {
+      await quizStore.deleteQuestionAnswer(questionsToRemove.id);
+      await quizStore.deleteQuestion(questionsToRemove.id);
+    }
+  );
+  questionArray.value.forEach(async (questionsToUpdate: any) => {
+    await quizStore.updateQuestion(questionsToUpdate.id, questionsToUpdate.title);
+    questionsToUpdate.answers.forEach(async (singleAnswer: any) => {
+      await quizStore.updateAnswer(
+        singleAnswer.id,
+        singleAnswer.question_id,
+        singleAnswer.answer,
+        1
+      );
+    });
   });
-  let quziId: any = route.params.id;
   answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
-    await quizStore.postNewQuestion(answerQuestion.title, quziId);
+    await quizStore.postNewQuestion(answerQuestion.title, quizId);
     let questionId = newQuestionId.value;
     answerQuestion.answers.forEach(async (answer: any) => {
       await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
     });
   });
 };
-
-// const onSubmit = async () => {
-//   await quizStore.postNewQuiz(
-//     quizArray[0].value,
-//     time.value,
-//     seletedCategory.value,
-//     seletedDifficulty.value,
-//     desArray[0].value,
-//     image.value
-//   );
-//   let quziId = newQuizId.value;
-//   answerQuestionArray.value?.forEach(async (answer: any) => {
-//     await quizStore.postNewQuestion(answer.title, quziId);
-//     let questionId = newQuestionId.value;
-//     answer.questions.forEach(async (question: any) => {
-//       await quizStore.postNewAnswer(question.name, questionId, question.selected);
-//     });
-//   });
-// };
 </script>
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";

@@ -315,16 +315,26 @@ export const useQuiz = defineStore('quiz', {
          async updateQuiz(id: any, title:string, category_id:number,description: string) {
             try {
                 const res = await axiosInstance.patch(`/quizzes/${id}`,{title, category_id,description})
-                // this.newQuizId = await res.data.data.id
             } catch (e) {
-                console.log(e)
             }
         },
+        //  async updateQuiz(id:any, title:string, time:number, category_id:number, difficulty:string,description: string, image:any) {
+        //     try {
+        //         const res = await axiosData.patch(`/quizzes/${id}`,{title, time, category_id, difficulty,description, image})
+        //         // this.newQuizId = await res.data.data.id
+        //     } catch (e) {
+        //     }
+        // },
         async updateQuestion(id: any, question:any) {
             try {
-                const res = await axiosInstance.patch(`/questions/${id}`, {question})
+                const res = await axiosInstance.put(`/questions/${id}`, {question})
             } catch (e) {
-                console.log(e)
+            }
+        },
+        async updateAnswer(id:any, question_id:any, answer:any, correct:any) {
+            try {
+                const res = await axiosInstance.put(`/answers/${id}`,{ question_id, answer, correct })
+            } catch (e) {
             }
         },
 

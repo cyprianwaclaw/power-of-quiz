@@ -23,31 +23,16 @@
     closeButton="Okej"
     @close="removeSuccess()"
   />
-<!-- <pre> -->
-  <div v-if="propsArray === undefined?true:false">
-test
-  </div>
-  <!-- {{propsArray === undefined ? 'true': 'false'}} -->
-  <!-- {{ array }} -->
-<!-- </pre> -->
-<!-- {{ array.length }}
-{{ propsArray?.length > 0  }} -->
-<!-- {{ propsArray }} -->
   <div v-if="props.array">
     <div v-for="(item, index) in propsArray" :key="index" class="white-retangle1 mt-6"
     >
-    <!-- :class="[index != 0 ? 'margin-top-owm' : null]" -->
+
       <div class="flex flex-col pl-2.5 pr-5 border-own1">
           <div class="flex justify-between">
-            <!-- {{ showRemoveButton(index) }} -->
+    
             <p class="font-semibold">Pytanie {{ index + 1 }}</p>
-            <!-- <Icon v-if=" index > 0 || array.length === 0 && index >= 0" name="carbon:close" size="24" class="close" @click="removePropsArray(index)" /> -->
               <Icon v-if="showRemoveButton(index)" name="carbon:close" size="24" class="close" @click="removePropsArray(index)" />
-            <!-- <div
-v-if="index === 0 && array.length === 0"
->
-  test
-</div> -->
+
           </div>
         <textarea
           type="text"
@@ -210,10 +195,6 @@ watch(array,(newValue)=>{
   console.log(newValue)
 
 })
-// watch(propsArray,(newValue)=>{
-//   console.log(newValue)
-//   emit('array', newValue);
-// })
 const select = (index: any, data: any) => {
   const correctOption = data[index];
   correctOption.correct = !correctOption.correct;
@@ -229,27 +210,19 @@ const removeQuestion = (index: any) => {
   removeSuccess()
 }
 const removePropsArray = (index: any) => {
-  // isRemoveModal();
   propsArray.value.splice(index, 1);
-  // console.log(propsArray.value)
   emit('newArray', propsArray.value);
-  // removeSuccess()
 }
 const checkQuestion=()=>{
   let lastQuestion = array[array.length - 1]
-    // let arrayProps = props?.array
     if(
-      // arrayProps ||
         lastQuestion?.answers.every((single:any)=> single.correct == false)
         || lastQuestion?.answers.some((single:any)=> single.name == '')
         || lastQuestion?.title == ''
         ){
-          // console.log('brakuje odpowiedzi')
        isOpen.value = !isOpen.value;
     } else {
-      // addQuestion(allArray())
       addQuestion(array)
-      // console.log('jest poprawnie')
     }
 }
 
