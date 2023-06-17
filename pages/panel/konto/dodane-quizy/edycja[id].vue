@@ -246,6 +246,11 @@ const onSubmit = async () => {
   //   console.log("tesdt")
   // }
   console.log(quizQuestionForRemove(allQuestion, questionArray))
+  quizQuestionForRemove(allQuestion, questionArray).forEach( async(questionsToRemove:any) => {
+    console.log(questionsToRemove.id)
+    await quizStore.deleteQuestionAnswer(questionsToRemove.id)
+    await quizStore.deleteQuestion(questionsToRemove.id)
+  });
   let quziId: any = route.params.id;
   answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
     await quizStore.postNewQuestion(answerQuestion.title, quziId);
