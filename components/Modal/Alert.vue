@@ -32,7 +32,7 @@
             {{ actionButton }}
           </p>
         </button>
-        <button class="button-primary-small" @click="$emit('close')">
+        <button class="button-primary-small" @click="$emit('closeButtonClick')">
           {{ closeButton }}
         </button>
       </div>
@@ -45,6 +45,7 @@
 import gsap from 'gsap'
 const emit = defineEmits<{
   (e: "close", value: any): void;
+  (e: "closeButtonClick", value: any): void;
   (e: "action", value: any): void;
 }>();
 
@@ -58,6 +59,10 @@ const props = defineProps({
     required: true,
   },
   closeButton: {
+    name: String,
+    required: true,
+  },
+  closeButtonClick: {
     name: String,
     required: true,
   },

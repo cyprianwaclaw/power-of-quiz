@@ -288,7 +288,7 @@ export const useQuiz = defineStore('quiz', {
         },
 
         //! dodawanie nowego quizu 
-        async postNewQuiz(title:string, time:number, category_id:number, difficulty:string,description: string, image:any) {
+        async postNewQuiz(title:string, time:number, category_id:any, difficulty:string,description: string, image:any) {
             try {
                 const res = await axiosData.post('/quizzes',{title, time, category_id, difficulty,description, image})
                 this.newQuizId = await res.data.data.id

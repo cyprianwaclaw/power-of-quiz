@@ -1,6 +1,6 @@
 <template>
     <div class="relative">
-      <input type="text" v-on="handlers" :value="value" :placeholder="placeholder" />
+      <input type="text" v-on="handlers" :value="value" :placeholder="placeholder" :maxlength="maxlength" />
       <span class="errorM">{{ errorMessage }}</span>
     </div>
   </template>
@@ -21,6 +21,9 @@
       type: String,
       default: 'aggressive',
     },
+    maxlength:{
+      type: Number,
+    }
   });
   
   // use `toRef` to create reactive references to `name` prop which is passed to `useField`

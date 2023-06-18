@@ -1,74 +1,76 @@
 <template>
-  <!-- v-if="isSendQuiz" -->
   <ModalAlert
     :modalActive="isSendQuiz"
     title="Wysłano!"
     des="Twój quiz został przesłany do nas w celu weryfikacji, gdy zostanie
-  zaakceptowany poprawnie, zostaniesz o tym poinformowany"
+  zaakceptowany, zostaniesz o tym poinformowany"
     closeButton="Kolejny quiz"
     actionButton="Home"
     redirect="/panel"
-    @close="sendQuiz1()"
+    @close="sendQuiz()"
+    @closeButtonClick="clearAll()"
   />
   <NuxtLayout name="panel">
-    <Form @submit="onSubmit" :validation-schema="schema">
+    <p @click="clearAll()">sas</p>
+    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ values }">
       <h1 class="title-h1">Nowy quiz</h1>
-      <!-- <pre>{{ values }}</pre> -->
       <h2 class="title-h2 mt-[28px] mb-3">Podstawowe informacje</h2>
       <WhiteRetangleContainer :array="[...quizArray]">
         <template #select>
           <QuizAddNewSelectOption
-            :array="[...difficultyArray]"
-            @selected="difficultyOption"
-            header="Poziom trudności"
-            name="Wybierz poziom trudności"
+          :array="[...difficultyArray]"
+          @selected="difficultyOption"
+          header="Poziom trudności"
+          name="Wybierz poziom trudności"
           />
         </template>
         <template #select1>
           <QuizAddNewSelectOption
-            :array="[...categoriesArray]"
-            @selected="categoryOption"
-            header="Kategoria"
-            name="Wybierz kategorie"
+          :array="[...categoriesArray]"
+          @selected="categoryOption"
+          header="Kategoria"
+          name="Wybierz kategorie"
           />
         </template>
-
-        {{ time }}
         <template #time>
           <div class="flex flex-row w-full place-items-center" @click="isTime()">
             <CustomField
               name="time"
               mode="aggressive"
-              v-model="time"
+              maxlength="2"
               :placeholder="timePlaceholder"
               :style="styleObject"
             />
             <p v-if="timeActive" class="font-medium pt-[6px]">minut</p>
           </div>
-          <!-- gdy jest błąd -->
         </template>
       </WhiteRetangleContainer>
       <h2 class="title-h2 mt-10 mb-4">Opis</h2>
       <LazyWhiteRetangleContainer :array="[...desArray]" />
       <h2 class="title-h2 mt-10 mb-4">Zdjęcie</h2>
+      {{ image }}
       <LazyModalContentCropImageInput
         @close="openModal(isImageModal)"
-        @image-file="handleImage"
+        @imageFile="handleImage"
+        :test="image"
       />
       <h2 class="title-h2 mt-10 -mb-1.5">Pytania</h2>
       <LazyQuizAddNewQuestionAnswer @array="answerQuestion" />
       <div class="mt-12 justify-end flex mb-[72px]">
-        <button class="button-primary w-full" id="submit" type="submit">
+        <button
+          class="button-primary w-full"
+          v-if="submitButton(values)">
           Prześlij quiz do akceptacji
         </button>
+        <p class="button-primary-disabled w-full" disabled v-else>
+          Prześlij quiz do akceptacji
+        </p>
       </div>
     </Form>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { gsap } from "gsap";
-
 import { storeToRefs } from "pinia";
 import { ref, reactive } from "vue";
 import { useQuiz } from "@/store/useQuiz";
@@ -79,8 +81,11 @@ definePageMeta({
   middleware: "auth",
 });
 
+const emit = defineEmits(['delete'])
+
 const schema = yup.object({
-  time: yup.string()
+  time: yup
+    .string()
     .matches(/^[0-9]*$/, "Wpisz liczbę")
     .max(2, "Quiz nie może być dłuższy niż 99 minut"),
 });
@@ -88,28 +93,26 @@ const schema = yup.object({
 const quizStore = useQuiz();
 const { categories, newQuizId, newQuestionId } = storeToRefs(quizStore);
 await quizStore.getCategory();
-let category: any = categories.value;
 
-const seletedCategory = ref();
-
+const seletedCategory = ref(null);
 const categoryOption = (select: any) => {
   seletedCategory.value = select;
-};
-const seletedDifficulty = ref();
-
-const difficultyOption = (select: any) => {
-  seletedDifficulty.value = select;
 };
 const categoriesArray = categories.value.map((single: any) => ({
   value: single.id,
   label: single.name,
 }));
 
+const seletedDifficulty = ref(null);
+const difficultyOption = (select: any) => {
+  seletedDifficulty.value = select;
+};
 const difficultyArray = reactive([
   { value: "easy", label: "Łatwy" },
   { value: "medium", label: "Średni" },
   { value: "hard", label: "Trudny" },
 ]);
+
 const quizArray = reactive<any>([
   {
     type: "input",
@@ -123,6 +126,7 @@ const quizArray = reactive<any>([
   { type: "select", template: "addNew" },
   { type: "select1", template: "addNew" },
 ]);
+
 const desArray = reactive([
   {
     type: "input",
@@ -151,39 +155,48 @@ const handleImage = (file: File) => {
 const answerQuestionArray = ref();
 const answerQuestion = (allArray: any) => {
   answerQuestionArray.value = allArray;
-  console.log(allArray);
-};
-
-const validateData = (allArray: any) => {
-  if (allArray?.title == "kk") {
-    console.log(allArray);
-    console.log("Jest błąd");
-  } else {
-    console.log(allArray);
-    console.log("Wyślij quiz");
-  }
-};
-
-const validateReceivedData = () => {
-  validateData(answerQuestionArray.value);
 };
 
 const styleObject = reactive({
   width: "100%",
 });
-
 const isSendQuiz = ref(false);
-
 const sendQuiz = () => {
   isSendQuiz.value = !isSendQuiz.value;
 };
+const clearAll = () => {
+  quizArray.forEach((item:any) => {
+    if (item.type === 'input') {
+      item.value = '';
+    }
+  });
 
-const sendQuiz1 = () => {
-  isSendQuiz.value = !isSendQuiz.value;
-  //  window.location.reload();
+  desArray.forEach((item:any) => {
+    if (item.type === 'input') {
+      item.value = '';
+    }
+  });
+
+  if (answerQuestionArray.value) {
+    answerQuestionArray.value.forEach((question:any) => {
+      question.title = '';
+      if (question.answers) {
+        question.answers.forEach((answer:any) => {
+          answer.answer = '';
+          answer.correct = false;
+        });
+      }
+    });
+  }
+  answerQuestionArray.value?.splice(1)
+image.value = 'brak'
+emit('delete')
+  seletedCategory.value = null;
+  seletedDifficulty.value = null;
 };
 
-const time = ref();
+
+
 const timeActive = ref(false);
 const timePlaceholder = ref("Szacunkowy czas trwania");
 const isTime = () => {
@@ -192,15 +205,17 @@ const isTime = () => {
   styleObject.width = "30px";
 };
 
-const onSubmit = async () => {
+const onSubmit = async (values: any) => {
+  let { time } = values
+  sendQuiz()
   await quizStore.postNewQuiz(
     quizArray[0].value,
-    time.value,
+    time,
     seletedCategory.value,
     seletedDifficulty.value,
     desArray[0].value,
     image.value
-  );
+    );
   let quziId = newQuizId.value;
   answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
     await quizStore.postNewQuestion(answerQuestion.title, quziId);
@@ -209,6 +224,30 @@ const onSubmit = async () => {
       await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
     });
   });
+};
+
+const submitButton = (values: any) => {
+  let { time } = values;
+  if (
+    time &&
+    quizArray[0].value &&
+    seletedCategory &&
+    seletedDifficulty &&
+    image.value &&
+    answerQuestionArray.value?.every(
+      (answerQuestion: any) => answerQuestion.title.length > 3
+    ) &&
+    answerQuestionArray.value?.every((item: any) =>
+      item.answers?.every((answer: any) => answer.answer.length > 3)
+    ) &&
+    answerQuestionArray.value?.every((item: any) =>
+      item.answers.some((answer: any) => answer.correct)
+    )
+  ) {
+    return true
+  } else {
+    return false
+  }
 };
 </script>
 <style scoped lang="scss">

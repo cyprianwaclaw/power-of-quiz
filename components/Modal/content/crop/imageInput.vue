@@ -53,6 +53,21 @@
           </div>
         </div>
       </div>
+      <dic v-if="props.test==='brak'">
+rdgfdggfgdfg  
+<div class="white-retangle-image" @click="imageModal()">
+  <label class="image-retangle">
+    <Icon
+    name="carbon:cloud-upload"
+    size="38"
+    color="9F9F9F"
+    class="justify-center flex w-full mb-2"
+    />
+    <div class="default-file-input" />
+    <h1>Dodaj zdjęcie</h1>
+  </label>
+</div>
+      </dic>
 </template>
 
 <script setup lang="ts">
@@ -61,13 +76,20 @@ const props = defineProps({
   image:{
     type: Boolean,
     default: false
+  },
+ test:{
+    type: String,
+    default: false
   }
 })
 const isImageModal = ref(false);
 const imageModal = () => {
   isImageModal.value = !isImageModal.value;
 };
-
+const propsImage = ref(props.image)
+watch(propsImage,(newValue)=>{
+  console.log(newValue);
+})
 const croppedFile = ref<File | null>(null);
 const croppedImageNew = ref<any | null>(null);
 

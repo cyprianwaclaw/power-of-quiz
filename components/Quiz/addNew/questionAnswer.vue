@@ -123,8 +123,9 @@
     />
   </div>
 </div>
-  <div class="flex justify-end -mr-3 mt-2">
-    <p @click="checkQuestion" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
+<div class="flex justify-end -mr-3 mt-2">
+    <p v-if="!checkQuestion()" class="text-[#618cfb75] text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
+    <p v-else @click="addQuestion(array)" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
   </div>
 </div>
 
@@ -213,16 +214,18 @@ const removePropsArray = (index: any) => {
   propsArray.value.splice(index, 1);
   emit('newArray', propsArray.value);
 }
+
 const checkQuestion=()=>{
   let lastQuestion = array[array.length - 1]
     if(
-        lastQuestion?.answers.every((single:any)=> single.correct == false)
-        || lastQuestion?.answers.some((single:any)=> single.name == '')
-        || lastQuestion?.title == ''
+      lastQuestion?.answers.every((single:any) => single.correct === false) ||
+    lastQuestion?.answers.some((single:any) => single.answer.length <= 3) ||
+    lastQuestion?.title.length <= 3
         ){
-       isOpen.value = !isOpen.value;
+       return false
     } else {
-      addQuestion(array)
+      return true
+      
     }
 }
 
