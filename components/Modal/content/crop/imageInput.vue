@@ -87,9 +87,14 @@ const imageModal = () => {
   isImageModal.value = !isImageModal.value;
 };
 const propsImage = ref(props.image)
-watch(propsImage,(newValue)=>{
-  console.log(newValue);
+
+watch(props,(newValue)=>{
+  console.log(newValue.test);
+  if(newValue.test==='brak'){
+    removeImage()
+  }
 })
+
 const croppedFile = ref<File | null>(null);
 const croppedImageNew = ref<any | null>(null);
 
