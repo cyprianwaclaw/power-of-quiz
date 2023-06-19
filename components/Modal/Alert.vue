@@ -21,7 +21,6 @@
       <div
         class="flex mx-5 mb-7 place-items-center justify-end"
         >
-        <!-- :class="[actionButton ? 'justify-is-two' : null]" -->
         <NuxtLink :to="`${redirect}`" v-if="redirect">
           <button class="ml-[-8px]">
             <p class="action-button primary-color">{{ actionButton }}</p>
@@ -32,7 +31,7 @@
             {{ actionButton }}
           </p>
         </button>
-        <button class="button-primary-small" @click="$emit('closeButtonClick')">
+        <button class="button-primary-small" @click="$emit('close')">
           {{ closeButton }}
         </button>
       </div>
@@ -45,7 +44,6 @@
 import gsap from 'gsap'
 const emit = defineEmits<{
   (e: "close", value: any): void;
-  (e: "closeButtonClick", value: any): void;
   (e: "action", value: any): void;
 }>();
 

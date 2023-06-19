@@ -9,7 +9,6 @@
     </select>
   </div>
 </template>
-
 <script setup lang="ts">
 import { ref, defineProps, defineEmits, watchEffect } from 'vue';
 import { selectOption } from '@/types';
@@ -35,6 +34,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  reset:{
+    type: String,
+    required: false,
+  }
 });
 
 const emit = defineEmits(['selected']);
@@ -48,6 +51,17 @@ watchEffect(() => {
 function handleSelection() {
   emit('selected', selected.value);
 }
+watch(() => props.reset,
+  (newValue) => {
+    if (newValue === 'true') {
+      resetSelection();
+    }
+  }
+);
+function resetSelection() {
+  selected.value = '';
+}
+
 </script>
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";

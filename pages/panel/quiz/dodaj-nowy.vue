@@ -8,11 +8,9 @@
     actionButton="Home"
     redirect="/panel"
     @close="sendQuiz()"
-    @closeButtonClick="clearAll()"
   />
   <NuxtLayout name="panel">
-    <p @click="clearAll()">sas</p>
-    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ values }">
+    <Form @submit="onSubmit" ref="form" :validation-schema="schema" v-slot="{ meta }">
       <h1 class="title-h1">Nowy quiz</h1>
       <h2 class="title-h2 mt-[28px] mb-3">Podstawowe informacje</h2>
       <WhiteRetangleContainer :array="[...quizArray]">
@@ -20,6 +18,7 @@
           <QuizAddNewSelectOption
           :array="[...difficultyArray]"
           @selected="difficultyOption"
+          :reset="isReset"
           header="Poziom trudności"
           name="Wybierz poziom trudności"
           />
@@ -28,6 +27,7 @@
           <QuizAddNewSelectOption
           :array="[...categoriesArray]"
           @selected="categoryOption"
+          :reset="isReset"
           header="Kategoria"
           name="Wybierz kategorie"
           />
@@ -48,7 +48,6 @@
       <h2 class="title-h2 mt-10 mb-4">Opis</h2>
       <LazyWhiteRetangleContainer :array="[...desArray]" />
       <h2 class="title-h2 mt-10 mb-4">Zdjęcie</h2>
-      {{ image }}
       <LazyModalContentCropImageInput
         @close="openModal(isImageModal)"
         @imageFile="handleImage"
@@ -59,10 +58,10 @@
       <div class="mt-12 justify-end flex mb-[72px]">
         <button
           class="button-primary w-full"
-          v-if="submitButton(values)">
+          v-if="submitButton(meta)">
           Prześlij quiz do akceptacji
         </button>
-        <p class="button-primary-disabled w-full" disabled v-else>
+        <p class="button-primary-disabled w-full text-center" disabled v-else>
           Prześlij quiz do akceptacji
         </p>
       </div>
@@ -75,13 +74,11 @@ import { storeToRefs } from "pinia";
 import { ref, reactive } from "vue";
 import { useQuiz } from "@/store/useQuiz";
 import * as yup from "yup";
-import { Form, Field } from "vee-validate";
+import { Form, Field, useForm } from "vee-validate";
 
 definePageMeta({
   middleware: "auth",
 });
-
-const emit = defineEmits(['delete'])
 
 const schema = yup.object({
   time: yup
@@ -93,8 +90,8 @@ const schema = yup.object({
 const quizStore = useQuiz();
 const { categories, newQuizId, newQuestionId } = storeToRefs(quizStore);
 await quizStore.getCategory();
-
-const seletedCategory = ref(null);
+const isReset = ref()
+const seletedCategory = ref();
 const categoryOption = (select: any) => {
   seletedCategory.value = select;
 };
@@ -103,7 +100,9 @@ const categoriesArray = categories.value.map((single: any) => ({
   label: single.name,
 }));
 
-const seletedDifficulty = ref(null);
+const time1 = ref()
+
+const seletedDifficulty = ref();
 const difficultyOption = (select: any) => {
   seletedDifficulty.value = select;
 };
@@ -139,7 +138,6 @@ const desArray = reactive([
 ]);
 const image = ref<any | null>(null);
 const isImageModal = ref(false);
-const isOpen = ref(false);
 
 const openModal = (open: boolean) => {
   let results: boolean = false;
@@ -164,38 +162,6 @@ const isSendQuiz = ref(false);
 const sendQuiz = () => {
   isSendQuiz.value = !isSendQuiz.value;
 };
-const clearAll = () => {
-  quizArray.forEach((item:any) => {
-    if (item.type === 'input') {
-      item.value = '';
-    }
-  });
-
-  desArray.forEach((item:any) => {
-    if (item.type === 'input') {
-      item.value = '';
-    }
-  });
-
-  if (answerQuestionArray.value) {
-    answerQuestionArray.value.forEach((question:any) => {
-      question.title = '';
-      if (question.answers) {
-        question.answers.forEach((answer:any) => {
-          answer.answer = '';
-          answer.correct = false;
-        });
-      }
-    });
-  }
-  answerQuestionArray.value?.splice(1)
-image.value = 'brak'
-emit('delete')
-  seletedCategory.value = null;
-  seletedDifficulty.value = null;
-};
-
-
 
 const timeActive = ref(false);
 const timePlaceholder = ref("Szacunkowy czas trwania");
@@ -206,34 +172,39 @@ const isTime = () => {
 };
 
 const onSubmit = async (values: any) => {
-  let { time } = values
   sendQuiz()
   await quizStore.postNewQuiz(
     quizArray[0].value,
-    time,
+    values.time,
     seletedCategory.value,
     seletedDifficulty.value,
     desArray[0].value,
     image.value
     );
-  let quziId = newQuizId.value;
-  answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
-    await quizStore.postNewQuestion(answerQuestion.title, quziId);
-    let questionId = newQuestionId.value;
-    answerQuestion.answers.forEach(async (answer: any) => {
-      await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
+    let quziId = newQuizId.value;
+    answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
+      await quizStore.postNewQuestion(answerQuestion.title, quziId);
+      let questionId = newQuestionId.value;
+      answerQuestion.answers.forEach(async (answer: any) => {
+        await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
+      });
     });
-  });
-};
 
-const submitButton = (values: any) => {
-  let { time } = values;
+  setTimeout(() => {
+    console.log(values)
+    clearAll(values)
+    console.log(values)
+ }, 500);
+
+}
+
+const submitButton = (meta:any) => {
   if (
-    time &&
     quizArray[0].value &&
     seletedCategory &&
     seletedDifficulty &&
     image.value &&
+    meta.valid &&
     answerQuestionArray.value?.every(
       (answerQuestion: any) => answerQuestion.title.length > 3
     ) &&
@@ -249,6 +220,44 @@ const submitButton = (values: any) => {
     return false
   }
 };
+
+
+const clearAll = (time:any) => {
+  quizArray.forEach((item:any) => {
+    if (item.type === 'input') {
+      item.value = '';
+    }
+  });
+
+  desArray.forEach((item:any) => {
+    if (item.type === 'input') {
+      item.value = '';
+    }
+  });
+  if (answerQuestionArray.value) {
+    answerQuestionArray.value.forEach((question:any) => {
+      question.title = '';
+      if (question.answers) {
+        question.answers.forEach((answer:any) => {
+          answer.answer = '';
+          answer.correct = false;
+        });
+      }
+    });
+  }
+  time.time = undefined
+  timeActive.value = false
+  timePlaceholder.value = "Szacunkowy czas trwania"
+ styleObject.width = "300px"
+  answerQuestionArray.value?.splice(1)
+image.value = 'brak'
+isReset.value = 'true'
+setTimeout(() => {
+  isReset.value = undefined;
+}, 200);
+};
+
+
 </script>
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";

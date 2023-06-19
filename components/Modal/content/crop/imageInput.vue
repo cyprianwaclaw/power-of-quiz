@@ -53,21 +53,6 @@
           </div>
         </div>
       </div>
-      <dic v-if="props.test==='brak'">
-rdgfdggfgdfg  
-<div class="white-retangle-image" @click="imageModal()">
-  <label class="image-retangle">
-    <Icon
-    name="carbon:cloud-upload"
-    size="38"
-    color="9F9F9F"
-    class="justify-center flex w-full mb-2"
-    />
-    <div class="default-file-input" />
-    <h1>Dodaj zdjęcie</h1>
-  </label>
-</div>
-      </dic>
 </template>
 
 <script setup lang="ts">
