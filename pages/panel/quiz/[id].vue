@@ -1,146 +1,22 @@
 <template>
-  <NavUser />
   <div class="h-screen">
-    <!-- <div class="quest-bg">
-        <div class="absolute -top-5 mt-2 -right-3">
-          <svg
-            width="56"
-            height="56"
-            viewBox="0 0 56 56"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle
-              cx="6.60536"
-              cy="6.60514"
-              r="5"
-              transform="rotate(24.0845 6.60536 6.60514)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="27.8153"
-              cy="6.60514"
-              r="5"
-              transform="rotate(24.0845 27.8153 6.60514)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="49.0253"
-              cy="6.60514"
-              r="5"
-              transform="rotate(24.0845 49.0253 6.60514)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="6.60536"
-              cy="27.8161"
-              r="5"
-              transform="rotate(24.0845 6.60536 27.8161)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="27.8153"
-              cy="27.8161"
-              r="5"
-              transform="rotate(24.0845 27.8153 27.8161)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="49.0253"
-              cy="27.8161"
-              r="5"
-              transform="rotate(24.0845 49.0253 27.8161)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="6.60536"
-              cy="49.0251"
-              r="5"
-              transform="rotate(24.0845 6.60536 49.0251)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="27.8153"
-              cy="49.0251"
-              r="5"
-              transform="rotate(24.0845 27.8153 49.0251)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="49.0253"
-              cy="49.0251"
-              r="5"
-              transform="rotate(24.0845 49.0253 49.0251)"
-              fill="#FFD15C"
-            />
-          </svg>
-        </div>
-        <h5> {{ current?.next_question.question }}</h5>
-        <div class="absolute left-4 bottom-5">
-          <svg
-            width="34"
-            height="30"
-            viewBox="0 0 34 30"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle
-              cx="13.9511"
-              cy="6.60514"
-              r="5"
-              transform="rotate(24.0845 13.9511 6.60514)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="27.3339"
-              cy="15.8747"
-              r="5"
-              transform="rotate(24.0845 27.3339 15.8747)"
-              fill="#FFD15C"
-            />
-            <circle
-              cx="6.60536"
-              cy="23.0387"
-              r="5"
-              transform="rotate(24.0845 6.60536 23.0387)"
-              fill="#FFD15C"
-            />
-          </svg>
-        </div>
-      </div>
-      {{ start }}
-      {{ checkAnswer }}
-      <div class="mx-6" v-for="(answer, index) in current?.next_question.answers" :key="index">
-        <button @click="postAnswer(current?.next_question.id, answer.id)" class="single-answer">
-          <div class="circle-answer">
-            <p class="circle-answer-text">A</p>
+  <NavUser />
+    <div class="pt-[95px] px-8">
+      {{ checkAnswerAlert() }}
+      <img :src="singleQuiz.image" class="image-single" />
+        <div v-for="(quiz, index) in current" :key="index" class="mt-2">
+          <div class="w-full justify-center flex mb-[15px]">
+            <p class="text-base font-medium tracking-wider">{{ quiz?.question }}</p>
           </div>
-          <p class="answer">{{ answer.answer }} {{ answer.id }}</p>
-        </button>
-      </div>
-    </div> -->
-    <!-- <div v-for="(question, index) in checkAnswer" :key="index">
-      {{ question }}
-      {{ question.is_correct === 0 ? "poprawna":"błędna odpowiedź" }}
-      <div v-for="(answer, index) in question.answers" :key="index">
-        {{ amswer }}
-      </div>
-    </div> -->
-    <div class="pt-20 px-8">
-
-        {{ checkAnswerAlert() }}
-        <div v-for="(quiz, index) in current" :key="index">
-          <p class="text-lg font-semibold">{{ quiz?.question }}</p>
-          <div v-for="(answer, index) in quiz?.answers" :key="index">
-            <button @click="postAnswer(quiz.id, answer.id)">{{ answer.answer }}</button>
+          <div class="grid grid-cols-2 gap-4">
+            <div v-for="(answer, index) in quiz?.answers" :key="index" @click="postAnswer(quiz.id, answer.id)" class="grid place-items-center h-[84px] border bg-[#DEE7FF]">
+              <p>{{ answer.answer }}</p>
+            </div>
           </div>
         </div>
-      <!-- {{current }} -->
-      <!-- {{ nextQuestion }} -->
-      <!-- {{  getNextQuestion1 }} -->
     </div>
+    <NavBottom />
   </div>
-  <NavBottom />
 </template>
 
 <script setup lang="ts">
@@ -148,9 +24,9 @@ import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
 const route = useRoute();
 const quizState = useQuiz();
-
+await quizState.getSingleQuiz(route.params.id);
 await quizState.startingQuiz(route.params.id);
-const { startQuiz, nextQuestion, getNextQuestion1 } = storeToRefs(quizState);
+const {singleQuiz, startQuiz, nextQuestion, getNextQuestion1 } = storeToRefs(quizState);
 let start: any = startQuiz.value;
 
 const current = ref<any>(startQuiz.value);
@@ -177,6 +53,13 @@ return 'błedna odpowiedz'
 
 <style scoped lang="scss">
 @import "@/assets/style/variables";
+
+.image-single {
+  border: 1px solid $border;
+  border-radius: 12px;
+  height: 200px;
+}
+
 .circle-answer {
   height: 38px;
   width: 38px;
