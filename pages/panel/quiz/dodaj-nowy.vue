@@ -54,16 +54,10 @@
         :test="image"
       />
       <h2 class="title-h2 mt-10 -mb-1.5">Pytania</h2>
-      <LazyQuizAddNewQuestionAnswer @array="answerQuestion" />
+      <LazyQuizAddNewQuestionAnswer1 :array="questionArray"/>
       <div class="mt-12 justify-end flex mb-[72px]">
-        <button
-          class="button-primary w-full"
-          v-if="submitButton(meta)">
-          Prześlij quiz do akceptacji
-        </button>
-        <p class="button-primary-disabled w-full text-center" disabled v-else>
-          Prześlij quiz do akceptacji
-        </p>
+        <button class="button-primary" v-if="submitButton(meta)">Prześlij do akceptacji</button>
+        <p v-else class="button-primary-disabled text-center" disabled>Prześlij do akceptacji</p>
       </div>
     </Form>
   </NuxtLayout>
@@ -150,10 +144,17 @@ const handleImage = (file: File) => {
   image.value = file;
 };
 
-const answerQuestionArray = ref();
-const answerQuestion = (allArray: any) => {
-  answerQuestionArray.value = allArray;
-};
+const questionArray = ref([
+   {
+   title: "",
+   answers: [
+       { answer: "", correct: false },
+       { answer: "", correct: false },
+       { answer: "", correct: false },
+       { answer: "", correct: false },
+     ],
+   },
+])
 
 const styleObject = reactive({
   width: "100%",
@@ -182,7 +183,7 @@ const onSubmit = async (values: any) => {
     image.value
     );
     let quziId = newQuizId.value;
-    answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
+    questionArray.value?.forEach(async (answerQuestion: any) => {
       await quizStore.postNewQuestion(answerQuestion.title, quziId);
       let questionId = newQuestionId.value;
       answerQuestion.answers.forEach(async (answer: any) => {
@@ -190,72 +191,62 @@ const onSubmit = async (values: any) => {
       });
     });
 
-  setTimeout(() => {
-    console.log(values)
-    clearAll(values)
-    console.log(values)
- }, 500);
+//   setTimeout(() => {
+//     console.log(values)
+//     clearAll(values)
+//     console.log(values)
+//  }, 500);
 
 }
 
-const submitButton = (meta:any) => {
+const submitButton = (meta: any) => {
   if (
     quizArray[0].value &&
     seletedCategory &&
     seletedDifficulty &&
-    image.value &&
     meta.valid &&
-    answerQuestionArray.value?.every(
-      (answerQuestion: any) => answerQuestion.title.length > 3
-    ) &&
-    answerQuestionArray.value?.every((item: any) =>
-      item.answers?.every((answer: any) => answer.answer.length > 3)
-    ) &&
-    answerQuestionArray.value?.every((item: any) =>
-      item.answers.some((answer: any) => answer.correct)
-    )
-  ) {
-    return true
-  } else {
-    return false
+    image.value &&
+    checkQuestion(questionArray.value) ){
+    return true;
+  } else {   
+    return false;
   }
-};
+}
 
+// const clearAll = (time:any) => {
+//   quizArray.forEach((item:any) => {
+//     if (item.type === 'input') {
+//       item.value = '';
+//     }
+//   });
 
-const clearAll = (time:any) => {
-  quizArray.forEach((item:any) => {
-    if (item.type === 'input') {
-      item.value = '';
-    }
-  });
-
-  desArray.forEach((item:any) => {
-    if (item.type === 'input') {
-      item.value = '';
-    }
-  });
-  if (answerQuestionArray.value) {
-    answerQuestionArray.value.forEach((question:any) => {
-      question.title = '';
-      if (question.answers) {
-        question.answers.forEach((answer:any) => {
-          answer.answer = '';
-          answer.correct = false;
-        });
-      }
-    });
-  }
-  time.time = undefined
-  timeActive.value = false
-  timePlaceholder.value = "Szacunkowy czas trwania"
- styleObject.width = "300px"
-  answerQuestionArray.value?.splice(1)
-image.value = 'brak'
-isReset.value = 'true'
-setTimeout(() => {
-  isReset.value = undefined;
-}, 200);
-};
+//   desArray.forEach((item:any) => {
+//     if (item.type === 'input') {
+//       item.value = '';
+//     }
+//   });
+//   if (answerQuestionArray.value) {
+//     answerQuestionArray.value.forEach((question:any) => {
+//       question.title = '';
+//       if (question.answers) {
+//         question.answers.forEach((answer:any) => {
+//           answer.answer = '';
+//           answer.correct = false;
+//         });
+//       }
+//     });
+//   }
+//   time.time = undefined
+//   timeActive.value = false
+//   timePlaceholder.value = "Szacunkowy czas trwania"
+//  styleObject.width = "300px"
+//   answerQuestionArray.value?.splice(1)
+// image.value = 'brak'
+// isReset.value = 'true'
+// setTimeout(() => {
+//   isReset.value = undefined;
+// }, 200);
+// };
 
 
 </script>

@@ -63,7 +63,7 @@ export type whiteRetangle = {
   mode?: string;
   des?: string;
   link?: string;
-  maxlength?: number;
+  maxlength?: any;
   lastIcon?:string;
   firstIcon?:string;
   wrap?:string 

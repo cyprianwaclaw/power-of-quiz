@@ -215,7 +215,6 @@ export const placeholderAnswer=(index:number)=>{
 export const addQuestion = (array:any) => {
   array.push(
 {
-  type: 'array',
   title: "",
   answers: [
     { answer: "", correct: false },
@@ -235,8 +234,6 @@ export const openModal= (open:boolean)=>{
   return results;
   }
 
-
-
   export const quizQuestionForRemove = (allQuestion:any, questionArray:any) => {
     let APIquestions = allQuestion.value;
     let formatedArrayFromProps = questionArray.value;
@@ -248,4 +245,22 @@ export const openModal= (open:boolean)=>{
     });
   
     return filteredQuestionToRemoveFromArray
+  }
+
+
+
+  export const checkQuestion=(array:any)=>{
+    if(array?.every(
+        (answerQuestion: any) => answerQuestion.title.length > 3
+        ) &&
+        array.every((item: any) =>
+        item?.answers?.every((answer: any) => answer.answer.length > 3)
+        ) &&
+        array.every((item: any) =>
+        item.answers.some((answer: any) => answer.correct)
+        )) {
+      return true;
+    } else {   
+      return false;
+    }
   }

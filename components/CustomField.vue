@@ -1,6 +1,6 @@
-<template>
+<!-- <template>
     <div class="relative">
-      <input type="text" v-on="handlers" :value="value" :placeholder="placeholder" :maxlength="maxlength" />
+      <input type="text" v-on="handlers" :value="initialValue"  :placeholder="placeholder" :maxlength="maxlength" />
       <span class="errorM">{{ errorMessage }}</span>
     </div>
   </template>
@@ -23,7 +23,11 @@
     },
     maxlength:{
       type: Number,
-    }
+    },
+    initialValue: {
+    type: String,
+    default: '',
+  },
   });
   
   // use `toRef` to create reactive references to `name` prop which is passed to `useField`
@@ -63,8 +67,76 @@
   
     return on;
   });
+  </script> -->
+  <template>
+ <div class="relative">
+      <input type="text" v-model="currentValue" v-on="handlers" :placeholder="placeholder" :maxlength="maxlength" />
+      <span  class="errorM">{{ errorMessage }}</span>
+    </div>
+  </template>
+  
+  <script setup lang="ts">
+  import { computed, toRef, defineProps, ref, watch } from 'vue';
+  import { useField } from 'vee-validate';
+  import { modes } from '../interactionModes';
+  
+  const props = defineProps({
+    name: {
+      type: String,
+    },
+    placeholder: {
+      type: String,
+    },
+    mode: {
+      type: String,
+      default: 'aggressive',
+    },
+    maxlength:{
+      type: Number,
+    },
+    initialValue: {
+      type: String,
+      default: '',
+    },
+  });
+  
+  const currentValue = ref(props.initialValue);
+  
+  const { meta, errorMessage, handleChange, handleBlur } = useField(
+    toRef(props, 'name'),
+    null,
+    {
+      validateOnValueUpdate: false,
+    }
+  );
+  
+  const handlers = computed(() => {
+    const on = {
+      blur: handleBlur,
+      input: [(e) => handleChange(e, false)],
+    };
+  
+    const triggers = modes[props.mode]({
+      errorMessage,
+      meta,
+    });
+  
+    triggers.forEach((t) => {
+      if (Array.isArray(on[t])) {
+        on[t].push(handleChange);
+      } else {
+        on[t] = handleChange;
+      }
+    });
+  
+    return on;
+  });
+  
+  watch(() => props.initialValue, (newValue) => {
+    currentValue.value = newValue;
+  });
   </script>
-
+  
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";
 input{

@@ -1,17 +1,29 @@
 <template>
   <ModalAlert
     :modalActive="isSendQuiz"
-    title="Wysłano!"
-    des="Twój quiz został przesłany do nas w celu weryfikacji, gdy zostanie
-  zaakceptowany poprawnie, zostaniesz o tym poinformowany"
-    closeButton="Kolejny quiz"
-    actionButton="Home"
-    redirect="/panel"
-    @close="sendQuiz1()"
-  />
+    title="Zapisano"
+    des="Prawidłowo zapisano wszystkie zmiany, które wprowadiłeś"
+    closeButton="Okej"
+    @close="removeSuccessClose()"
+  />  
+<ModalAlert
+:modalActive="isOpen"
+title="Usuń quiz"
+des="Czy na pewno chcesz usunąć quiz? Tej operacji nie będzie można cofnąć"
+closeButton="Anuluj"
+actionButton="Usuń"
+actionButtonClass="text-red-500"
+@close="isModal()"
+@action="removeQuiz"
+/>
+<ModalAlert
+:modalActive="isRemoveSucessModal"
+title="Usunięto quiz"
+des="Twój quiz został usunięty"
+closeButton="Okej"
+@close="removeSuccessClose()"
+/>
   <NuxtLayout name="panel">
-    <!-- {{ questionArray}} -->
-    <!-- {{ questionArray }} -->
     <div class="mb-12 flex justify-end -mr-3">
       <NuxtLink
         :to="`/panel/konto/dodane-quizy/${route.params.id}`"
@@ -21,7 +33,6 @@
         <p class="go primary-color">Powrót</p>
       </NuxtLink>
     </div>
-    <button @click="consoleQuiz()">console.log</button>
     <div v-if="!image">
       <img :src="single.image" class="image-single" />
     </div>
@@ -30,7 +41,8 @@
       @close="openModal(isImageModal)"
       @image-file="handleImage"
     />
-    <Form @submit="onSubmit" :validation-schema="schema">
+    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ meta }" :initial-values="formValues">
+      <!-- {{ meta }} -->
       <WhiteRetangleContainer :array="[...quizArray]" class="mt-10">
         <template #select>
           <QuizAddNewSelectOption
@@ -50,32 +62,31 @@
             header="Kategoria"
           />
         </template>
-
-        {{ time }}
         <template #time>
-          <div class="flex flex-row w-full place-items-center" @click="isTime()">
+          <div class="flex flex-row w-full place-items-center">
             <CustomField
-              class="w-2"
+              class="w-6"
               name="time"
-              mode="aggressive"
-              v-model="time"
               placeholder="0"
-              :style="styleObject"
-            />
-            <p class="font-medium pt-[6px]">minut</p>
+              maxlength="2"
+              mode="aggressive"
+              :initial-value="single.time"
+              />
+            {{  test}}
+            <p class="font-medium pt-[6px] ml-1">minut</p>
           </div>
         </template>
       </WhiteRetangleContainer>
       <h2 class="title-h2 mt-10 mb-4">Opis</h2>
       <LazyWhiteRetangleContainer :array="[...desArray]" />
       <h2 class="title-h2 mt-10 -mb-1.5">Pytania</h2>
-      <LazyQuizAddNewQuestionAnswer @array="answerQuestion" :array="questionArray" />
-      <!-- @newArray="newAnswerQuestion"  -->
+      <LazyQuizAddNewQuestionAnswer1 @questionToRemove="toRemove" :array="questionArray" />
       <div class="mt-12 flex gap-6 mb-[72px] justify-end">
         <button @click="isModal()">
           <p class="action-button red">Usuń</p>
         </button>
-        <button class="button-primary-small">Zapisz zmiany</button>
+        <button class="button-primary" v-if="submitButton(meta)" type="Submit">Zapisz zmiany</button>
+        <p v-else class="button-primary-disabled text-center" disabled>Zapisz zmiany</p>
       </div>
     </Form>
   </NuxtLayout>
@@ -86,7 +97,7 @@ import { storeToRefs } from "pinia";
 import { ref, reactive } from "vue";
 import { useQuiz } from "@/store/useQuiz";
 import * as yup from "yup";
-import { Form, Field } from "vee-validate";
+import { Form, Field, useForm } from "vee-validate";
 
 definePageMeta({
   middleware: "auth",
@@ -101,6 +112,7 @@ const schema = yup.object({
   time: yup
     .string()
     .matches(/^[0-9]*$/, "Wpisz liczbę")
+    .required("Uzupełnij czas trwania quizu")
     .max(2, "Quiz nie może być dłuższy niż 99 minut"),
 });
 const { singleQuiz, allQuestion, answerById, categories, newQuestionId } = storeToRefs(
@@ -129,7 +141,7 @@ const quizDesc = () => {
     return "";
   }
 };
-
+const test = ref('')
 const defaultCategory = single.category_id;
 const seletedCategory = ref();
 const categoriesArray = categories.value.map((single: any) => ({
@@ -189,7 +201,22 @@ const desArray = reactive([
 const image = ref<any | null>(null);
 const isImageModal = ref(false);
 const isOpen = ref(false);
-
+ const isModal = () => {
+   isOpen.value = !isOpen.value;
+  };
+  const isRemoveSucessModal = ref(false);
+  const removeSuccess = () => {
+    isRemoveSucessModal.value = !isRemoveSucessModal.value;
+  };
+  const removeQuiz = async () => {
+    isModal();
+    await quizStore.deleteSingleQuiz(route.params.id);
+    removeSuccess();
+  };
+  const removeSuccessClose = () => {
+    navigateTo("/panel/konto/dodane-quizy");
+  };
+  
 const openModal = (open: boolean) => {
   let results: boolean = false;
   if (open == true) results = false;
@@ -201,28 +228,11 @@ const handleImage = (file: File) => {
   image.value = file;
 };
 
-const answerQuestionArray = ref();
-const answerQuestion = (allArray: any) => {
-  answerQuestionArray.value = allArray;
+const toRemoveArray = ref<any>();
+const toRemove = (allArray: any) => {
+  toRemoveArray.value = allArray;
+  console.log(allArray)
 };
-
-const validateData = (allArray: any) => {
-  if (allArray?.title == "kk") {
-    console.log(allArray);
-    console.log("Jest błąd");
-  } else {
-    console.log(allArray);
-    console.log("Wyślij quiz");
-  }
-};
-
-const validateReceivedData = () => {
-  validateData(answerQuestionArray.value);
-};
-
-const styleObject = reactive({
-  width: "100%",
-});
 
 const isSendQuiz = ref(false);
 
@@ -230,36 +240,26 @@ const sendQuiz = () => {
   isSendQuiz.value = !isSendQuiz.value;
 };
 
-const sendQuiz1 = () => {
-  isSendQuiz.value = !isSendQuiz.value;
-  //  window.location.reload();
-};
-
-const time = ref();
-const timeActive = ref(true);
-const isTime = () => {
-  timeActive.value = true;
-  styleObject.width = "30px";
-};
-
-const onSubmit = async () => {
+const onSubmit = async (meta:any) => {
   let quizId: any = route.params.id;
+  const questionUpdate = questionArray.value.filter((question: any)=>question.id>0)
   await quizStore.updateQuiz(
     quizId,
     quizArray[0].value,
-    // time.value,
+    // meta.initialValues.time,
     seletedCategory.value,
     // seletedDifficulty.value,
     desArray[0].value
     // image.value
-  );
-  quizQuestionForRemove(allQuestion, questionArray).forEach(
+  )
+  toRemoveArray?.value?.forEach(
     async (questionsToRemove: any) => {
       await quizStore.deleteQuestionAnswer(questionsToRemove.id);
       await quizStore.deleteQuestion(questionsToRemove.id);
     }
   );
-  questionArray.value.forEach(async (questionsToUpdate: any) => {
+  sendQuiz()
+  questionArray.value.filter((question: any)=>question.id>0).forEach(async (questionsToUpdate: any) => {
     await quizStore.updateQuestion(questionsToUpdate.id, questionsToUpdate.title);
     questionsToUpdate.answers.forEach(async (singleAnswer: any) => {
       await quizStore.updateAnswer(
@@ -270,7 +270,7 @@ const onSubmit = async () => {
       );
     });
   });
-  answerQuestionArray.value?.forEach(async (answerQuestion: any) => {
+  questionArray.value.filter((question: any)=> !question.id)?.forEach(async (answerQuestion: any) => {
     await quizStore.postNewQuestion(answerQuestion.title, quizId);
     let questionId = newQuestionId.value;
     answerQuestion.answers.forEach(async (answer: any) => {
@@ -278,6 +278,29 @@ const onSubmit = async () => {
     });
   });
 };
+
+const newQuestion = questionArray.value.filter((question: any)=>question.id>0)
+
+const submitButton = (meta: any) => {
+  if (
+    quizArray[0].value &&
+    seletedCategory &&
+    seletedDifficulty &&
+    meta.valid &&
+    checkQuestion(questionArray.value) ){
+    return true;
+  } else {   
+    return false;
+  }
+}
+
+
+const formValues = {
+  time: single.time,
+};
+useForm({
+  initialValues: formValues,
+});
 </script>
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";
@@ -291,7 +314,6 @@ const onSubmit = async () => {
 input {
   outline: none;
   font-size: 16px;
-  width: 100%;
   overflow: hidden;
   min-height: 30px;
   padding: 0px;
@@ -322,5 +344,15 @@ input::placeholder {
 .back-arrow {
   transform: rotate(180deg);
   margin-left: -4px;
+}
+.errorM{
+  position: absolute;
+ // margin-top: -3px;
+ // margin-bottom: 8px;
+  font-size: 12px;
+  width: 100vh;
+  left: 60px;
+  bottom: 47px;
+color: $color-error;
 }
 </style>

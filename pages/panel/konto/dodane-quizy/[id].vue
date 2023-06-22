@@ -21,15 +21,6 @@
     <p class="text-[22px] font-medium mr-8 mt-4 mb-10">
       {{singleQuiz.title }}
     </p>
-    <!-- {{ singleQuiz }}
-    <pre>
-     {{  answers.flat()}}
-      ! lista wszystkich odpowiedzi do danego pytania
-      {{ answerById }}
-      ! lista wszystkich pytań do danego quizu
-       {{allQuestion}}
-      </pre> -->
-
     <WhiteRetangleContainer :array="[...quizArray]" />
     <p
     class="text-[18px] font-semibold mb-[3px] mt-9"

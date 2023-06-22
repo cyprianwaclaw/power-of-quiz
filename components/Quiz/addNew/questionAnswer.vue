@@ -1,12 +1,5 @@
 <template>
   <LazyModalAlert
-  :modalActive="isOpen"
-    title="Uzupełnij pytanie"
-    des="Aby dodać kolejne pytanie, wpisz tytuł poprzedniego pytania oraz  podaj wszystkie jego  odpowiedzi i zaznacz tę, która jest poprawna"
-    closeButton="Uzupełnij"
-    @close="isOpenModal()"
-  />
-  <LazyModalAlert
     :modalActive="isRemove"
     title="Usuń pytanie"
     des="Czy na pewno chcesz usunąć pytanie? Tej operacji nie będzie można cofnąć"
@@ -23,16 +16,19 @@
     closeButton="Okej"
     @close="removeSuccess()"
   />
+  <pre>
+    <!-- {{ props.array }}
+    {{ array }} -->
+    {{ props.array?.concat(array) }}
+  </pre>
   <div v-if="props.array">
     <div v-for="(item, index) in propsArray" :key="index" class="white-retangle1 mt-6"
     >
-
       <div class="flex flex-col pl-2.5 pr-5 border-own1">
           <div class="flex justify-between">
     
             <p class="font-semibold">Pytanie {{ index + 1 }}</p>
               <Icon v-if="showRemoveButton(index)" name="carbon:close" size="24" class="close" @click="removePropsArray(index)" />
-
           </div>
         <textarea
           type="text"
@@ -70,12 +66,12 @@
       />
     </div>
   </div>
-  <div class="flex justify-end -mr-3 mt-2" v-if="!isArray">
+  <!-- <div class="flex justify-end -mr-3 mt-2" v-if="!isArray"> -->
     <!-- <p @click="addQuestion(array)" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Dodaj pytanie</p> -->
-    <p @click="isArray = true" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Dodaj pytanie</p>
+    <!-- <p @click="isArray = true" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p> -->
   </div>
-  </div>
-<div v-if="isArray">
+  <!-- </div> -->
+<div >
   <div v-for="(item, index) in array" :key="index" class="white-retangle1 mt-6"
   >
     <div class="flex flex-col pl-2.5 pr-5 border-own1">
@@ -124,8 +120,9 @@
   </div>
 </div>
 <div class="flex justify-end -mr-3 mt-2">
-    <p v-if="!checkQuestion()" class="text-[#618cfb75] text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
-    <p v-else @click="addQuestion(array)" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
+  <!-- v-if="!checkQuestion()" -->
+    <p  class="text-[#618cfb75] text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
+    <p @click="addQuestion(array)" class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl">Następne pytanie</p>
   </div>
 </div>
 
@@ -167,26 +164,26 @@ const maxLetter = ref(50)
 
 
 const array = reactive([
-  {
-  title: "",
-  answers: [
-      { answer: "", correct: false },
-      { answer: "", correct: false },
-      { answer: "", correct: false },
-      { answer: "", correct: false },
-    ],
-  },
+  // {
+  // title: "",
+  // answers: [
+  //     { answer: "", correct: false },
+  //     { answer: "", correct: false },
+  //     { answer: "", correct: false },
+  //     { answer: "", correct: false },
+  //   ],
+  // },
 ])
 
-const isArray = ref();
-const allArray = ()=>{
-  if(props.array){
-   isArray.value = false
-  } else {
-    isArray.value = true
-  }
-}
-allArray()
+// const isArray = ref();
+// const allArray = ()=>{
+//   if(props.array){
+//    isArray.value = false
+//   } else {
+//     isArray.value = true
+//   }
+// }
+// allArray()
 
 const propsArray = ref()
 propsArray.value = props.array
@@ -231,7 +228,7 @@ const checkQuestion=()=>{
 
 const showRemoveButton =(index:number) =>{
   let propsArray:any = props?.array
-if(propsArray?.length === 1 && !isArray.value){
+if(propsArray?.length === 1){
   return false
 }
 if(array.length && index === 0){
