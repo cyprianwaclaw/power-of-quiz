@@ -46,7 +46,7 @@ export const useQuiz = defineStore('quiz', {
         correctAnswer: [],
         answer: null,
         nextQuestion: {} as any,
-        getNextQuestion: [] as any,
+        getNextQuestion1: [] as any,
         newQuizId:{} as number,
         newQuestionId:{} as any,
         new:{} as string,
@@ -263,7 +263,7 @@ export const useQuiz = defineStore('quiz', {
         async getNextQuestion(quiz_submission: any) {
             try {
                 const res = await axiosInstance.get(`/quiz/submission/${quiz_submission}/getNextQuestion`)
-                this.getNextQuestion = await res.data.data
+                this.getNextQuestion1 = await res.data.data
             } catch (e) {
                 console.error(e)
             }

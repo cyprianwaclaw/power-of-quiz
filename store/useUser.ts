@@ -11,6 +11,7 @@ export const useUser = defineStore('user', {
         invitedUser: [],
         allUser: [],
         payouts: [] as any,
+        invoices: [] as any,
         payments: [] as any,
         invitedCount: {} as number,
         getPersonal: {} as Personal,
@@ -99,8 +100,16 @@ export const useUser = defineStore('user', {
         },
         async getPaymentsObject() {
             try {
-                const res = await axiosInstance.get('/plans')
+                const res = await axiosInstance.get('/payments')
                 this.payments = await res.data
+            }  catch (error:any) {
+                this.errorMessage = error.response.data
+            }
+        },        
+        async getUserInvoices() {
+            try {
+                const res = await axiosInstance.get('/plans')
+                this.invoices = await res.data
             }  catch (error:any) {
                 this.errorMessage = error.response.data
             }

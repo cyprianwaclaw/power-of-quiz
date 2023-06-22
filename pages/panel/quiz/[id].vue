@@ -1,8 +1,7 @@
 <template>
   <NavUser />
   <div class="h-screen">
-    <div class="pt-[60px]">
-      <div class="quest-bg">
+    <!-- <div class="quest-bg">
         <div class="absolute -top-5 mt-2 -right-3">
           <svg
             width="56"
@@ -76,7 +75,6 @@
             />
           </svg>
         </div>
-        <p>1/{{ quiz?.questions_count }}</p>
         <h5> {{ current?.next_question.question }}</h5>
         <div class="absolute left-4 bottom-5">
           <svg
@@ -110,86 +108,39 @@
           </svg>
         </div>
       </div>
+      {{ start }}
       {{ checkAnswer }}
       <div class="mx-6" v-for="(answer, index) in current?.next_question.answers" :key="index">
-        <!-- {{ current?.next_question.id }} -->
         <button @click="postAnswer(current?.next_question.id, answer.id)" class="single-answer">
           <div class="circle-answer">
             <p class="circle-answer-text">A</p>
           </div>
           <p class="answer">{{ answer.answer }} {{ answer.id }}</p>
         </button>
-        <!-- <button class="single-answer">
-          <div class="circle-answer">
-            <p class="circle-answer-text">B</p>
-          </div>
-          <p class="answer">test</p>
-        </button>
-        <button class="single-answer">
-          <div class="circle-answer">
-            <p class="circle-answer-text">C</p>
-          </div>
-          <p class="answer">test</p>
-        </button>
-        <button class="single-answer">
-          <div class="circle-answer">
-            <p class="circle-answer-text">D</p>
-          </div>
-          <p class="answer">test</p>
-        </button> -->
-
-      </div>
-    </div>
-    <pre>
-      <!-- {{ current?.next_question.answers }} -->
-      <!-- <div v-if="nextQuestion.length > 1">
-        test
-      </div> -->
-      <!-- <div v-else>
-        {{ startQuiz }}
-        test
-      </div> -->
-      <!-- {{ nextQuestion }} -->
-      <!-- <button @click="postAnswer()" class="bg-blue-300 px-5 py-3 border rounded-xl">
-        Wyślij odpowidź
-      </button> -->
-    </pre>
-  </div>
-  <NavBottom />
-  <!-- <div class="mx-12 py-10">
-      <div class="mb-12">
-        <p>test quiz id: {{ route.params.id }}</p>
-        <h1 class="">Tytuł quizu: {{ quiz.title }}</h1>
-        <h2 class="">Kategoria: {{ findCategory.name }}</h2>
-        <img :src="quiz.image" class="" />
-        <div>
-          <h2>Pytanie 1: {{ start.next_question.question }}</h2>
-          <p>Odpowiedzi:</p>
-          <div v-for="answers in start.next_question.answers" :key="answers.id">
-            <p>{{ answers.answer }}- {{ answers.id }}</p>
-          </div>
-          <p>id_pytania: {{ start.next_question.id }}</p>
-          <pre>
-  Pytanie:{{ correct }} 
-  Odpowiedzi: {{ correctAnswer1 }} </pre
-          >
-        </div>
-      </div>
-      <pre>
-      {{ quiz }}
-      {{ findCategory }}
-DO znalezienie id pytania 
-      {{ start }}
-      {{ start.next_question.answers[0].id }}
-      </pre>
-      <div>
-        <button @click="postAnswer" class="bg-blue-300 px-5 py-3 border rounded-xl">
-          Wyślij odpowidź
-        </button>
-        {{ NextQuestion }}
-        <p class="answer">test</p>
       </div>
     </div> -->
+    <!-- <div v-for="(question, index) in checkAnswer" :key="index">
+      {{ question }}
+      {{ question.is_correct === 0 ? "poprawna":"błędna odpowiedź" }}
+      <div v-for="(answer, index) in question.answers" :key="index">
+        {{ amswer }}
+      </div>
+    </div> -->
+    <div class="pt-20 px-8">
+
+        {{ checkAnswerAlert() }}
+        <div v-for="(quiz, index) in current" :key="index">
+          <p class="text-lg font-semibold">{{ quiz?.question }}</p>
+          <div v-for="(answer, index) in quiz?.answers" :key="index">
+            <button @click="postAnswer(quiz.id, answer.id)">{{ answer.answer }}</button>
+          </div>
+        </div>
+      <!-- {{current }} -->
+      <!-- {{ nextQuestion }} -->
+      <!-- {{  getNextQuestion1 }} -->
+    </div>
+  </div>
+  <NavBottom />
 </template>
 
 <script setup lang="ts">
@@ -198,44 +149,30 @@ import { useQuiz } from "@/store/useQuiz";
 const route = useRoute();
 const quizState = useQuiz();
 
-const currentTitle = ref(
-  "Jaką zupę podano Jackowi Soplicy w “Pan Tadeusz” Adama Mickiewicza ?"
-);
-
 await quizState.startingQuiz(route.params.id);
-const { startQuiz,nextQuestion, getNextQuestion } = storeToRefs(quizState);
+const { startQuiz, nextQuestion, getNextQuestion1 } = storeToRefs(quizState);
 let start: any = startQuiz.value;
+
+const current = ref<any>(startQuiz.value);
+const checkAnswer = ref(null);
+
 // await quizState.getNextQuestion(start.submission_id)
-// let nextQuestion1 = getNextQuestion.value
-// console.log(nextQuestion1)
 
-const current = ref(startQuiz.value)
-const checkAnswer= ref()
-// const currentQuestion = async ()=>{
-//   if(nextQuestion){
-//     return nextQuestion
-//   } else {
-//     return nextQuestion
-//   }
-// }
-// let next = ref<any>(nextQuestion)
-// const check = () =>{
-//   if(next.length > 1){
-//     console.log('test')
-//   }
-// }
- const postAnswer = async (question_id:any, ansewer_id:any)=> {
- const res =  await quizState.postAnswerNextQuestion(
-    start.submission_id,
-    start.next_question.id,
-    start.next_question.answers[2].id
-    );
-    let next = nextQuestion.value
+const postAnswer = async (question_id: any, ansewer_id: any) => {
+  await quizState.postAnswerNextQuestion(start.submission_id, question_id, ansewer_id);
+  let next = nextQuestion.value
    startQuiz.value = null
-   checkAnswer.value = next
+   checkAnswer.value = next.is_correct
    current.value = next
-}
+};
 
+const checkAnswerAlert = ()=>{
+  if(checkAnswer.value == 0){
+return 'błedna odpowiedz'
+  } else if(checkAnswer.value == 1){
+    return "poprawna odpowiedz"
+  }
+}
 </script>
 
 <style scoped lang="scss">
