@@ -23,8 +23,9 @@
         </div>
   </div>
   <div v-else>
-    <div v-if="isQuiz">
+    <!-- <div v-if="isQuiz"> -->
       <ModalDown
+      :modalActive="isQuiz"
       title="Quiz"
       @close= "isQuizClose" 
       >
@@ -34,7 +35,7 @@
         />
         </template>
         </ModalDown>
-    </div>
+    <!-- </div> -->
       <!-- <NuxtLink :to="`/panel/quiz/${quiz?.id}`"> -->
         <div class="card bg-size" :style="`background-image: url(${quiz?.image})`" @click="isQuizClose()">
         <div class="bg-image">

@@ -1,7 +1,9 @@
 <template>
     <div>
-      <div v-if="isOpen">
+      <!-- <div v-if="isOpen"> -->
         <ModalDown
+ :modalActive="isOpen"
+
         title="Czym są punkty ?"
         @close= "isClose" 
         >
@@ -10,7 +12,7 @@
           />
         </template>
         </ModalDown>
-      </div>
+      <!-- </div> -->
     <div>
         <h2 class="title-h2 mb-7">Twoje statystyki</h2>
         <div class="mb-9 white-retangle">

@@ -1,6 +1,7 @@
 <template>
-  <div v-if="isOpen">
+  <!-- <div v-if="isOpen"> -->
     <ModalDown
+ :modalActive="isOpen"
     title="Jak zdobyć punkty"
     @close= "isClose" 
     >
@@ -9,7 +10,7 @@
       />
     </template>
     </ModalDown>
-  </div>
+  <!-- </div> -->
 <div>
   <div class="retangle mb-[35px]">
     <div class=" pt-2 border-b border-gray-200">

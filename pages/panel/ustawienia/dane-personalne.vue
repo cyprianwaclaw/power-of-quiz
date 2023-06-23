@@ -1,11 +1,13 @@
 <template>
-  <div v-if="isOpen">
-    <ModalDown :title="titleImage()" @close="isModal()">
+  <!-- <div v-if="isOpen"> -->
+    <ModalDown 
+ :modalActive="isOpen"
+    :title="titleImage()" @close="isModal()">
       <template #content>
         <LazyModalContentCropAvatar @close="isModal()" />
       </template>
     </ModalDown>
-  </div>
+  <!-- </div> -->
   <NuxtLayout name="edit-settings">
     <div class="grid place-items-center">
       <div v-if="user.avatar_path" class="relative">

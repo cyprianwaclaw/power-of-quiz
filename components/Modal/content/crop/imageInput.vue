@@ -1,6 +1,7 @@
 <template>
-  <div v-if="isImageModal">
-    <ModalDown title="Dodaj zdjęcie" @close="imageModal()">
+    <ModalDown 
+    :modalActive="isImageModal"
+    title="Dodaj zdjęcie" @close="imageModal()">
       <template #content>
         <LazyModalContentCropQuiz
           @croppedFile="handleCroppedFile"
@@ -9,7 +10,6 @@
         />
       </template>
     </ModalDown>
-  </div>
     <div v-if="props.image">
       <div class="flex justify-end mt-[14px]" v-if="!croppedImageNew">
         <button @click="changeImage()">

@@ -1,6 +1,8 @@
 <template>
-  <div v-if="isOpen">
+  <!-- <div v-if="isOpen"> -->
     <ModalDown
+ :modalActive="isOpen"
+    
     title="Zaproś znajomych"
     @close= "isClose" 
     >
@@ -10,7 +12,7 @@
       />
     </template>
     </ModalDown>
-  </div>
+  <!-- </div> -->
   <NuxtLayout name="panel">
     <div>
       <h1 class="title-h1">Zaproszone osoby</h1>

@@ -12,8 +12,10 @@
         </div>
       </div>
     <div v-else>
-        <div v-if="isQuiz">
+        <!-- <div v-if="isQuiz"> -->
             <ModalDown
+ :modalActive="isQuiz"
+
             title="Quiz"
             @close= "isQuizClose" 
             >
@@ -23,7 +25,7 @@
               />
               </template>
               </ModalDown>
-         </div>   
+         <!-- </div>    -->
         <!-- <NuxtLink :to="`/panel/konto/dodane-quizy/${quiz.id}`"> -->
             <div class="" @click="isQuizClose()">           
                 <img v-if="!quiz.image" src="@/assets/file/placeholder-image.webp" class="my-quiz-image"/>
