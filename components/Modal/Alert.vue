@@ -1,130 +1,90 @@
 <template>
-    <div class="fixed z-50 left-0 bottom-0 w-full" v-if="props.modalActive">
-      <div class="blur-background-update" ref="background"></div>
-    <div class="modal-view-update" ref="modal">
-      <div class="flex justify-end pr-3 pt-2">
-        <Icon
-          name="carbon:close"
-          size="30"
-          class="close w-8 h-8 border-transparent rounded-[6px]"
-          @click="$emit('close')"
-        />
-      </div>
-      <div class="px-5 pb-6 pt-1 grid">
-        <div>
-          <p class="text-[20px] text-center font-semibold">{{ title }}</p>
-          <p class="edit-message-modal">{{ des }}</p>
+  <Transition>
+    <div class="fixed z-50 left-0 bottom-0 w-full">
+      <div class="blur-background-update" v-if="props.modalActive"></div>
+      <Transition 
+      @before-enter="onBefore"
+      >
+        <div class="modal-view-update" v-if="props.modalActive">
+          <div class="flex justify-end pr-3 pt-2">
+            <Icon
+              name="carbon:close"
+              size="30"
+              class="close w-8 h-8 border-transparent rounded-[6px]"
+              @click="$emit('close')"
+            />
+          </div>
+          <div class="px-5 pb-6 pt-1 grid">
+            <div>
+              <p class="text-[20px] text-center font-semibold">{{ props.title }}</p>
+              <p class="edit-message-modal">{{ props.des }}</p>
+            </div>
+          </div>
+          <div class="flex mx-5 mb-5 place-items-center justify-end">
+            <NuxtLink :to="props.redirect" v-if="props.redirect">
+              <div class="ml-[-8px]">
+                <p class="action-button primary-color">{{ props.actionButton }}</p>
+              </div>
+            </NuxtLink>
+            <div @click="$emit('action')" v-else class="action-button">
+              <p :class="[props.actionButtonClass ? props.actionButtonClass : 'primary-color']">
+                {{ props.actionButton }}
+              </p>
+            </div>
+            <p class="button-primary-small" @click="$emit('close')">
+              {{ props.closeButton }}
+            </p>
+          </div>
         </div>
-      </div>
-      <div
-        class="flex mx-5 mb-5 place-items-center justify-end">
-        <NuxtLink :to="`${redirect}`" v-if="redirect">
-          <button class="ml-[-8px]">
-            <p class="action-button primary-color">{{ actionButton }}</p>
-          </button>
-        </NuxtLink>
-        <button @click="$emit('action')" v-else class="action-button">
-          <p :class="[actionButtonClass ? actionButtonClass : 'primary-color']">
-            {{ actionButton }}
-          </p>
-        </button>
-        <button class="button-primary-small" @click="$emit('close')">
-          {{ closeButton }}
-        </button>
-      </div>
+      </Transition>
     </div>
-  </div>
+  </Transition>
 </template>
+
 <script setup lang="ts">
 import gsap from 'gsap'
-const emit = defineEmits<{
-  (e: "close", value: any): void;
-  (e: "action", value: any): void;
-}>();
-
+const emit = defineEmits(['close', 'action']);
 const props = defineProps({
   title: {
-    name: String,
+    type: String,
     required: true,
   },
   des: {
-    name: String,
+    type: String,
     required: true,
   },
   closeButton: {
-    name: String,
+    type: String,
     required: true,
   },
   closeButtonClick: {
-    name: String,
+    type: String,
     required: false,
   },
   modalActive: {
-    name: String,
+    type: Boolean,
     required: true,
   },
   actionButton: {
-    name: String,
+    type: String,
     required: false,
   },
   actionButtonClass: {
-    name: String,
+    type: String,
     required: false,
   },
   redirect: {
-    name: String,
+    type: String,
     required: false,
   },
 });
-const is_active = ref(false)
-const open = ()=>{
-  is_active.value =! is_active.value
+
+const onBefore = (el:any)=>{
+  gsap.to(el,{
+    y: -20,
+    duration: 0.2,
+  })
 }
-const background = ref()
-const modal = ref()
-// let animation = gsap.timeline({paused: true, onReverseComplete: open}) 
-// onMounted(()=>{
-// animation.from(background.value,{
-//   opacity: 0,
-//   duration: 0.1,
-// })
-// .to(background.value,{
-//   y: 200,
-//   duration: 0.5,
-// })
-// .from(modal.value,{
-//   opacity: 0,
-//   y: 20,
-//   duration: 0.5,
-// })
-// })
-
-// let animation = gsap.timeline({ paused: true, onReverseComplete: open });
-// onMounted(() => {
-//     animation
-//       .from(background.value, {
-//         opacity: 0,
-//         duration: 0.1,
-//       })
-//       .to(background.value, {
-//         y: 200,
-//         duration: 0.5,
-//       })
-//       .from(modal.value, {
-//         opacity: 0,
-//         y: 20,
-//         duration: 0.5,
-//       });
-// });
-
-// watch(props,(newValue) =>{
-//   if(newValue.modalActive == true){
-//     open()
-//     animation.play()
-//   } else{
-//     animation.reverse()
-//   }
-// })
 </script>
 
 <style scoped lang="scss">
@@ -136,6 +96,7 @@ const modal = ref()
   font-weight: 600;
   margin-right: 24px;
 }
+
 .edit-message-modal {
   margin: 10px 8px 0px 8px;
   line-height: 24px;
@@ -144,9 +105,19 @@ const modal = ref()
   text-align: center;
 }
 
-
 .close {
   color: rgb(209, 209, 209);
+}
+
+/* tło do modala */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 
 </style>

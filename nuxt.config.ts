@@ -1,5 +1,8 @@
 import CompressionPlugin from 'compression-webpack-plugin'
 export default defineNuxtConfig({
+  // app: {
+  //   pageTransition: { name: 'page', mode: 'out-in' }
+  // },
   build: {
     transpile: ['gsap'],
     // ...pozostała część konfiguracji build...

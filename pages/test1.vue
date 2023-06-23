@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div>
+      
+    </div>
     <select11 :array="options" :name="name" v-model="selectedOption" :defaultOption="defaultOption" @selectedOption="handleSelectedOption" header="chuj"></select11>
     <p>Zaznaczona opcja: {{ selectedOption }}</p>
   </div>
