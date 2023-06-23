@@ -69,8 +69,9 @@ const onBeforeEnter = (el: any) => {
 const onEnter = (el:any, done:any) => {
   let elementHeight = el.offsetHeight;
   gsap.from(el, {
+    ease: "power1.out",
     y: elementHeight,
-    duration: 0.12,
+    duration: 0.3,
     onComplete: done,
   });
 };
@@ -90,8 +91,9 @@ const onBeforeLeave = (el: any) => {
 const onLeave = (el: any, done: any) => {
   let elementHeight = el.offsetHeight;
   gsap.to(el, {
+    ease: "power1.out",
     y: elementHeight,
-    duration: 0.2,
+    duration: 0.3,
     onComplete: done,
   })
 }
