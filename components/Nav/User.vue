@@ -1,33 +1,85 @@
-<template>
-  <div class="nav-border lg:py-1 py-4  px-6 lg:px-10 2xl:px-14 fixed w-full flex bg-white z-100 place-items-center">
-    <div class="flex w-full justify-between  top-6">
+<!-- <template>
+  <div
+    class="nav-border lg:py-4 py-4 px-6 lg:px-10 xl:px-16 fixed w-full flex bg-white z-100 place-items-center"
+  >
+    <div class="flex w-full justify-between top-6">
       <div class="flex place-items-center">
-       <menuDesktop />
-        <NuxtLink to="/panel"
-        ><img src="@/assets/file/logo.png" class="size-logo"
+        <NuxtLink to="/panel" class="md:mr-14"
+          ><img src="@/assets/file/logo.png" class="xl:w-[200px] w-[175px]"
         /></NuxtLink>
+        <div v-for="(page, index) in links" :key="index" class="mr-7 hidden md:flex">
+          <NuxtLink :to="page.link" class="flex gap-7">
+       <p class="text-[#464646] font-medium  hover:text-black">{{ page.name }}</p>
+          </NuxtLink>
+        </div>
       </div>
-      <div class="flex place-items-center lg:hidden">
+        <div class="flex grow">
+          <InputSearch
+
+          />
+          <userCard />
+        </div>
+        <div class="flex place-items-center lg:hidden">
           <button @click="openSearch = !openSearch" v-if="!openSearch">
             <Icon name="ph:magnifying-glass-light" size="30" class="search-icon" />
           </button>
           <button @click="openSearch = !openSearch" v-else>
             <Icon name="carbon:close" size="30" class="search-icon" />
           </button>
+        </div>
+    </div>
+    <ModalSearch v-if="openSearch" @close="Modal()" title="Filtruj quizy"> </ModalSearch>
+  </div>
+</template> -->
+
+
+<template>
+  <!-- <div class="nav-border lg:py-4 py-4 px-6 lg:px-10 xl:px-16 fixed w-full flex bg-white z-100 place-items-center">
+    <div class="flex w-full justify-between top-6">
+      <div class="flex place-items-center">
+        <NuxtLink to="/panel" class="md:mr-14">
+          <img src="@/assets/file/logo.png" class="xl:w-[200px] w-[175px]" />
+        </NuxtLink>
+        <div v-for="(page, index) in links" :key="index" class="mr-7 hidden md:flex">
+          <NuxtLink :to="page.link" class="flex gap-7">
+            <p class="text-[#464646] font-medium hover:text-black">{{ page.name }}</p>
+          </NuxtLink>
+        </div>
       </div>
-      <div class="lg:flex hidden">
+      <div class="lg:flex hidden flex-grow">
+        <InputSearch />
         <userCard />
       </div>
+      <div class="flex place-items-center lg:hidden">
+        <button @click="openSearch = !openSearch" v-if="!openSearch">
+          <Icon name="ph:magnifying-glass-light" size="30" class="search-icon" />
+        </button>
+        <button @click="openSearch = !openSearch" v-else>
+          <Icon name="carbon:close" size="30" class="search-icon" />
+        </button>
+      </div>
+    </div>
+    <ModalSearch v-if="openSearch" @close="Modal()" title="Filtruj quizy"></ModalSearch>
+  </div> -->
+
+  <div class="flex h-16 mt-16 mx-20">
+    <div class="flex-grow bg-blue-500 min-w-[200px] flex flex-row items-center">
+      <span class="whitespace-no-wrap md:flex-wrap">huj ci w dupe</span>
+      <input class="ml-2 min-w-[20px] max-w-[300px] h-[40px] flex-shrink" />
+    </div>
+    <div class="flex-grow-0 bg-red-300 min-w-[500px]">
+      Treść diva 2
     </div>
   </div>
-      <ModalSearch v-if="openSearch"  @close= "Modal()"  title="Filtruj quizy">
-          </ModalSearch>
+  
+  
 </template>
+
+
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
 import { usePersistCart } from "@/utils/hooks";
-
 
 const isOpen = ref(false);
 const Modal = () => {
@@ -45,13 +97,10 @@ usePersistCart();
 let category = categories.value;
 const allCategories: any = ref();
 
-let mapCategory = (allCategories.value = category.map((single: any) => ({
-  id: single.id,
-  name: single.name,
-  selected: false,
-})));
-
-// let populars = quizesValue(popularQuiz.value, mapCategory)
+const links = [
+  { name: "Zaproś znajomych", link: "/panel/zaproszeni" },
+  { name: "test", link: "/panel/quiz/dodaj-nowy" },
+];
 
 const searchInput: any = computed(() => {
   return allQuizName.value.filter((quiz: any) =>
@@ -170,11 +219,6 @@ function click() {
   }
 }
 
-@media only screen and (min-width: 770px) {
-  .size-logo {
-    width: 160px;
-  }
-}
 .search-icon {
   color: #c4c4c4;
 }

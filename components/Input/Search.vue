@@ -1,16 +1,17 @@
 <template>
-  <div class="mx-6 py-8 flex place-items-center gap-2">
-    <input class="" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
-    <div class="serach_color">
+  <div class="mx-6 py-8 md:py-0 flex place-items-center gap-2 grow">
+    <input class="md:rounded-2xl flex w-[450px] min-w-[100px]" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
+    <div class="serach_color flex md:hidden">
       <Icon
         name="ph:magnifying-glass"
         size="22"
         color="white"
-        class="search_icon_color"
+        class="search_icon_color "
       />
     </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 defineProps(["modelValue"]);
