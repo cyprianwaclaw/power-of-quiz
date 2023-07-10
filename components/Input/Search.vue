@@ -1,6 +1,6 @@
 <template>
-  <div class="mx-6 py-8 md:py-0 flex place-items-center gap-2 grow">
-    <input class="md:rounded-2xl flex w-[450px] min-w-[100px]" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
+  <div class="mx-6 py-8 md:py-0 flex place-items-center gap-2">
+    <input class="md:rounded-2xl" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
     <div class="serach_color flex md:hidden">
       <Icon
         name="ph:magnifying-glass"
