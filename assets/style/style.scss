@@ -278,6 +278,11 @@
         height: 100vh;
     }
     
+    .bg-black-own {
+        background: rgba(0, 0, 0, 0.40);
+        backdrop-filter: blur(2px);
+    }
+    
     .modal-view-update {
         background-color: rgb(243, 239, 239);
         border: solid transparent;

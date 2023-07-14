@@ -1,6 +1,5 @@
 <template>
-  <Transition name="slide-fade">
-    <div class="fixed z-50 left-0 bottom-0 w-full top-[60px] bg-white">
+    <div class="fixed z-50 left-0 bottom-0 w-full top-[60px] bg-white" v-if="props.modalActive">
       <div class="flex place-items-center bg-white flex-col mx-5">
         <input name="search" class="mb-6 mt-6" v-model="search" placeholder="Wyszukaj quiz..." />
           <button class="serach_color" @click="click" v-if="search">
@@ -29,9 +28,7 @@
             </div>
         </div>
       </div>
-      <div
-        class="overflow-auto h-screen relative bg-white rounded-xl flex flex-col mx-6 scrollbar-hide  pb-[240px]"
-      >
+      <div class="overflow-auto h-screen relative bg-white rounded-xl flex flex-col mx-6 scrollbar-hide  pb-[240px]">
         <div v-for="quiz in searchInput" :key="quiz" >
           <div v-if="search.length">
             <QuizSearchCard :quiz="quiz" />
@@ -40,7 +37,7 @@
       </div>
       <div>
         <div v-if="results">
-          <button class="serach_color_disabled" @click="click" disabled>
+          <button class="serach_color_disabled" @click="$emit('close')" disabled>
             <Icon
               name="ph:magnifying-glass"
               size="22"
@@ -65,16 +62,21 @@
         </div>
       </div>
     </div>
-  </Transition>
+    <!-- </Transition> -->
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
+import gsap from 'gsap'
 
-const isOpen = ref(false);
-const Modal = () => {
-  isOpen.value = !isOpen.value;
-};
+const props = defineProps({
+  modalActive: {
+    type: Boolean,
+    required: true,
+  },
+})
+
+const emit = defineEmits(['close'])
 
 const quiz = useQuiz();
 const { allQuizName, popularQuiz, loadingQuiz, categories } = storeToRefs(quiz);
@@ -102,11 +104,6 @@ const searchInput: any = computed(() => {
 });
 
 
-function deleteItem() {
-  console.log("delete");
-}
-
-function newStorge() {}
 
 watch(search, async (newValue: any) => {
   if (newValue.length > 0) {
@@ -139,6 +136,45 @@ function click() {
   quiz.add(search.value);
   search.value = "";
   // useRouter().push("/panel/quiz/szukaj");
+}
+
+
+const onEnter = (el:any, done:any) => {
+  gsap.from(el, {
+    ease: "power1.out",
+    y: -200,
+    duration: 0.3,
+    onComplete: done,
+  });
+};
+
+const onAfterEnter = (el: any) => {
+  // Do something after enter animation
+}
+
+const onEnterCancelled = (el: any) => {
+  // Handle cancelled enter animation
+}
+
+const onBeforeLeave = (el: any) => {
+  // Do something before leave animation
+}
+
+const onLeave = (el: any, done: any) => {
+  gsap.to(el, {
+    ease: "power1.out",
+    y: -1000,
+    duration: 0.7,
+    onComplete: done,
+  })
+}
+
+const onAfterLeave = (el: any) => {
+  // Do something after leave animation
+}
+
+const onLeaveCancelled = (el: any) => {
+  // Handle cancelled leave animation
 }
 </script>
 

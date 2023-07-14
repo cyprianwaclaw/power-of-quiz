@@ -106,7 +106,9 @@ export function indexBigger (index: number){
 return results
 }
 
-export function changeDifficult(text:any){
+
+
+export const changeDifficult=(text:any)=>{
   let result:string = ''
   if(text == 'easy'){
     result = 'Łatwy'

@@ -1,38 +1,42 @@
 <template>
- 
-   <div class="fixed z-50 w-full">
-   <div class="flex h-16 bg-white justify-between w-full absolute">
-    <div class="flex flex-shrink-0 items-center px-5">
-      <NuxtLink to="/panel" class="md:mr-14">
-        <img src="@/assets/file/logo.png" class="xl:w-[200px] w-[175px]" />
-      </NuxtLink>
-      <div v-for="(page, index) in links" :key="index" class="mr-7 hidden md:flex">
-        <NuxtLink :to="page.link" class="flex gap-7">
-          <p class="text-[#464646] font-medium hover:text-black">{{ page.name }}</p>
+  <ModalSearch 
+  :modalActive="openSearch"
+  @close= "isClose" 
+  />
+  <div class="fixed z-50 w-full">
+
+    <div class="flex bg-white border place-items-center justify-between h-16 border-b-gray-300  z-40  px-10">
+      <div class="flex items-center shrink-0  pr-[80px]">
+        <NuxtLink to="/panel" class="md:mr-14">
+          <img src="@/assets/file/logo.png" class="w-[175px] "/>
         </NuxtLink>
+        <div v-for="(page, index) in links" :key="index" class="mr-7 hidden md:flex">
+          <NuxtLink :to="page.link" class="flex gap-7">
+            <p class="text-[#464646] font-semibold whitespace-nowrap  hover:text-black">{{ page.name }}</p>
+          </NuxtLink>
+        </div>
       </div>
-    </div>
-    <div class="flex flex-shrink">
-      <div class="flex-shrink min-w-[300px] max-w-[700px] w-[500px] px-5 items-center lg:flex hidden">
-        <input class="ml-2 min-w-0 flex-shrink h-[40px] w-full max-w-[500px]" />
-        <userCard class="ml-2 flex-shrink-0"/>
-      </div>
-      <div class="lg:hidden flex">
-        <button @click="openSearch = !openSearch" v-if="!openSearch">
-          <Icon name="ph:magnifying-glass-light" size="30" class="search-icon" />
-        </button>
-        <button @click="openSearch = !openSearch" v-else>
-          <Icon name="carbon:close" size="30" class="search-icon" />
-        </button>
+      <div class="flex lg:flex-1 shrink place-items-center gap-7 max-w-[1000px] ">
+        <div class="lg:flex hidden w-full">   
+          <InputSearch 
+          @open="openMenuDesktop"
+          />
+          <userCard 
+          @open="openMenuDesktop"
+          class="shrink-0" />
+        </div>
+        <div class="lg:hidden flex ">
+          <button @click="openSearch = !openSearch" v-if="!openSearch">
+            <Icon name="ph:magnifying-glass-light" size="30" class="search-icon" />
+          </button>
+          <button @click="openSearch = !openSearch" v-else>
+            <Icon name="carbon:close" size="30" class="search-icon" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
-<ModalSearch v-if="openSearch" @close="Modal()" title="Filtruj quizy"> </ModalSearch>
-  </div>
-
-
 </template>
-
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
@@ -41,6 +45,13 @@ import { usePersistCart } from "@/utils/hooks";
 const isOpen = ref(false);
 const Modal = () => {
   isOpen.value = !isOpen.value;
+};
+
+const openMenu = ref(false);
+const openMenuDesktop = (value: any) => {
+  console.log("wartosc z komponenty: " + value);
+  openMenu.value = value;
+  // return value
 };
 
 const quiz = useQuiz();

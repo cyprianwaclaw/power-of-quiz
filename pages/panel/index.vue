@@ -1,5 +1,17 @@
 <template>
   <NuxtLayout name="panel">
+      <!-- <div class="flex-container">
+        <div>1</div>
+        <div>2</div>
+        <div class="shrink-0">3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        <div>10</div>
+      </div> -->
         <div class="flex flex-col justify-center w-full mb-12 mt-4">
           <div class="flex items-place-center">
             <div class="md:flex" >         
@@ -41,6 +53,10 @@
 import { storeToRefs } from "pinia";
 import { useUser } from "@/store/useUser";
 import { useQuiz } from "@/store/useQuiz";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper';
+import 'swiper/css';
 
 definePageMeta({
   middleware: "auth"
@@ -76,4 +92,59 @@ let latest =  quizesValue(quizLatest.value, mapCategory)
   border-radius: 2000px;
   height: 52px;
   }
+
+  
+.swiper-slide {
+  background: transparent;
+  height: 220px;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-pagination {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: auto !important;
+	left: auto !important;
+	margin: 0;
+}
+.swiper-pagination-bullet, swiper-pagination-bullet-active {
+	padding: 5px 10px !important;
+	border-radius: 0;
+	width: auto;
+	height: 30px;
+	text-align: center;
+	line-height: 30px;
+	font-size: 12px;
+	color:#000;
+	opacity: 1;
+	background: rgba(0,0,0,0.2);
+}
+.swiper-pagination-bullet-active {
+	color:#fff;
+	background: #007aff;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #000 !important;
+}
+
+.flex-container {
+  display: flex;
+  align-items: stretch;
+  background-color: #f1f1f1;
+}
+
+.flex-container>div {
+  background-color: DodgerBlue;
+  color: white;
+  width: 100px;
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+}
 </style>
