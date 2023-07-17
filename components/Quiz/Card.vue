@@ -1,10 +1,16 @@
 <template>
   <div v-if="!hasPremium">
-    <div v-if="isOpen">
-        <ModalPremiumPlan
-        @close= "isClose" 
-        />
-    </div>
+    <ModalAlert
+    :modalActive="isOpen"
+    name="Premium"
+    status="error"
+    title="Brak dostępu"
+    des="Ta sekcja wymaga pakietu Premium. Dołącz już teraz i ciesz się pełnymi możliwościami"
+    closeButton="Zamknij"
+    actionButton="Zobacz pakiety"
+    redirect="/panel/pakiety"
+    @close="isClose"
+  />
         <div class="card bg-size" :style="`background-image: url(${quiz?.image})`" @click="isClose()">
           <div class="bg-image">
             <div class="details">

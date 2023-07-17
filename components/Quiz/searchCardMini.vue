@@ -1,37 +1,30 @@
 <template>
     <div v-if="!hasPremium">
-        <div v-if="isOpen">
-            <ModalPremiumPlan
-            @close= "isClose" 
-            />
-        </div>
-        <!-- <div class="card w-[260px] bg-size" :style="`background-image: url(${quiz.image})`"  @click="isClose()">
-            <div class="bg-image">
-                <div class="details">
-                    <h3 class="title">{{ quiz.title }}</h3>
-                    <div class="float-left flex mt-3 gap-3">
-                        <p class="des">{{ quiz.questions_count }} pytań</p>
-                        <div class="vl"></div>
-                        <p class="des">{{ quiz.time }} min</p>
-                        <div class="vl"></div>
-                        <p class="des">{{ quiz.difficulty }}</p>
-                    </div>
-                </div>
-            </div>
-        </div> -->
+        <ModalAlert
+        :modalActive="isOpen"
+        name="Premium"
+        title="Brak dostępu"
+        des="Ta sekcja wymaga pakietu Premium. Dołącz już teraz i ciesz się pełnymi możliwościami"
+        closeButton="Zamknij"
+        status="error"
+        actionButton="Zobacz pakiety"
+        redirect="/panel/pakiety"
+        @close="isClose"
+      />
         <div class="flex place-items-center w-[250px]">
             <img :src="quiz.image" class="w-14 h-14 border-slate-300 border rounded-[4px]"/>
             <div class="flex flex-col">
               <p> {{ truncateText(quiz.title, 18).name }}{{ truncateText(quiz.title, 10)?.symbol }}</p>
                 <div class="flex gap-2">
-                <!-- <p class="des">   {{ quiz.questions_count }} pytania</p>
-                 <div class="vl"></div>  -->
+                <p class="des">   {{ quiz.questions_count }} pytania</p>
+                 <div class="vl"></div> 
                 <p class="des">   {{ quiz.category[0].name }} </p>
                   <div class="vl"></div> 
                 <p class="des">   {{ changeDifficult(quiz.difficulty) }} </p>
                 </div>
             </div>
         </div>
+        <!-- {{ quiz.title }} -->
       </div>
       <div v-else>
             <ModalDown

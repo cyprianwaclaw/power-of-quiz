@@ -1,7 +1,7 @@
 <template>
     <div class="text pr-4">
         Aktualnie posiadasz pakiet Standard, przejdź na
-<span class="primary-color font-semibold"> PREMIUM </span><br>i zyskaj
+<span class="primary-color font-semibold"> PREMIUM </span>i zyskaj
         dodatkowe funkcję
     </div>
 </template>

@@ -1,10 +1,11 @@
 <template>
   <ModalAlert
     :modalActive="isSendQuiz"
-    title="Wysłano!"
+    title="Wysłano quiz!"
     des="Twój quiz został przesłany do nas w celu weryfikacji, gdy zostanie
   zaakceptowany, zostaniesz o tym poinformowany"
     closeButton="Kolejny quiz"
+    status="success"
     actionButton="Home"
     redirect="/panel"
     @close="sendQuiz()"
@@ -12,9 +13,11 @@
   <NuxtLayout name="panel">
     <Form @submit="onSubmit" ref="form" :validation-schema="schema" v-slot="{ meta }">
       <h1 class="title-h1">Nowy quiz</h1>
-      <h2 class="title-h2 mt-[28px] mb-3">Podstawowe informacje</h2>
-      <WhiteRetangleContainer :array="[...quizArray]">
-        <template #select>
+      <div class="grid grid-cols-1 md:grid-rows-2 md:grid-cols-2 gap-10">
+        <div class="row-start-1">
+          <h2 class="title-h2  mb-3">Podstawowe informacje</h2>
+          <WhiteRetangleContainer :array="[...quizArray]">
+            <template #select>
           <QuizAddNewSelectOption
           :array="[...difficultyArray]"
           @selected="difficultyOption"
@@ -45,16 +48,24 @@
           </div>
         </template>
       </WhiteRetangleContainer>
-      <h2 class="title-h2 mt-10 mb-4">Opis</h2>
-      <LazyWhiteRetangleContainer :array="[...desArray]" />
-      <h2 class="title-h2 mt-10 mb-4">Zdjęcie</h2>
+    </div>
+      <div class="row-start-2 content-start">
+        <h2 class="title-h2  mb-4">Opis</h2>
+        <LazyWhiteRetangleContainer :array="[...desArray]" />
+    </div>
+    <div class="md:row-start-1">
+      <h2 class="title-h2 mt-10 mb-4 md:mt-0">Zdjęcie</h2>
       <LazyModalContentCropImageInput
         @close="openModal(isImageModal)"
         @imageFile="handleImage"
         :test="image"
       />
-      <h2 class="title-h2 mt-10 -mb-1.5">Pytania</h2>
+    </div>
+  </div>
+      <div class="">
+      <h2 class="title-h2">Pytania</h2>
       <LazyQuizAddNewQuestionAnswer1 :array="questionArray"/>
+      </div>
       <div class="mt-12 justify-end flex mb-[72px]">
         <button class="button-primary" v-if="submitButton(meta)">Prześlij do akceptacji</button>
         <p v-else class="button-primary-disabled text-center" disabled>Prześlij do akceptacji</p>

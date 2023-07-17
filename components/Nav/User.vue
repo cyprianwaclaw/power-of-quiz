@@ -3,29 +3,26 @@
   :modalActive="openSearch"
   @close= "isClose" 
   />
-  <div class="fixed z-50 w-full">
-
+  <div class="fixed z-20 w-full">
     <div class="flex bg-white border place-items-center justify-between h-16 border-b-gray-300  z-40  px-10">
-      <div class="flex items-center shrink-0  pr-[80px]">
+      <div class="flex items-center shrink-0  lg:pr-[80px]">
         <NuxtLink to="/panel" class="md:mr-14">
           <img src="@/assets/file/logo.png" class="w-[175px] "/>
         </NuxtLink>
-        <div v-for="(page, index) in links" :key="index" class="mr-7 hidden md:flex">
+        <div v-for="(page, index) in links" :key="index" class="mr-7 hidden lg:flex">
           <NuxtLink :to="page.link" class="flex gap-7">
             <p class="text-[#464646] font-semibold whitespace-nowrap  hover:text-black">{{ page.name }}</p>
           </NuxtLink>
         </div>
       </div>
-      <div class="flex lg:flex-1 shrink place-items-center gap-7 max-w-[1000px] ">
-        <div class="lg:flex hidden w-full">   
-          <InputSearch 
-          @open="openMenuDesktop"
-          />
+      <div class="flex lg:flex-1 shrink place-items-center lg:gap-7 max-w-[1000px]">
+        <InputSearch />
+        <div class="shrink-0">
           <userCard 
           @open="openMenuDesktop"
-          class="shrink-0" />
+          />
         </div>
-        <div class="lg:hidden flex ">
+        <div class="sm:hidden flex place-items-center gap-4">
           <button @click="openSearch = !openSearch" v-if="!openSearch">
             <Icon name="ph:magnifying-glass-light" size="30" class="search-icon" />
           </button>
@@ -33,6 +30,7 @@
             <Icon name="carbon:close" size="30" class="search-icon" />
           </button>
         </div>
+        <NavOpenMenu />
       </div>
     </div>
   </div>
@@ -49,7 +47,6 @@ const Modal = () => {
 
 const openMenu = ref(false);
 const openMenuDesktop = (value: any) => {
-  console.log("wartosc z komponenty: " + value);
   openMenu.value = value;
   // return value
 };

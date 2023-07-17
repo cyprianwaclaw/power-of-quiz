@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-y-scroll h-[274px] pr-6">
+    <div class="overflow-y-scroll h-[274px] pr-6 md:pl-3">
         <p>Punkt to wirtualna jednostka waluty, którą możesz wypłacić z serwisu.</p>
 <p class="flex primary-color font-semibold text-[18px] mx-[10px] my-[16px]">1pkt = 1zł</p>
 <p>Punkty możesz zdobyć zapraszając znajomych do wspólnej gry, przesyłając im swój indywidualny kod polecający.

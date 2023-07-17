@@ -1,5 +1,4 @@
 <template>
-  //TODO Można kiedyś zmienić, tak aby był tylko jeden modal
     <div class="fixed z-50 left-0 bottom-0 w-full">
         <div class="blur-background-update"></div>
         <div class="modal-view-update">    

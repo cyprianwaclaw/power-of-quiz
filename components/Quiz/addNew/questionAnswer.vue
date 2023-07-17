@@ -4,6 +4,7 @@
     title="Usuń pytanie"
     des="Czy na pewno chcesz usunąć pytanie? Tej operacji nie będzie można cofnąć"
     closeButton="Anuluj"
+    status="alert"
     actionButton="Usuń"
     actionButtonClass="text-red-500"
     @close="isRemoveModal()"

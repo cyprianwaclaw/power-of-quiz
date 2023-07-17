@@ -266,3 +266,15 @@ export const openModal= (open:boolean)=>{
       return false;
     }
   }
+
+  export const watchOpen = (params:any)=>{
+    watch(params, (newValue:any) => {
+        if (newValue == true) {
+            document.body.style.overflow = "hidden";
+            document.body.style.userSelect = "none";
+        } else {
+            document.body.style.overflow = "auto";
+            document.body.style.userSelect = "auto";
+        }
+    });
+}

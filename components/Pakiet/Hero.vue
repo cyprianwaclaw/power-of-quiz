@@ -1,10 +1,8 @@
 <template>
   <div class="bg-white py-5 px-8 rounded-3xl relative">
-    <div v-if="props.text" class="mt-1">
-
+    <div v-if="props.text" class="mt-1 w-full">
         <p class="text-des-mobile">Twój pakiet</p>
-        <div v-if="
-        hasPremium" class="mb-3 mt-[3px] flex place-items-center gap-2 primary-color">
+        <div v-if="hasPremium" class="mb-3 mt-[3px] flex place-items-center gap-2 primary-color ">
             <div class="absolute top-0 right-0">
                 <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M47 0H0.5L123.5 123.5V76.5L47 0Z" fill="#FACC57" fill-opacity="0.74"/>
@@ -17,9 +15,7 @@
                         </clipPath>
                     </defs>
                 </svg>
-            </div>
-                
-            <!-- <Icon name="fa:diamond" size="26" class="chevron-hero" /> -->
+            </div>                
             <p class="font-medium text-2xl tracking-wide">Premium</p>
         </div>
         <div v-else>
@@ -27,11 +23,9 @@
         </div>
     </div>
     <div v-if="hasPremium">
-      <!-- premium -->
       <PakietContentPremium />
     </div>
     <div v-else>
-      <!-- standard -->
       <PakietContentStandard />
       <PakietGoPremium />
     </div>

@@ -12,17 +12,23 @@
 
 <script setup lang="ts">
 
-  const nuxtApp = useNuxtApp();
-  const loading = ref(false);
-  nuxtApp.hook("page:start", () => {
-    loading.value = true;
-  });
-  nuxtApp.hook("page:finish", () => {
-    loading.value = false;
-  });
+//   const nuxtApp = useNuxtApp();
+//   const loading = ref(false);
+//   nuxtApp.hook("page:start", () => {
+//     loading.value = true;
+//   });
+//   nuxtApp.hook("page:finish", () => {
+//     loading.value = false;
+//   });
 
+//   const isLoading = ref(false);
 
-  
+//   onBeforeRouteLeave((to, from, next) => {
+//   isLoading.value = true;
+//   setTimeout(() => {
+//     next();
+//   }, 500); // Ustaw opóźnienie, które pozwoli na wyświetlenie animacji ładowania
+// });
 </script>
 
 <style>

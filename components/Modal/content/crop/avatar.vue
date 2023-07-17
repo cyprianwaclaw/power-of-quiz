@@ -45,12 +45,8 @@
         </button>
       </div>
       <div v-else class="flex justify-between mt-[16px] mb-[5px]">
-        <button @click="removeImage()">
-          <p class="font-semibold text-sm red">Usuń</p>
-        </button>
-        <button @click="cropImage">
-          <p class="font-semibold text-sm primary-color">Ustaw zdjęcie</p>
-        </button>
+          <p class="font-semibold text-sm red"  @click="removeImage()">Usuń</p>
+          <p class="font-semibold text-sm primary-color" @click="cropImage">Ustaw zdjęcie</p>
       </div>
     </div>
   </div>

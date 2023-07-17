@@ -2,11 +2,16 @@
     <div>
     <div class="mt-2">
         <div v-if="!hasPremium">
-            <div v-if="isOpen">
-                <ModalPremiumPlan
-                @close= "isClose" 
-                />
-            </div>
+          <ModalAlert
+          :modalActive="isOpen"
+          name="Premium"
+          title="Brak dostępu"
+          des="Ta sekcja wymaga pakietu Premium. Dołącz już teraz i ciesz się pełnymi możliwościami"
+          closeButton="Zamknij"
+          actionButton="Zobacz pakiety"
+          redirect="/panel/pakiety"
+          @close="isClose"
+        />
                 <div class="flex columns-2 w-full mb-2 place-items-center" @click="isClose()">
                   <Icon
                     name="ph:lightning-fill"

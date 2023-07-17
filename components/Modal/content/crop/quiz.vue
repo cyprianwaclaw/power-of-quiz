@@ -30,9 +30,7 @@
         <button @click="removeImage()">
           <p class="font-semibold text-sm red">Usuń</p>
         </button>
-        <button @click="cropImage()">
-          <p class="font-semibold text-sm primary-color">Ustaw zdjęcie</p>
-        </button>
+          <p  @click="cropImage()" class="font-semibold text-sm primary-color">Ustaw zdjęcie</p>
       </div>
     </div>
   </div>

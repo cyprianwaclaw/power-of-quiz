@@ -1,9 +1,7 @@
 <template>
     <div>
-      <!-- <div v-if="isOpen"> -->
         <ModalDown
  :modalActive="isOpen"
-
         title="Czym są punkty ?"
         @close= "isClose" 
         >
@@ -12,16 +10,29 @@
           />
         </template>
         </ModalDown>
-      <!-- </div> -->
-    <div>
-        <h2 class="title-h2 mb-7">Twoje statystyki</h2>
-        <div class="mb-9 white-retangle">
+        <ModalAlert
+        :modalActive="isOpenDesktop"
+        title="Czym są punkty ?"
+        closeButton="Zamknij"
+        @close="isCloseDesktop()"
+        >
+      <template #content>
+        <ModalContentPoints
+        />
+        </template>
+      </ModalAlert>
+    <div class="w-full">
+        <h2 class="title-h2 mb-7 md:mt-3">Twoje statystyki</h2>
+        <div class="white-retangle">
           <div class="row-table-start -mt-1">
             <h2 class="title">{{ current.points }}</h2>
             <div class="flex place-items-center gap-1.5">
               <p class="text-des-mobile">Ilość punktów</p>
-              <button @click="isClose()">
+              <button @click="isClose()" class="flex md:hidden">
                 <Icon name="ph:info-bold" size="20" class="" color="#618CFB" @click="Modal" />
+              </button>
+              <button  class="hidden md:flex">
+                <Icon name="ph:info-bold" size="20" class="" color="#618CFB" @click="isCloseDesktop()" />
               </button>
             </div>
           </div>
@@ -39,10 +50,10 @@
               </div>
             </div>
           </div>
-          <div class="row-table-end">
+          <div class="row-table-end md:mb-3">
             <h2 class="title">{{ users }}</h2>
             <p class="text-des-mobile">Liczba zaproszonych osób</p>
-            <div class="flex columns-2 mt-4 mb-2 place-items-center gap-1" @click="copyToken">
+            <div class="flex columns-2 mt-4 mb-2 place-items-center gap-1 cursor-pointer md:hidden" @click="copyToken">
               <Icon name="ic:round-content-copy" size="20" class="primary-color" />
               <p class="primary-color font-semibold">Skopiuj kod polecający</p>
               <div class="tooltip" v-if="tooltip">
@@ -65,6 +76,10 @@ import { useUser } from "@/store/useUser";
 const isOpen = ref(false)
 const isClose = ()=>{
     isOpen.value =! isOpen.value
+}
+const isOpenDesktop = ref(false)
+const isCloseDesktop = ()=>{
+    isOpenDesktop.value =! isOpenDesktop.value
 }
 const tooltip = ref<boolean>();
 const userStore = useUser();
