@@ -34,15 +34,15 @@
     v-if="!hasPremium"
   >
     <!-- nie ma premium -->
-    <div class="bg-image w-[260px] lg:w-full rounded-[24px] lg:rounded-[12px]">
+    <div class="bg-image w-[260px] lg:w-full rounded-[24px] lg:rounded-[12px] cursor-pointer">
       <div class="details">
-        <h3 class="title">{{ quiz.title }}</h3>
+        <h3 class="title hover:underline-offset-4 ">{{ quiz.title }}</h3>
         <div class="flex mt-3 gap-3 float-left">
           <!-- <p class="des">{{ quiz.questions_count }} pytań</p>
           <div class="vl"></div> -->
           <p class="des">{{ quiz.time }} min</p>
           <div class="vl"></div>
-          <p class="des">{{ quiz.difficulty }}</p>
+          <p class="des">{{  changeDifficult(quiz.difficulty)  }}</p>
           <div class="vl"></div>
           <p class="des">{{ quiz?.category[0].name }}</p>
         </div>
@@ -55,15 +55,15 @@
     :style="`background-image: url(${quiz.image}); background-size: cover;`"
     @click="isModal()"
   >
-    <div class="bg-image w-[260px] lg:w-full rounded-[24px] lg:rounded-[12px]">
+    <div class="bg-image w-[260px] lg:w-full rounded-[24px] lg:rounded-[12px] cursor-pointer">
       <div class="details">
-        <h3 class="title">{{ quiz.title }}</h3>
+        <h3 class="title hover:underline-offset-4 ">{{ quiz.title }}</h3>
         <div class="flex mt-3 gap-3 float-left">
           <!-- <p class="des">{{ quiz.questions_count }} pytań</p>
         <div class="vl"></div> -->
           <p class="des">{{ quiz.time }} min</p>
           <div class="vl"></div>
-          <p class="des">{{ quiz.difficulty }}</p>
+          <p class="des">{{ changeDifficult(quiz.difficulty) }}</p>
           <div class="vl"></div>
           <p class="des">{{ quiz?.category[0].name }}</p>
         </div>

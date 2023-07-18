@@ -7,7 +7,7 @@
       >
         <div 
         class="modal-view-update" 
-        :class="[props.name=='singleQuiz' ? 'w-[800px] relative h-[450px]':'md:w-[400px] lg:w-[500px] 2xl:w-[600px] w-[300px]']"
+        :class="[props.name=='singleQuiz' ? 'w-[900px] relative h-[550px]':'md:w-[400px] lg:w-[500px] 2xl:w-[600px] w-[300px]']"
         v-if="props.modalActive">
         <div class="flex justify-end pr-3 pt-2">
           <Icon
