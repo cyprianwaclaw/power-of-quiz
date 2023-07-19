@@ -6,13 +6,13 @@
       </div>
     </div>
     <div v-else>
-      <div class="white-retangle-image">
-        <label class="image-retangle">
+      <div class="white-retangle-image flex md:w-[350px] lg:w-[450px] 2xl:w-[550px]">
+        <label class="image-retangle md:h-[300px]">
           <Icon
             name="carbon:cloud-upload"
             size="38"
             color="9F9F9F"
-            class="justify-center flex w-full -mb-4 mt-3"
+            class="justify-center flex w-full -mb-4 mt-3 md:mt-12"
           />
           <input
             type="file"
@@ -21,15 +21,14 @@
             accept="image/*"
             class="default-file-input"
           />
-          <h1>Kliknij tutaj aby dodać zdjęcie</h1>
+          <h1 class="flex md:hidden">Kliknij tutaj aby dodać zdjęcie</h1>
+          <h1 class="hidden md:flex justify-center">Kliknij tutaj aby dodać zdjęcie,<br> lub upusc tutaj zdjecie</h1>
         </label>
       </div>
     </div>
     <div v-if="croppedImage" class="mt-[5px] mx-[3px]">
       <div class="flex justify-between mt-[16px] mb-[5px]">
-        <button @click="removeImage()">
-          <p class="font-semibold text-sm red">Usuń</p>
-        </button>
+          <p class="font-semibold text-sm red" @click="removeImage()">Usuń</p>
           <p  @click="cropImage()" class="font-semibold text-sm primary-color">Ustaw zdjęcie</p>
       </div>
     </div>
@@ -136,7 +135,6 @@ input[type="file"] {
 .white-retangle-image {
   background-color: white;
   border-radius: 24px;
-  padding: 4px 0px 20px 0px;
 }
 .quest-text {
   font-size: 16px;

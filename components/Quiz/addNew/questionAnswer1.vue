@@ -18,12 +18,12 @@
     closeButton="Okej"
     @close="removeSuccess()"
   />
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-10">
   <TransitionGroup @before-enter="onBefore" @enter="onEnter" :css="false">
-    <div class="grid grid-cols-1 md:grid-cols-2 col-start-1 row-start-1 gap-10">
     <div
       v-for="(item, index) in propsArray"
       :key="index"
-      class="white-retangle1 mt-6"
+      class="white-retangle1"
     >
       <div class="flex flex-col pl-2.5 pr-5 border-own1">
         <div class="flex justify-between">
@@ -98,17 +98,17 @@
         </p>
       </div>
     </div>
-  </div>
-  <div class="flex justify-end -mr-3 mt-2">
-    <p
+    <div class="flex justify-end -mr-3 mt-2">
+      <p
       @click="addQuestion(props.array)"
       v-if="checkQuestion(propsArray)"
       class="primary-color text-[17px] font-semibold px-4 py-2 border border-transparent rounded-xl"
-    >
+      >
       Następne pytanie
     </p>
   </div>
-  </TransitionGroup>
+</TransitionGroup>
+</div>
 </template>
 
 <script setup lang="ts">

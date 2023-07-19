@@ -1,15 +1,28 @@
 <template>
     <ModalDown 
-    :modalActive="isImageModal"
-    title="Dodaj zdjęcie" @close="imageModal()">
+    :modalActive="isOpenMobile"
+    title="Dodaj zdjęcie" @close="isModalClose()">
       <template #content>
         <LazyModalContentCropQuiz
           @croppedFile="handleCroppedFile"
           @croppedImageData="handleCroppedImageData"
-          @close="imageModal()"
+          @close="isModalClose()"
         />
       </template>
     </ModalDown>
+
+    <ModalAlert
+    :modalActive="isOpenDesktop"
+    @close="isModalClose()"
+  >
+  <template #content>
+    <LazyModalContentCropQuiz
+    @croppedFile="handleCroppedFile"
+    @croppedImageData="handleCroppedImageData"
+    @close="isModalClose()"
+  />
+    </template>
+  </ModalAlert>
     <div v-if="props.image">
       <div class="flex justify-end mt-[14px]" v-if="!croppedImageNew">
         <button @click="changeImage()">
@@ -29,7 +42,7 @@
       </div>
     </div>
       <div v-else>
-        <div class="white-retangle-image" @click="imageModal()" v-if="!croppedImageNew">
+        <div class="white-retangle-image" @click="isModal()" v-if="!croppedImageNew">
           <label class="image-retangle">
             <Icon
             name="carbon:cloud-upload"
@@ -67,10 +80,27 @@ const props = defineProps({
     default: false
   }
 })
-const isImageModal = ref(false);
-const imageModal = () => {
-  isImageModal.value = !isImageModal.value;
+
+const isOpenMobile = ref(false);
+const isOpenDesktop = ref(false);
+
+const isModal = () => {
+  if (window.screen.width <= 900) {
+    isOpenMobile.value = true;
+  } else {
+    isOpenDesktop.value = true;
+  }
 };
+
+const isModalClose = () => {
+  if (window.screen.width <= 900) {
+    isOpenMobile.value = false;
+
+  } else {
+    isOpenDesktop.value = false;
+  }
+};
+
 const propsImage = ref(props.image)
 
 watch(props,(newValue)=>{
@@ -94,7 +124,7 @@ const handleCroppedImageData = (croppedImage: any) => {
 const changeImage = () => {
   croppedFile.value = null;
   croppedImageNew.value = null;
-  imageModal()
+  isModalClose()
 }
 
 const removeImage = () => {

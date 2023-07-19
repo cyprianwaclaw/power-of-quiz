@@ -12,64 +12,75 @@
   />
   <NuxtLayout name="panel">
     <Form @submit="onSubmit" ref="form" :validation-schema="schema" v-slot="{ meta }">
-      <h1 class="title-h1">Nowy quiz</h1>
-      <div class="grid grid-cols-1 md:grid-rows-2 md:grid-cols-2 gap-10">
-        <div class="row-start-1">
-          <h2 class="title-h2  mb-3">Podstawowe informacje</h2>
+      <h1 class="title-h1 md:hidden">Nowy quiz</h1>
+      <h1 class="title-h1 md:flex hidden mb-12 mt-5">Dodaj nowy quiz</h1>
+      <div class="flex md:flex-row flex-col md:gap-12">
+        <div class="flex flex-col shrink w-full md:shrink md:max-w-[350px] md:min-w-[300px] md:gap-y-6">
+          <h2 class="title-h2 mb-3 md:hidden">Podstawowe informacje</h2>
           <WhiteRetangleContainer :array="[...quizArray]">
             <template #select>
-          <QuizAddNewSelectOption
-          :array="[...difficultyArray]"
-          @selected="difficultyOption"
-          :reset="isReset"
-          header="Poziom trudności"
-          name="Wybierz poziom trudności"
-          />
-        </template>
-        <template #select1>
-          <QuizAddNewSelectOption
-          :array="[...categoriesArray]"
-          @selected="categoryOption"
-          :reset="isReset"
-          header="Kategoria"
-          name="Wybierz kategorie"
-          />
-        </template>
-        <template #time>
-          <div class="flex flex-row w-full place-items-center" @click="isTime()">
-            <CustomField
-              name="time"
-              mode="aggressive"
-              maxlength="2"
-              :placeholder="timePlaceholder"
-              :style="styleObject"
-            />
-            <p v-if="timeActive" class="font-medium pt-[6px]">minut</p>
-          </div>
-        </template>
-      </WhiteRetangleContainer>
-    </div>
-      <div class="row-start-2 content-start">
-        <h2 class="title-h2  mb-4">Opis</h2>
-        <LazyWhiteRetangleContainer :array="[...desArray]" />
-    </div>
-    <div class="md:row-start-1">
-      <h2 class="title-h2 mt-10 mb-4 md:mt-0">Zdjęcie</h2>
-      <LazyModalContentCropImageInput
-        @close="openModal(isImageModal)"
-        @imageFile="handleImage"
-        :test="image"
-      />
-    </div>
-  </div>
-      <div class="">
-      <h2 class="title-h2">Pytania</h2>
-      <LazyQuizAddNewQuestionAnswer1 :array="questionArray"/>
+              <QuizAddNewSelectOption
+                :array="[...difficultyArray]"
+                @selected="difficultyOption"
+                :reset="isReset"
+                header="Poziom trudności"
+                name="Wybierz poziom trudności"
+              />
+            </template>
+            <template #select1>
+              <QuizAddNewSelectOption
+                :array="[...categoriesArray]"
+                @selected="categoryOption"
+                :reset="isReset"
+                header="Kategoria"
+                name="Wybierz kategorie"
+              />
+            </template>
+            <template #time>
+              <div class="flex flex-row w-full place-items-center" @click="isTime()">
+                <CustomField
+                  name="time"
+                  mode="aggressive"
+                  maxlength="2"
+                  :placeholder="timePlaceholder"
+                  :style="styleObject"
+                />
+                <p v-if="timeActive" class="font-medium pt-[6px]">minut</p>
+              </div>
+            </template>
+          </WhiteRetangleContainer>
+            <h2 class="title-h2 mb-4 md:hidden">Opis</h2>
+            <LazyWhiteRetangleContainer :array="[...desArray]" />
+              <h2 class="title-h2 mt-10 mb-4 md:mt-0 md:hidden">Zdjęcie</h2>
+              <LazyModalContentCropImageInput
+              @close="openModal(isImageModal)"
+              @imageFile="handleImage"
+              :test="image"
+              />
+              <div class="md:flex w-full hidden">
+                <button class="button-primary w-full" v-if="submitButton(meta)">
+                  Prześlij do akceptacji
+                </button>
+                <p v-else class="button-primary-disabled text-center w-full" disabled>
+                  Prześlij do akceptacji
+                </p>
+              </div>
+            </div>
+            <div class="flex w-full flex-col">
+              <h2 class="title-h2 mb-7">Pytania do quizu</h2>
+              <div class="md:h- overflow-y-scroll pr-5">
+                <LazyQuizAddNewQuestionAnswer1 :array="questionArray" />
+              </div>
       </div>
-      <div class="mt-12 justify-end flex mb-[72px]">
-        <button class="button-primary" v-if="submitButton(meta)">Prześlij do akceptacji</button>
-        <p v-else class="button-primary-disabled text-center" disabled>Prześlij do akceptacji</p>
+      <div class="mt-12 justify-end flex mb-[72px] md:hidden">
+        <button class="button-primary" v-if="submitButton(meta)">
+          Prześlij do akceptacji
+        </button>
+        <p v-else class="button-primary-disabled text-center" disabled>
+          Prześlij do akceptacji
+        </p>
       </div>
+    </div>
     </Form>
   </NuxtLayout>
 </template>
@@ -95,7 +106,7 @@ const schema = yup.object({
 const quizStore = useQuiz();
 const { categories, newQuizId, newQuestionId } = storeToRefs(quizStore);
 await quizStore.getCategory();
-const isReset = ref()
+const isReset = ref();
 const seletedCategory = ref();
 const categoryOption = (select: any) => {
   seletedCategory.value = select;
@@ -105,7 +116,7 @@ const categoriesArray = categories.value.map((single: any) => ({
   label: single.name,
 }));
 
-const time1 = ref()
+const time1 = ref();
 
 const seletedDifficulty = ref();
 const difficultyOption = (select: any) => {
@@ -156,16 +167,16 @@ const handleImage = (file: File) => {
 };
 
 const questionArray = ref([
-   {
-   title: "",
-   answers: [
-       { answer: "", correct: false },
-       { answer: "", correct: false },
-       { answer: "", correct: false },
-       { answer: "", correct: false },
-     ],
-   },
-])
+  {
+    title: "",
+    answers: [
+      { answer: "", correct: false },
+      { answer: "", correct: false },
+      { answer: "", correct: false },
+      { answer: "", correct: false },
+    ],
+  },
+]);
 
 const styleObject = reactive({
   width: "100%",
@@ -184,7 +195,7 @@ const isTime = () => {
 };
 
 const onSubmit = async (values: any) => {
-  sendQuiz()
+  sendQuiz();
   await quizStore.postNewQuiz(
     quizArray[0].value,
     values.time,
@@ -192,23 +203,22 @@ const onSubmit = async (values: any) => {
     seletedDifficulty.value,
     desArray[0].value,
     image.value
-    );
-    let quziId = newQuizId.value;
-    questionArray.value?.forEach(async (answerQuestion: any) => {
-      await quizStore.postNewQuestion(answerQuestion.title, quziId);
-      let questionId = newQuestionId.value;
-      answerQuestion.answers.forEach(async (answer: any) => {
-        await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
-      });
+  );
+  let quziId = newQuizId.value;
+  questionArray.value?.forEach(async (answerQuestion: any) => {
+    await quizStore.postNewQuestion(answerQuestion.title, quziId);
+    let questionId = newQuestionId.value;
+    answerQuestion.answers.forEach(async (answer: any) => {
+      await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
     });
+  });
 
-//   setTimeout(() => {
-//     console.log(values)
-//     clearAll(values)
-//     console.log(values)
-//  }, 500);
-
-}
+  //   setTimeout(() => {
+  //     console.log(values)
+  //     clearAll(values)
+  //     console.log(values)
+  //  }, 500);
+};
 
 const submitButton = (meta: any) => {
   if (
@@ -217,12 +227,13 @@ const submitButton = (meta: any) => {
     seletedDifficulty &&
     meta.valid &&
     image.value &&
-    checkQuestion(questionArray.value) ){
+    checkQuestion(questionArray.value)
+  ) {
     return true;
-  } else {   
+  } else {
     return false;
   }
-}
+};
 
 // const clearAll = (time:any) => {
 //   quizArray.forEach((item:any) => {
@@ -258,8 +269,6 @@ const submitButton = (meta: any) => {
 //   isReset.value = undefined;
 // }, 200);
 // };
-
-
 </script>
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";

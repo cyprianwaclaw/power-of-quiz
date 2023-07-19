@@ -54,7 +54,7 @@
     </div>
     <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-20">
       <SingleInvitedUser
-        v-for="(user, index) in users1"
+        v-for="(user, index) in users"
         :key="index"
         :user="user"
       />
@@ -96,54 +96,6 @@ const { invitationToken, allUser, invitedUser } = storeToRefs(userStore);
 
 let isUser = invitedUser.value;
 let users = allUser.value;
-let users1 = [
-  {
-    "id": 5,
-    "name": "Cyprian",
-    "is_premium": false,
-    "avatar_path": null
-  },   {
-    "id": 5,
-    "name": "Cyprian",
-    "is_premium": false,
-    "avatar_path": null
-  },   {
-    "id": 5,
-    "name": "Cyprian",
-    "is_premium": false,
-    "avatar_path": null
-  },   {
-    "id": 5,
-    "name": "Cyprian",
-    "is_premium": false,
-    "avatar_path": null
-  },   {
-    "id": 5,
-    "name": "Cyprian",
-    "is_premium": false,
-    "avatar_path": null
-  },   {
-    "id": 5,
-    "name": "Cyprian",
-    "is_premium": false,
-    "avatar_path": null
-  },   {
-    "id": 5,
-    "name": "Cyprian",
-    "is_premium": false,
-    "avatar_path": null
-  },   {
-    "id": 5,
-    "name": "Cyprian",
-    "is_premium": false,
-    "avatar_path": null
-  },   {
-    "id": 5,
-    "name": "Cyprian",
-    "is_premium": false,
-    "avatar_path": null
-  }
-]
 function Modal() {}
 function copyToken(token: any) {
   var token: any = invitationToken.value;
