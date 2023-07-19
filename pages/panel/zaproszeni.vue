@@ -1,30 +1,36 @@
 <template>
-  <!-- <div v-if="isOpen"> -->
-    <ModalDown
- :modalActive="isOpen"
-    
-    title="Zaproś znajomych"
-    @close= "isClose" 
-    >
+  <ModalDown :modalActive="isOpenMobile" title="Zaproś znajomych" @close="isCloseMobile()">
     <template #content>
-      <ModalContentInvitePeople
-      
-      />
+      <ModalContentInvitePeople />
     </template>
-    </ModalDown>
-  <!-- </div> -->
+  </ModalDown>
+  <ModalAlert
+    :modalActive="isOpenDesktop"
+    title="Zaproś znajomych"
+    closeButton="Zamknij"
+    @close="isCloseDesktop()"
+  >
+    <template #content>
+      <ModalContentInvitePeople />
+    </template>
+  </ModalAlert>
   <NuxtLayout name="panel">
-    <div>
+  <div class="bg-white py-5 px-8 mb-2 rounded-3xl relative">
       <h1 class="title-h1">Zaproszone osoby</h1>
-      <p class="text mt-3">
+      <p class="text mt-3 md:max-w-[500px] md:shrink">
         Zaproś znajomych do wspólnej gry i zyskaj bonus za każdego poleconego, który
         wykupi pakiet PREMIUM
-        <button @click="isClose()">
-<Icon name="ph:info-bold" size="20" class="inline mb-1 ml-1.5" color="#618CFB" />
+        <button @click="isModal()">
+          <Icon
+            name="ph:info-bold"
+            size="20"
+            class="mb-1 ml-1.5"
+            color="#618CFB"
+            @click="isModal()"
+          />
         </button>
       </p>
       <button class="button-primary mt-7 mb-1">
-        <!-- Przejdź na PREMIUM <Icon name="carbon:chevron-right" class="-mr-2" size="24" /> -->
         <div class="tooltip" v-if="tooltip">
           <span ref="tooltip" class="tooltiptext family">
             Skopiowano kod polecający
@@ -37,7 +43,6 @@
       </button>
     </div>
     <div v-if="!isUser">
-      <!-- element na środku po x class="grid place-items-center"-->
       <div class="grid place-items-center mt-10">
         <Icon name="ph:users" size="166" color="#CFD8E0" />
         <p class="invite-text -mt-2 mb-5">Brak znajomych</p>
@@ -47,9 +52,11 @@
         </p>
       </div>
     </div>
-    <div v-else class="mt-3 grid grid-cols-2 -mx-3 pb-28">
-      <SingleInvitedUser v-for="(user, index) in users" :key="index" class=""
-      :user = user
+    <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-20">
+      <SingleInvitedUser
+        v-for="(user, index) in users1"
+        :key="index"
+        :user="user"
       />
     </div>
   </NuxtLayout>
@@ -62,11 +69,24 @@ import { useUser } from "@/store/useUser";
 definePageMeta({
   middleware: "auth",
 });
-const isOpen = ref(false)
-const isClose = ()=>{
-    isOpen.value =! isOpen.value
-}
 
+const isOpenMobile = ref(false);
+const isOpenDesktop = ref(false);
+
+const isModal = () => {
+  if (window.screen.width <= 900) {
+    isOpenMobile.value = true;
+  } else {
+    isOpenDesktop.value = true;
+  }
+};
+
+const isCloseMobile = () => {
+  isOpenMobile.value = false;
+};
+const isCloseDesktop = () => {
+  isOpenDesktop.value = false;
+};
 const tooltip = ref<boolean>();
 const userStore = useUser();
 await userStore.getInvitationToken();
@@ -76,7 +96,54 @@ const { invitationToken, allUser, invitedUser } = storeToRefs(userStore);
 
 let isUser = invitedUser.value;
 let users = allUser.value;
-
+let users1 = [
+  {
+    "id": 5,
+    "name": "Cyprian",
+    "is_premium": false,
+    "avatar_path": null
+  },   {
+    "id": 5,
+    "name": "Cyprian",
+    "is_premium": false,
+    "avatar_path": null
+  },   {
+    "id": 5,
+    "name": "Cyprian",
+    "is_premium": false,
+    "avatar_path": null
+  },   {
+    "id": 5,
+    "name": "Cyprian",
+    "is_premium": false,
+    "avatar_path": null
+  },   {
+    "id": 5,
+    "name": "Cyprian",
+    "is_premium": false,
+    "avatar_path": null
+  },   {
+    "id": 5,
+    "name": "Cyprian",
+    "is_premium": false,
+    "avatar_path": null
+  },   {
+    "id": 5,
+    "name": "Cyprian",
+    "is_premium": false,
+    "avatar_path": null
+  },   {
+    "id": 5,
+    "name": "Cyprian",
+    "is_premium": false,
+    "avatar_path": null
+  },   {
+    "id": 5,
+    "name": "Cyprian",
+    "is_premium": false,
+    "avatar_path": null
+  }
+]
 function Modal() {}
 function copyToken(token: any) {
   var token: any = invitationToken.value;

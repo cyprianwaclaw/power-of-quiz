@@ -1,7 +1,5 @@
 <template>
-  <div class="flex justify-center">
-    <div class="grid
-     place-items-center mt-16">
+    <div class="grid place-items-center">
       <div v-if="user.avatar_path">
         <img :src="user.avatar_path" class="" />
       </div>
@@ -19,7 +17,6 @@
         <p class="standard text-gray">Standard</p>
     </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
