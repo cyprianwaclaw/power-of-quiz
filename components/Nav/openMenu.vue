@@ -58,7 +58,7 @@ const openMenu = () => {
 
 const links = [
   { name: "Zaproś znajomych", link: "/panel/zaproszeni" },
-  { name: "Moje konto", link: "/panel/quiz/dodaj-nowy" },
+  { name: "Moje konto", link: "/panel/konto" },
   { name: "Moje quizy", link: "/panel/quiz/dodaj-nowy" },
   { name: "Ustawienia", link: "/panel/quiz/dodaj-nowy" },
   { name: "Dodaj nowy quiz", link: "/panel/quiz/dodaj-nowy" },

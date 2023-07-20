@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-[120px]">
+  <!-- <div class="pb-[120px]"> -->
       <NavUser />
     <div class="own-container min-h-screen page-background ">
       <slot />
@@ -7,7 +7,7 @@
     <div class="md:hidden">
       <NavBottom />
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script setup lang="ts">
@@ -35,8 +35,8 @@
 }
 @media (min-width: 1024px) { 
   .own-container {
-    width: 850px;
-    margin: auto auto;
+    margin-left: 100px;
+    margin-right: 100px;
     padding-top: 100px
   }
 }
@@ -47,7 +47,7 @@
     padding-top: 100px
   }
 }
-@media (min-width: 1536px) { 
+@media (min-width: 1536px) {
   .own-container {
 width: 1280px;
 margin: auto auto;

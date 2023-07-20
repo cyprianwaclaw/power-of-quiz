@@ -49,28 +49,12 @@ const openMenu = () => {
   isOpen.value = !isOpen.value;
 };
 
-
-// export const watchOpen = (params:any)=>{
-//     watch(params, (newValue:any) => {
-//         if (newValue == true) {
-//             document.body.style.overflow = "hidden";
-//             document.body.style.userSelect = "none";
-//         } else {
-//             document.body.style.overflow = "auto";
-//             document.body.style.userSelect = "auto";
-//         }
-//     });
-// }
-
 const links = [
   { name: "Zaproś znajomych", link: "/panel/zaproszeni" },
-  { name: "Moje konto", link: "/panel/quiz/dodaj-nowy" },
+  { name: "Twoje konto", link: "/panel/konto" },
   { name: "Moje quizy", link: "/panel/quiz/dodaj-nowy" },
   { name: "Ustawienia", link: "/panel/quiz/dodaj-nowy" },
   { name: "Dodaj nowy quiz", link: "/panel/quiz/dodaj-nowy" },
-  { name: "Zaproś znajomych", link: "/panel/quiz/dodaj-nowy" },
-  { name: "Ustawienia", link: "/panel/quiz/dodaj-nowy" },
-  { name: "Przeglądaj quizy", link: "/panel/quiz/dodaj-nowy" },
 ];
 
 const { currentUser, hasPremium } = storeToRefs(useUser());

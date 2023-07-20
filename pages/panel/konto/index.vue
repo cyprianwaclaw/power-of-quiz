@@ -1,8 +1,9 @@
 <template>
   <NuxtLayout name="panel">
     <h1 class="title-h1 pb-6">Twoje konto</h1>
-    <div class="columns-2 flex gap-5">
-      <NuxtLink to="/panel/konto/dodane-quizy"  class="retangle gold">
+    <div class="md:hidden flex flex-col">
+      <div class="columns-2 flex gap-5">
+        <NuxtLink to="/panel/konto/dodane-quizy"  class="retangle gold">
           <Icon name="ph:game-controller-fill" color="D19D38" size="34" />
           <p class="retangle-title family">Quizy</p>
       </NuxtLink>
@@ -11,17 +12,13 @@
           <p class="retangle-title family">Środki</p>
         </NuxtLink>
     </div>
-    <!-- <div class="retangle green"> -->
-      <NuxtLink to="/panel/konto/platnosci" class="retangle green flex flex-col" >
+    <NuxtLink to="/panel/konto/platnosci" class="retangle green flex flex-col" >
         <Icon name="ph:newspaper-fill" color="38D1AC" size="34" />
         <p class="retangle-title family mb-1">Faktury i płatności</p>
       </NuxtLink>
-    <!-- </div> -->
-    <!-- w zależności od pakietu -->
     <PakietHero 
     text="true"
     class="my-10"/>
-    <!-- koniec  -->
     <userStatistics />
     <div class="white-retangle mt-12">
       <NuxtLink to="/panel/ustawienia">
@@ -50,14 +47,16 @@
           name="material-symbols:logout-rounded"
           size="18"
           class="primary-color margin-top"
-        />
+          />
+        </div>
       </div>
     </div>
-  </NuxtLayout>
-</template>
+<AccountPage
+/>
+    </NuxtLayout>
+  </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { useAuth } from "@/store/useAuth";
 
 definePageMeta({
