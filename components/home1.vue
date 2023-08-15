@@ -1,5 +1,6 @@
 <template>
     <div class="flex">
+        home1
 {{ user }}
     </div>
   </template>

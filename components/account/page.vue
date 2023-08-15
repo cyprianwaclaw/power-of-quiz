@@ -2,75 +2,62 @@
   <div class="md:flex hidden">
     <div class="flex flex-col shrink-0 w-[220px] gap-[12px]">
       <div v-for="(single, index) in links" :key="index">
-        <NuxtLink :to="`/panel/konto${single.hash}`" v-if="single.hash" class="hover: cursor-pointer">
-            <p :class="[single.hash === route.hash ? 'active-title': 'title' ]">{{ single.title }}</p>
-        </NuxtLink>
+        <button @click="loadComponent(single?.component)" v-if="single?.component" class="hover: cursor-pointer" >
+            <p :class="[active==single?.component ?  'primary-color title font-semibold' : 'title hover:text-gray-600']">{{ single.title }}</p>
+        </button>
         <p class="title cursor-default" v-else>{{ single.title }}</p>
         <div class="flex flex-col ml-[12px] gap-[4px] mt-[4px]">
           <div v-for="(page, index) in single?.pages" :key="index">
-            <NuxtLink :to="`/panel/konto${page.hash}`" class="hover: cursor-pointer">
-            <p :class="[page.hash === route.hash ? 'active-page': 'page' ]">{{ page?.name }}</p>
-            </NuxtLink>
+            <button @click="loadComponent(page?.component)" class="hover: cursor-pointer">
+            <p :class="[active==page?.component ? 'primary-color font-semibold' : 'text-black hover:text-gray-600']">{{ page?.name }}</p>
+            </button>
           </div>
         </div>
       </div>
     </div>
-
     <div class="flex shrink retangle">
-      {{ newRoute }}
-      <toggleComponent />
-      <!-- <div>
-        <component :is="AccountPageAllQuiz" />
-      </div> -->
+      <component :is="currentComponent" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-let route = useRoute()
-let router = useRouter()
+const currentComponent = ref()
+const active = ref()
 const links = [
   {
     title: "Quizy",
     pages: [
-      { id: 1, name: "Wszystkie", hash:"#wszystkie"},
-      { id: 2, name: "Do akceptacji", hash:"#do-akceptacji"},
-      { id: 3, name: "Zaakceptowane", hash:"#zaakceptowane"},
+      { id: 1, name: "Wszystkie", component: "allQuiz"},
+      { id: 2, name: "Do akceptacji",  component: "toAccept"},
+      { id: 3, name: "Zaakceptowane",  component: "accepted"},
     ],
   },
-  { title: "Moje środki", hash:"#moje-srodki" },
+  { title: "Moje środki", component: "myFunds" },
   {
     title: "Faktury i płatności ",
     pages: [
-      { id: 1, name: "Nadchodzace platności", hash:"#nadchodzace-platnosci" },
-      { id: 2, name: "Faktury", hash:"#faktury" },
+      { id: 1, name: "Nadchodzace platności", component: "futurePayments" },
+      { id: 2, name: "Faktury",  component: "invoices" },
     ],
   },
-  { title: "Ustawienia", hash:"#ustawienia" },
+  { title: "Ustawienia",  component: "settings" },
 ];
-const nullHash = ()=>{
-    if(!route.hash){
-       router.push('/panel/konto#wszystkie')
-    } else{
-        console.log(route.hash)
-    }
-}
-onMounted (()=>{
-    nullHash()
+
+const loadComponent = async (componentName:any) => {
+  const component = await import(`@/components/account/page/${componentName}.vue`);
+  currentComponent.value =markRaw(component.default || component);
+};
+
+watch(currentComponent,(newValue)=>{
+  const changeActive =()=>{
+    active.value = newValue.__name
+  }
+    changeActive()
 })
 
-const newRoute = ref()
-watch(route,(newValue:any)=>{
-if(newValue.value == '#wszystkie'){
- return  newRoute.value = 'wszystkie'
-} else{
- return  newRoute.value = 'test'
-}
-})
-const all = 'wszystkie'
-const toggleComponent =  defineAsyncComponent(() => 
-import(`@/components/account/page/${route.hash}.vue`));
-
-
+onMounted(() => {
+  loadComponent('allQuiz');
+});
 </script>
 
 <style scoped lang="scss">
@@ -83,18 +70,13 @@ import(`@/components/account/page/${route.hash}.vue`));
   box-shadow: -6px 6px 7px 0px rgba(0, 0, 0, 0.05);
 }
 .title {
-  color: #1f1818;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 500;
 }
 .page {
   color: #646464;
   font-size: 15px;
   font-weight: 400;
-}
-.page:hover {
-    color: #1f1818;
-    font-weight: 500;
 }
 .active-title {
   color: $primary;

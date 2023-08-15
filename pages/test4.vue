@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { Field, Form, ErrorMessage, FieldArray, useForm } from 'vee-validate';
 import * as yup from 'yup';
 
@@ -42,8 +42,6 @@ const { meta, handleSubmit } = useForm(); // Zmienione
 <template>
   <div>
     <h1>vee-validate array fields</h1>
-
-    <!-- Zmienione -->
     <Form
       @submit="handleSubmit(onSubmit)" 
       :initial-values="initialData"
@@ -91,8 +89,6 @@ const { meta, handleSubmit } = useForm(); // Zmienione
     </Form>
   </div>
 </template>
-
-
 
 <style scoped>
 #app {
@@ -143,4 +139,29 @@ form + form {
   top: 10px;
   right: 10px;
 }
-</style>
+</style> -->
+<template>
+  <div>
+    <button @click="loadComponent('archive')">Load Archive Component</button>
+    <button @click="loadComponent('posts')">Load Posts Component</button>
+    <button @click="loadComponent('home')">Load Home Component</button>
+
+    <component :is="currentComponent" />
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const currentComponent = ref();
+
+const loadComponent = async (componentName) => {
+  const component = await import(`@/components/${componentName}.vue`);
+  currentComponent.value = component.default || component;
+};
+
+onMounted(() => {
+  // Inicjalnie ładujemy komponent home jako domyślny
+  loadComponent('home');
+});
+</script>

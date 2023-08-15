@@ -33,7 +33,7 @@ export const useQuiz = defineStore('quiz', {
         activeQuiz: [],
         allQuestion: [],
         answerById: [],
-        allQuiz: [],
+        allQuiz: [] as any,
         allQuiz1: [],
         allQuizNew: [],
         notActiveQuiz: [] as any,
@@ -52,7 +52,7 @@ export const useQuiz = defineStore('quiz', {
         new:{} as string,
         allQuizName:[],
         searchText: [] as any,
-        popularQuiz: {} as any,
+        popularQuiz: [] as any,
         test1: [] as any [],
         loadingQuiz: false as boolean,
         contents: JSON.parse(localStorage.getItem(STORAGE) as string) ?? {}
