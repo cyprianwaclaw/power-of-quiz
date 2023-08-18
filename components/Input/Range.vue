@@ -83,7 +83,7 @@ watchEffect(() => {
     />
   </div>
   <div class="minmax-inputs mt-[18px]">
-    <input type="number" :step="step" v-model="sliderMinValue" />
-    <input type="number" :step="step" v-model="sliderMaxValue" />
+    <input type="number" class="w-[50px]" :step="step" v-model="sliderMinValue" />
+    <input type="number" class="w-[50px]" :step="step" v-model="sliderMaxValue" />
   </div>
 </template>

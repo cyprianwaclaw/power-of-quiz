@@ -22,7 +22,7 @@
                 <div class="vl"></div>
                 <p class="des">{{ quiz?.difficulty }}</p>
                 <div class="vl"></div>
-                <p class="des">{{ quiz?.category[0].name }}</p>
+                <p class="des">{{ categoryMapping(categories, quiz) }}</p>
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@
               <div class="vl"></div>
               <p class="des">{{ quiz?.difficulty }}</p>
               <div class="vl"></div>
-              <p class="des">{{ quiz?.category[0].name }}</p>
+              <p class="des">{{ categoryMapping(categories, quiz) }}</p>
             </div>
           </div>
         </div>
@@ -66,11 +66,15 @@
 <script setup lang="ts">
 import { Quiz } from "@/types";
 import { useUser } from "@/store/useUser";
+import { useQuiz } from "@/store/useQuiz";
+
 import { storeToRefs } from "pinia";
 
 defineProps<{ quiz: Quiz }>();
 
 const { hasPremium } = storeToRefs(useUser());
+const {categories } = storeToRefs(useQuiz());
+
 const isOpen = ref(false)
 const isClose = ()=>{
     isOpen.value =! isOpen.value

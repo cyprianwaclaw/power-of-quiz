@@ -66,12 +66,7 @@ function selectOption(index, category) {
   localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
 }
 
-// selected items from all sorting, selected = true
 const selectedItems = computed(() => {
   return data1.value.filter((item) => item.selected);
-});
-
-watch(selectedItems, (newValue, oldValue) => {
-  console.log(newValue);
 });
 </script>

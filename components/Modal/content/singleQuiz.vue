@@ -13,7 +13,7 @@
     <div class="mt-4 mb-7 gap-[5px] flex flex-col">
       <div class="flex flex-row">
         <p class="text-base text-[#a7a2a2] font-thin">Kategoria:</p>
-        <p class="text-base primary-color font-medium ml-[4px]">{{ quiz.category[0].name }}</p> 
+        <p class="text-base primary-color font-medium ml-[4px]">{{ categoryMapping(categories, quiz) }}</p> 
       </div>
       <div class="flex flex-row">
         <p class="text-base text-[#a7a2a2] font-thin">Liczba pytań:</p>
@@ -38,9 +38,12 @@
   </div>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { useQuiz } from "@/store/useQuiz";
 import { Quiz } from "@/types";
 
 defineProps<{ quiz: Quiz }>();
+const {categories } = storeToRefs(useQuiz());
 
 const emit = defineEmits<{
   (e: "close", value: any): void;

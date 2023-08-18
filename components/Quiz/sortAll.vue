@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full grid grid-cols-3 justify-items-center mt-[26px] mb-[30px]">
+  <div class="w-full grid grid-cols-3 justify-items-center mt-[21px] mb-[34px]">
     <div @click="buttonClick1()" class="click-mobile-container">
       <div
         class="w-12 h-[30px]"
@@ -50,37 +50,39 @@
 </template>
 <script setup lang="ts">
 const emit = defineEmits<{
-  (e: "two", value: any): void;
-  (e: "three", value: any): void;
-  (e: "four", value: any): void;
+  (e: "stateView", value: string): void;
 }>();
 
 const first:any = ref(localStorage.getItem('listView') == 'two' ? true : false)
 const second:any = ref(localStorage.getItem('listView') == 'three' ? true : false)
 const third:any = ref(localStorage.getItem('listView') == 'four' ? true : false)
 
+const changeViewClick = () =>{
+
+}
+
 const buttonClick1 = () => {
   first.value = true;
-  localStorage.setItem('listView', 'two')
+  // localStorage.setItem('listView', 'two')
   third.value = false;
   second.value = false;
-  emit('two', true);
+  emit('stateView', 'two');
 };
 
 const buttonClick2 = () => {
-  localStorage.setItem('listView', 'three')
+  // localStorage.setItem('listView', 'three')
   second.value = true;
   first.value = false;
   third.value = false;
-  emit("three",  'three');
+  emit('stateView', 'three');
 };
 
 const buttonClick3 = () => {
-  localStorage.setItem('listView', 'four')
+  // localStorage.setItem('listView', 'four')
   third.value = true;
   second.value = false;
   first.value = false;
-  emit("four",  'four');
+  emit('stateView', 'four');
 };
 
 </script>
