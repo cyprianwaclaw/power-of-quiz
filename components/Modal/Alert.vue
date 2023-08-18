@@ -27,7 +27,7 @@
         <div class="px-5"
         :class="[props.name=='singleQuiz' ? '':'pb-2 md:pb-6  md:pt-4 pt-10 grid']"
         >
-            <p class="text-[21px] md:text-[24px] text-center font-semibold mb-4">{{ props.title }}</p>
+            <p class="text-[21px] md:text-[24px] text-center font-semibold md:mb-1 mb-4">{{ props.title }}</p>
             <slot name="content" />
               <p class="edit-message-modal">{{ props.des }}</p>
           </div>

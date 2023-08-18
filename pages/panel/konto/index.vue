@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="panel">
-    <h1 class="title-h1 pb-6">Twoje konto</h1>
+    <h1 class="title-h1  pb-6">Twoje konto</h1>
     <div class="md:hidden flex flex-col">
       <div class="columns-2 flex gap-5">
         <NuxtLink to="/panel/konto/dodane-quizy"  class="retangle gold">

@@ -1,6 +1,6 @@
 <template>
-  <div class="md:flex hidden">
-    <div class="flex flex-col shrink-0 w-[220px] gap-[12px]">
+  <div class="md:flex hidden md:justify-between">
+    <div class="flex flex-col shrink-0 w-[220px] gap-[5px]">
       <div v-for="(single, index) in links" :key="index">
         <button @click="loadComponent(single?.component)" v-if="single?.component" class="hover: cursor-pointer" >
             <p :class="[active==single?.component ?  'primary-color title font-semibold' : 'title hover:text-gray-600']">{{ single.title }}</p>
@@ -15,7 +15,9 @@
         </div>
       </div>
     </div>
-    <div class="flex shrink retangle">
+    <div class="flex shrink"
+    :class="[active == 'settings' ? 'retangle': 'retangle-white']"
+    >
       <component :is="currentComponent" />
     </div>
   </div>
@@ -24,6 +26,7 @@
 const currentComponent = ref()
 const active = ref()
 const links = [
+  { title: "Pakiety", component: "package" },
   {
     title: "Quizy",
     pages: [
@@ -32,15 +35,13 @@ const links = [
       { id: 3, name: "Zaakceptowane",  component: "accepted"},
     ],
   },
-  { title: "Moje środki", component: "myFunds" },
+  { title: "Moje środki",  component: "myFunds"  },
+  
   {
-    title: "Faktury i płatności ",
-    pages: [
-      { id: 1, name: "Nadchodzace platności", component: "futurePayments" },
-      { id: 2, name: "Faktury",  component: "invoices" },
-    ],
+    title: "Faktury i płatności",
+    component: "futurePayments" 
   },
-  { title: "Ustawienia",  component: "settings" },
+  { title: "Ustawienia",  component: "settings"  },
 ];
 
 const loadComponent = async (componentName:any) => {
@@ -56,16 +57,19 @@ watch(currentComponent,(newValue)=>{
 })
 
 onMounted(() => {
-  loadComponent('allQuiz');
+  loadComponent('package');
 });
 </script>
 
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";
 .retangle {
-  width: 100%;
+  width: 76%;
+}
+.retangle-white {
+  width: 76%;
   border-radius: 12px;
-  padding: 34px;
+  padding: 46px 52px;
   background-color: white;
   box-shadow: -6px 6px 7px 0px rgba(0, 0, 0, 0.05);
 }

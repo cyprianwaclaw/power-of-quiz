@@ -1,31 +1,23 @@
 <template>
-
-  <!-- :class="{ 'has-error': ErrorLogin}" -->
-  <!-- :class="{ 'has-error': !!errorMessage, success: meta.valid }" -->
-    <div
-     class="base-input"
-    >
-      <label :for="name">{{ label }}</label>
-      <input
+  <div class="base-input" :class="{ 'has-error': !!errorMessage, success: meta.valid }">
+    <!-- <label :for="name" class="label">{{ label }}</label> -->
+    <input
       class="base-input"
-        :name="name"
-        :id="name"
-        :ErrorLogin="hasError"
-        :hasError="hasError"
-        :type="type"
-        :value="inputValue"
-        :placeholder="placeholder"
-        @input="handleChange"
-        @blur="handleBlur"
-        />
-        <!-- autofocus -->
-  
-      <div class="help-message" v-if="errorMessage || meta.valid">
-      <p class="red">
-        {{ errorMessage || successMessage }}
-      </p>  
+      :class="color"
+      :name="name"
+      :id="name"
+      :type="type"
+      :value="inputValue"
+      :placeholder="placeholder"
+      @input="handleChange"
+      @blur="handleBlur"
+      />
+      <div class="absolute w-[250px]">
+        <p class="help-message" v-show="errorMessage || meta.valid">
+          {{ errorMessage || successMessage }}
+        </p>
       </div>
-    </div>
+  </div>
   </template>
   
   <script setup lang="ts">
@@ -44,6 +36,9 @@
     name: {
       type: String,
       required: true,
+    },
+    maxlength:{
+      type: Number,
     },
     label: {
       type: String,
@@ -94,5 +89,13 @@
     border-color: #618CFB;
 }
 
+input[type='number'] {
+  -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
   </style>
   

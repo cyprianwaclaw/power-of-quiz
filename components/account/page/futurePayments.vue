@@ -1,8 +1,8 @@
 <template>
-    <div class="flex">
-NADCHODZACE PLATNOSCI
-<!-- {{ user }} -->
-    </div>
+  <div class="flex w-full flex-col">
+    <p class="text-3xl font-semibold mb-5">Faktury i płatności</p>
+    <p class="text-xl font-semibold mb-5">Historia płatności</p>
+  </div>
   </template>
   <script setup lang="ts">
 import { storeToRefs } from "pinia";

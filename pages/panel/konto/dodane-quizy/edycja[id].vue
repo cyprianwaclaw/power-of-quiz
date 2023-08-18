@@ -5,24 +5,24 @@
     des="Prawidłowo zapisano wszystkie zmiany, które wprowadiłeś"
     closeButton="Okej"
     @close="removeSuccessClose()"
-  />  
-<ModalAlert
-:modalActive="isOpen"
-title="Usuń quiz"
-des="Czy na pewno chcesz usunąć quiz? Tej operacji nie będzie można cofnąć"
-closeButton="Anuluj"
-actionButton="Usuń"
-actionButtonClass="text-red-500"
-@close="isModal()"
-@action="removeQuiz"
-/>
-<ModalAlert
-:modalActive="isRemoveSucessModal"
-title="Usunięto quiz"
-des="Twój quiz został usunięty"
-closeButton="Okej"
-@close="removeSuccessClose()"
-/>
+  />
+  <ModalAlert
+    :modalActive="isOpen"
+    title="Usuń quiz"
+    des="Czy na pewno chcesz usunąć quiz? Tej operacji nie będzie można cofnąć"
+    closeButton="Anuluj"
+    actionButton="Usuń"
+    actionButtonClass="text-red-500"
+    @close="isModal()"
+    @action="removeQuiz"
+  />
+  <ModalAlert
+    :modalActive="isRemoveSucessModal"
+    title="Usunięto quiz"
+    des="Twój quiz został usunięty"
+    closeButton="Okej"
+    @close="removeSuccessClose()"
+  />
   <NuxtLayout name="panel">
     <div class="mb-12 flex justify-end -mr-3">
       <NuxtLink
@@ -33,59 +33,85 @@ closeButton="Okej"
         <p class="go primary-color">Powrót</p>
       </NuxtLink>
     </div>
-    <div v-if="!image">
-      <img :src="single.image" class="image-single" />
-    </div>
-    <LazyModalContentCropImageInput
-      image="true"
-      @close="openModal(isImageModal)"
-      @image-file="handleImage"
-    />
-    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ meta }" :initial-values="formValues">
-      <!-- {{ meta }} -->
-      <WhiteRetangleContainer :array="[...quizArray]" class="mt-10">
-        <template #select>
-          <QuizAddNewSelectOption
-            v-model="selectedDifficulty"
-            :defaultOption="defaultDifficulty"
-            :array="[...difficultyArray]"
-            @selected="DifficultyOption"
-            header="Poziom truności"
-          />
-        </template>
-        <template #select1>
-          <QuizAddNewSelectOption
-            v-model="selectedCategory"
-            :defaultOption="defaultCategory"
-            :array="[...categoriesArray]"
-            @selected="categoryOption"
-            header="Kategoria"
-          />
-        </template>
-        <template #time>
-          <div class="flex flex-row w-full place-items-center">
-            <CustomField
-              class="w-6"
-              name="time"
-              placeholder="0"
-              maxlength="2"
-              mode="aggressive"
-              :initial-value="single.time"
-              />
-            {{  test}}
-            <p class="font-medium pt-[6px] ml-1">minut</p>
+
+    <Form
+      @submit="onSubmit"
+      :validation-schema="schema"
+      v-slot="{ meta }"
+      :initial-values="formValues"
+    >
+      <div class="flex flex-col">
+        <div class="grid md:grid-cols-2 grid-cols-1 md:gap-20 gap-0">
+          <div>
+            <!-- <div class="absolute-element"> -->
+            <div v-if="!image">
+              <img :src="single.image" class="image-single" />
+            </div>
+            <LazyModalContentCropImageInput
+              image="true"
+              @close="openModal(isImageModal)"
+              @image-file="handleImage"
+            />
+          <!-- </div> -->
           </div>
-        </template>
-      </WhiteRetangleContainer>
-      <h2 class="title-h2 mt-10 mb-4">Opis</h2>
-      <LazyWhiteRetangleContainer :array="[...desArray]" />
-      <h2 class="title-h2 mt-10 -mb-1.5">Pytania</h2>
-      <LazyQuizAddNewQuestionAnswer1 @questionToRemove="toRemove" :array="questionArray" />
-      <div class="mt-12 flex gap-6 mb-[72px] justify-end">
+          <div>
+            <WhiteRetangleContainer :array="[...quizArray]" class="mt-10 md:mt-0">
+              <template #select>
+                <QuizAddNewSelectOption
+                  v-model="selectedDifficulty"
+                  :defaultOption="defaultDifficulty"
+                  :array="[...difficultyArray]"
+                  @selected="DifficultyOption"
+                  header="Poziom truności"
+                />
+              </template>
+              <template #select1>
+                <QuizAddNewSelectOption
+                  v-model="selectedCategory"
+                  :defaultOption="defaultCategory"
+                  :array="[...categoriesArray]"
+                  @selected="categoryOption"
+                  header="Kategoria"
+                />
+              </template>
+              <template #time>
+                <div class="flex flex-row w-full place-items-center">
+                  <CustomField
+                    class="w-6"
+                    name="time"
+                    placeholder="0"
+                    maxlength="2"
+                    mode="aggressive"
+                    :initial-value="single.time"
+                  />
+                  {{ test }}
+                  <p class="font-medium pt-[6px] ml-1">minut</p>
+                </div>
+              </template>
+            </WhiteRetangleContainer>
+            <div class="hidden md:flex flex-col">
+            <h2 class="title-h2 mt-10 mb-4">Opis</h2>
+            <LazyWhiteRetangleContainer :array="[...desArray]" />
+            </div>
+          </div>
+        </div>
+        <div class="md:hidden flex flex-col">
+        <h2 class="title-h2 mt-10 mb-4">Opis</h2>
+        <LazyWhiteRetangleContainer :array="[...desArray]" />
+        </div>
+        <h2 class="title-h2 mt-10 mb-4">Pytania</h2>
+        <LazyQuizAddNewQuestionAnswer1
+          @questionToRemove="toRemove"
+          :array="questionArray"
+        />
+      </div>
+      <div class="mt-12 flex gap-6 justify-end pb-28 md:pb-20 ">
         <button @click="isModal()">
-          <p class="action-button red">Usuń</p>
+          <p class="action-button red">Usuń quiz</p>
         </button>
-        <button class="button-primary" v-if="submitButton(meta)" type="Submit">Zapisz zmiany</button>
+        <button class="button-primary" v-if="submitButton(meta)" type="submit">
+          Zapisz zmiany
+        </button>
         <p v-else class="button-primary-disabled text-center" disabled>Zapisz zmiany</p>
       </div>
     </Form>
@@ -141,7 +167,7 @@ const quizDesc = () => {
     return "";
   }
 };
-const test = ref('')
+const test = ref("");
 const defaultCategory = single.category_id;
 const seletedCategory = ref();
 const categoriesArray = categories.value.map((single: any) => ({
@@ -201,22 +227,22 @@ const desArray = reactive([
 const image = ref<any | null>(null);
 const isImageModal = ref(false);
 const isOpen = ref(false);
- const isModal = () => {
-   isOpen.value = !isOpen.value;
-  };
-  const isRemoveSucessModal = ref(false);
-  const removeSuccess = () => {
-    isRemoveSucessModal.value = !isRemoveSucessModal.value;
-  };
-  const removeQuiz = async () => {
-    isModal();
-    await quizStore.deleteSingleQuiz(route.params.id);
-    removeSuccess();
-  };
-  const removeSuccessClose = () => {
-    navigateTo("/panel/konto/dodane-quizy");
-  };
-  
+const isModal = () => {
+  isOpen.value = !isOpen.value;
+};
+const isRemoveSucessModal = ref(false);
+const removeSuccess = () => {
+  isRemoveSucessModal.value = !isRemoveSucessModal.value;
+};
+const removeQuiz = async () => {
+  isModal();
+  await quizStore.deleteSingleQuiz(route.params.id);
+  removeSuccess();
+};
+const removeSuccessClose = () => {
+  navigateTo("/panel/konto/dodane-quizy");
+};
+
 const openModal = (open: boolean) => {
   let results: boolean = false;
   if (open == true) results = false;
@@ -231,7 +257,7 @@ const handleImage = (file: File) => {
 const toRemoveArray = ref<any>();
 const toRemove = (allArray: any) => {
   toRemoveArray.value = allArray;
-  console.log(allArray)
+  console.log(allArray);
 };
 
 const isSendQuiz = ref(false);
@@ -240,9 +266,9 @@ const sendQuiz = () => {
   isSendQuiz.value = !isSendQuiz.value;
 };
 
-const onSubmit = async (meta:any) => {
+const onSubmit = async (meta: any) => {
   let quizId: any = route.params.id;
-  const questionUpdate = questionArray.value.filter((question: any)=>question.id>0)
+  const questionUpdate = questionArray.value.filter((question: any) => question.id > 0);
   await quizStore.updateQuiz(
     quizId,
     quizArray[0].value,
@@ -251,35 +277,37 @@ const onSubmit = async (meta:any) => {
     // seletedDifficulty.value,
     desArray[0].value
     // image.value
-  )
-  toRemoveArray?.value?.forEach(
-    async (questionsToRemove: any) => {
-      await quizStore.deleteQuestionAnswer(questionsToRemove.id);
-      await quizStore.deleteQuestion(questionsToRemove.id);
-    }
   );
-  sendQuiz()
-  questionArray.value.filter((question: any)=>question.id>0).forEach(async (questionsToUpdate: any) => {
-    await quizStore.updateQuestion(questionsToUpdate.id, questionsToUpdate.title);
-    questionsToUpdate.answers.forEach(async (singleAnswer: any) => {
-      await quizStore.updateAnswer(
-        singleAnswer.id,
-        singleAnswer.question_id,
-        singleAnswer.answer,
-        1
-      );
-    });
+  toRemoveArray?.value?.forEach(async (questionsToRemove: any) => {
+    await quizStore.deleteQuestionAnswer(questionsToRemove.id);
+    await quizStore.deleteQuestion(questionsToRemove.id);
   });
-  questionArray.value.filter((question: any)=> !question.id)?.forEach(async (answerQuestion: any) => {
-    await quizStore.postNewQuestion(answerQuestion.title, quizId);
-    let questionId = newQuestionId.value;
-    answerQuestion.answers.forEach(async (answer: any) => {
-      await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
+  sendQuiz();
+  questionArray.value
+    .filter((question: any) => question.id > 0)
+    .forEach(async (questionsToUpdate: any) => {
+      await quizStore.updateQuestion(questionsToUpdate.id, questionsToUpdate.title);
+      questionsToUpdate.answers.forEach(async (singleAnswer: any) => {
+        await quizStore.updateAnswer(
+          singleAnswer.id,
+          singleAnswer.question_id,
+          singleAnswer.answer,
+          1
+        );
+      });
     });
-  });
+  questionArray.value
+    .filter((question: any) => !question.id)
+    ?.forEach(async (answerQuestion: any) => {
+      await quizStore.postNewQuestion(answerQuestion.title, quizId);
+      let questionId = newQuestionId.value;
+      answerQuestion.answers.forEach(async (answer: any) => {
+        await quizStore.postNewAnswer(answer.answer, questionId, answer.correct);
+      });
+    });
 };
 
-const newQuestion = questionArray.value.filter((question: any)=>question.id>0)
+const newQuestion = questionArray.value.filter((question: any) => question.id > 0);
 
 const submitButton = (meta: any) => {
   if (
@@ -287,13 +315,13 @@ const submitButton = (meta: any) => {
     seletedCategory &&
     seletedDifficulty &&
     meta.valid &&
-    checkQuestion(questionArray.value) ){
+    checkQuestion(questionArray.value)
+  ) {
     return true;
-  } else {   
+  } else {
     return false;
   }
-}
-
+};
 
 const formValues = {
   time: single.time,
@@ -308,7 +336,6 @@ useForm({
 .image-single {
   border: 1px solid $border;
   border-radius: 16px;
-  height: 240px;
 }
 
 input {
@@ -345,14 +372,19 @@ input::placeholder {
   transform: rotate(180deg);
   margin-left: -4px;
 }
-.errorM{
+.errorM {
   position: absolute;
- // margin-top: -3px;
- // margin-bottom: 8px;
+  // margin-top: -3px;
+  // margin-bottom: 8px;
   font-size: 12px;
   width: 100vh;
   left: 60px;
   bottom: 47px;
-color: $color-error;
+  color: $color-error;
+}
+.absolute-element{
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 </style>

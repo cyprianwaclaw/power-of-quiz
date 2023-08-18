@@ -43,7 +43,7 @@
     </div>
       <div v-else>
         <div class="white-retangle-image" @click="isModal()" v-if="!croppedImageNew">
-          <label class="image-retangle">
+          <label class="image-retangle md:mt-3">
             <Icon
             name="carbon:cloud-upload"
             size="38"
@@ -104,7 +104,6 @@ const isModalClose = () => {
 const propsImage = ref(props.image)
 
 watch(props,(newValue)=>{
-  console.log(newValue.test);
   if(newValue.test==='brak'){
     removeImage()
   }
@@ -124,7 +123,8 @@ const handleCroppedImageData = (croppedImage: any) => {
 const changeImage = () => {
   croppedFile.value = null;
   croppedImageNew.value = null;
-  isModalClose()
+  console.log('zmieniono')
+  isModal()
 }
 
 const removeImage = () => {

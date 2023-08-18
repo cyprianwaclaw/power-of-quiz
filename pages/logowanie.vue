@@ -10,10 +10,10 @@
         :validation-schema="schema"
         @invalid-submit="onInvalidSubmit"
       >
-        <InputNotSuccess ref="inputField" class="base-input" type="email" :class="{
+        <InputSettings ref="inputField" class="base-input" type="email" :class="{
         errorInput: ErrorLogin.errorInput }" hasError: true name="email"
         placeholder="E-mail" />
-        <InputNotSuccess
+        <InputSettings 
           type="password"
           :class="{ errorInput: ErrorLogin.errorInput }"
           class="mt-3"

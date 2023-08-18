@@ -16,7 +16,7 @@
     </div>
     <div v-else>
       <div class="white-retangle-image">
-        <label class="image-retangle">
+        <label class="image-retangle md:mt-3">
           <Icon
             name="carbon:cloud-upload"
             size="38"

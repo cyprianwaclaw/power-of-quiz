@@ -278,3 +278,52 @@ export const openModal= (open:boolean)=>{
         }
     });
 }
+
+export const checkCompany = (values: any, meta: any, company:any) => {
+  if (!meta.valid) {
+    return false;
+  } else if (
+    values.name == company.name &&
+    values.nip == company.nip &&
+    values.regon == company.regon &&
+    values.city == company.address.city &&
+    values.postcode == company.address.postcode &&
+    values.street == company.address.street &&
+    values.building == company.address.building_number &&
+    values.house == company.address.house_number
+  ) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+  
+  export const checkPersonal = (values: any, meta: any, personal:any) => {
+    if (!meta.valid) {
+      return false;
+    } else if (
+      values.name == personal.name &&
+      values.surname == personal.surname &&
+      values.email == personal.email &&
+      values.phone == personal.phone
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  export const checkFinancial = (values: any, meta: any, financial:any) => {
+    if (!meta.valid) {
+      return false;
+    } else if (
+      values.bank_name == financial.bank_name &&
+      values.iban == financial.iban &&
+      values.swift == financial.swift
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };

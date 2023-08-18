@@ -44,9 +44,16 @@ import { storeToRefs } from "pinia";
 import { useUser } from "@/store/useUser";
 import { vOnClickOutside } from "@vueuse/components";
 
+const route = useRouter()
 const isOpen = ref(false);
 const openMenu = () => {
-  isOpen.value = !isOpen.value;
+
+  if (window.screen.width <= 1024) {
+    isOpen.value = !isOpen.value;
+  } else {
+    route.push('/panel/konto')
+  }
+
 };
 
 const links = [

@@ -1,8 +1,10 @@
 <template>
-    <div class="flex">
-USTAWIENIA
-<!-- {{ user }} -->
-    </div>
+  <div class="flex w-full flex-col gap-y-14 mb-[112px]">
+    <p class="text-3xl font-semibold -mb-5">Ustawienia konta</p>
+    <AccountPageContentPersonal/>
+  <AccountPageContentCompany/>
+  <AccountPageContentFinancial/>
+</div>
   </template>
   <script setup lang="ts">
 import { storeToRefs } from "pinia";

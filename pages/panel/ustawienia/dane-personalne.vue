@@ -1,6 +1,6 @@
 <template>
   <!-- <div v-if="isOpen"> -->
-    <ModalDown 
+    <ModalDown
  :modalActive="isOpen"
     :title="titleImage()" @close="isModal()">
       <template #content>
