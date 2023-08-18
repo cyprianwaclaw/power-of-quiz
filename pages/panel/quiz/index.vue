@@ -1,25 +1,40 @@
 <template>
   <ModalDown :modalActive="filter" title="Filtruj quizy" @close="filterShow()">
     <template #content>
-      <ModalContentQuizFilterView 
-      @state="quizView" @perPage="perPageChange" @close="filterShow"
+      <ModalContentQuizFilterView
+        @state="quizView"
+        @perPage="perPageChange"
+        @close="filterShow"
       />
     </template>
   </ModalDown>
   <ModalDown :modalActive="sorting" title="Sortowanie" @close="sortingShow()">
     <template #content>
-      <ModalContentQuizSortingView @state="quizView" @perPage="perPageChange" @close="sortingShow"/>
+      <ModalContentQuizSortingView
+        @state="quizView"
+        @perPage="perPageChange"
+        @close="sortingShow"
+      />
     </template>
   </ModalDown>
-      <div class="fixed margin z-40 flex w-full justify-end">
-        <div class="open-filter" @click="filterShow()">
-          <Icon name="heroicons:adjustments-horizontal" size="32" color="white" />
-        </div>
-      </div>
+  <div class="fixed margin z-40 flex w-full justify-end">
+    <div class="open-filter" @click="filterShow()">
+      <Icon name="heroicons:adjustments-horizontal" size="32" color="white" />
+    </div>
+  </div>
   <NuxtLayout name="panel">
     <div class="pb-[90px]">
-      <div class="flex justify-end">
-        <button @click="sortingShow">Sortuj</button>
+      <div class="flex justify-between place-items-center">
+        <div class="flex flex-row gap-2">
+          <p class="text-[13px] text-gray-400">
+            Strona {{ currentPage }}/{{ allQuiz.last_page }}
+          </p>
+          <div class="vl"></div>
+          <p class="text-[13px] text-gray-400">{{ allQuiz.total }} wyników</p>
+        </div>
+        <div class="flex">
+          <button @click="sortingShow">Sortuj</button>
+        </div>
       </div>
       <div v-if="view == 'two'">
         <QuizCard v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
@@ -83,31 +98,41 @@ const quizView = (value: string) => {
 
 const nextPage = async () => {
   if (currentPage.value < allQuiz.value.last_page) {
+    scrollToTop();
     currentPage.value++;
     await quiz.getAllQuiz(perPageStart.value, currentPage.value);
   }
 };
 
 const previousPage = async () => {
-  if (currentPage.value !== 1) currentPage.value--
-  await quiz.getAllQuiz(perPageStart.value, currentPage.value);
+  if (currentPage.value !== 1) {
+    scrollToTop();
+    currentPage.value--;
+    await quiz.getAllQuiz(perPageStart.value, currentPage.value);
+  }
 };
-const perPageChange = async(value:number)=>{
-    perPageStart.value = value
-    await quiz.getAllQuiz(value, currentPage.value);
-}
+const perPageChange = async (value: number) => {
+  perPageStart.value = value;
+  await quiz.getAllQuiz(value, currentPage.value);
+};
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/style/variables.scss";
 .margin {
-    margin-top: 440px;
-  }
-  .open-filter {
-    color: white;
-    background-color: #618cfb;
-    padding: 8px 6px 8px 9px;
-    border: 1px solid transparent;
-    border-radius: 14px 0px 0px 14px;
-  }
+  margin-top: 440px;
+}
+.open-filter {
+  color: white;
+  background-color: #618cfb;
+  padding: 8px 6px 8px 9px;
+  border: 1px solid transparent;
+  border-radius: 14px 0px 0px 14px;
+}
+
+.vl {
+  border-left: 1px solid rgb(156 163 175);
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
 </style>

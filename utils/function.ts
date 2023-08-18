@@ -327,3 +327,7 @@ export const checkCompany = (values: any, meta: any, company:any) => {
       return true;
     }
   };
+
+  export const scrollToTop =() =>{
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
