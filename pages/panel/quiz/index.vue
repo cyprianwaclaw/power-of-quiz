@@ -167,33 +167,33 @@ const pagination = () => {
   return countPageArray1;
 };
 
-// const pagination1 = () => {
-//   const linksPagination = allQuiz.value.links;
-//   const countPageArray = linksPagination.slice(1, allQuiz.value.links.length - 1);
-//   const currentIndex = countPageArray.indexOf(currentPage.value)
-
-//   // const firstIndex = 
-//   //   const lastIndex = 
-//   return currentIndex;
-// };
 const pagination1 = () => {
-  const lastPageNumber = allQuiz.value.last_page;
-  const halfPageToShow = Math.floor(pageToShow / 2);
+  const linksPagination = allQuiz.value.links;
+  const countPageArray = linksPagination.slice(1, allQuiz.value.links.length - 1);
+  const currentIndex = countPageArray.indexOf(currentPage.value)
 
-  const startPage = Math.max(1, currentPage.value - halfPageToShow);
-  const endPage = Math.min(lastPageNumber, startPage + pageToShow - 1);
-
-  allQuiz.value.links = Array.from({ length: endPage - startPage + 1 }, (_, i) => {
-    const pageNumber = startPage + i;
-    return {
-      label: pageNumber,
-      url: `?page=${pageNumber}`,
-      active: pageNumber === currentPage.value,
-    };
-  });
-
-  return allQuiz.value.links;
+  // const firstIndex = 
+  //   const lastIndex = 
+  return currentIndex;
 };
+// const pagination1 = () => {
+//   const lastPageNumber = allQuiz.value.last_page;
+//   const halfPageToShow = Math.floor(pageToShow / 2);
+
+//   const startPage = Math.max(1, currentPage.value - halfPageToShow);
+//   const endPage = Math.min(lastPageNumber, startPage + pageToShow - 1);
+
+//   allQuiz.value.links = Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+//     const pageNumber = startPage + i;
+//     return {
+//       label: pageNumber,
+//       url: `?page=${pageNumber}`,
+//       active: pageNumber === currentPage.value,
+//     };
+//   });
+
+//   return allQuiz.value.links;
+// };
 
 
 const changePageButton = async (value: any) => {
