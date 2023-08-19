@@ -26,7 +26,7 @@
       </div>
     <p class="mb-6 text-lg font-bold mt-9">Liczba pytań</p>
     <InputRange
-      :max="99"
+      :max="60"
       v-model:max-value="maxAnswersRange"
       v-model:min-value="minAnswersRange"
     />
@@ -40,7 +40,7 @@
     />
     <div class="flex columns-2 gap-4 mt-10 mb-5">
       <button class="button-remove w-full" @click="saveChanges">Wyczyść</button>
-      <button class="button-primary w-full" @click="saveChanges">Zapisz zmiany</button>
+      <button class="button-primary w-full" @click="saveChanges">Zapisz</button>
     </div>
   </div>
 </template>
@@ -62,10 +62,10 @@ const emit = defineEmits<{
 }>();
 
 
-const minAnswersRange = ref(0);
-const maxAnswersRange = ref(99);
-const minTimeRange = ref(0);
-const maxTimeRange = ref(60);
+const minAnswersRange = ref(4);
+const maxAnswersRange = ref(56);
+const minTimeRange = ref(4);
+const maxTimeRange = ref(56);
 
 let mapCategory = (allCategories.value = category.map((single: any) => ({
   id: single.id,
