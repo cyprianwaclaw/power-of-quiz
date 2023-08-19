@@ -58,7 +58,8 @@
           </button>
         </div>
         <div class="flex space-x-5 mx-3">
-          <div v-for="(links, index) in pagination()" :key="index">
+          <!-- {{pagination1()}} -->
+          <div v-for="(links, index) in pagination1()" :key="index">
             <button
               @click="changePageButton(links.label)"
               class="mt-[3px]"
@@ -155,31 +156,46 @@ const perPageChange = async (value: number) => {
 
 const pagination = () => {
   const linksPagination = allQuiz.value.links;
+
   const countPageArray = linksPagination.slice(1, allQuiz.value.links.length - 1);
-  return countPageArray;
+  const countPageArray1 = countPageArray.slice(allQuiz.value.current_page - 2, allQuiz.value.current_page + 2);
+
+//   console.log(allQuiz.value.current_page - 2)
+//   setTimeout(()=>{
+//     countPageArray.value = countPageArray.value
+// }, 100)
+  return countPageArray1;
 };
 
+// const pagination1 = () => {
+//   const linksPagination = allQuiz.value.links;
+//   const countPageArray = linksPagination.slice(1, allQuiz.value.links.length - 1);
+//   const currentIndex = countPageArray.indexOf(currentPage.value)
 
-// const pagination = () => {
-//   const lastPageNumber = allQuiz.value.last_page;
-
-//   // Oblicz indeks początkowy i końcowy stron, tak aby wyświetlać 5 stron z aktywnym środkiem.
-//   let startPage = Math.max(1, currentPage.value - Math.floor(pageToShow / 2));
-//   let endPage = Math.min(lastPageNumber, startPage + pageToShow - 1);
-
-//   // Dostosuj indeks początkowy, jeśli końcowa strona jest za blisko końca.
-//   if (endPage - startPage + 1 < pageToShow) {
-//     startPage = Math.max(1, endPage - pageToShow + 1);
-//   }
-//   // Aktualizuj tablicę linksPagination z pełnymi informacjami o stronach.
-//   allQuiz.value.links = [];
-//   for (let i = startPage; i <= endPage; i++) {
-//     const isActive = i === currentPage.value; // Sprawdza, czy strona jest aktywna
-//     allQuiz.value.links.push({ label: i, url: `?page=${i}`, active: isActive });
-//   }
-
-//   return allQuiz.value.links;
+//   // const firstIndex = 
+//   //   const lastIndex = 
+//   return currentIndex;
 // };
+const pagination1 = () => {
+  const lastPageNumber = allQuiz.value.last_page;
+
+  // Oblicz indeks początkowy i końcowy stron, tak aby wyświetlać 5 stron z aktywnym środkiem.
+  let startPage = Math.max(1, currentPage.value - Math.floor(pageToShow / 2));
+  let endPage = Math.min(lastPageNumber, startPage + pageToShow - 1);
+
+  // Dostosuj indeks początkowy, jeśli końcowa strona jest za blisko końca.
+  if (endPage - startPage + 1 < pageToShow) {
+    startPage = Math.max(1, endPage - pageToShow + 1);
+  }
+  // Aktualizuj tablicę linksPagination z pełnymi informacjami o stronach.
+  allQuiz.value.links = [];
+  for (let i = startPage; i <= endPage; i++) {
+    const isActive = i === currentPage.value; // Sprawdza, czy strona jest aktywna
+    allQuiz.value.links.push({ label: i, url: `?page=${i}`, active: isActive });
+  }
+
+  return allQuiz.value.links;
+};
 
 const changePageButton = async (value: any) => {
   currentPage.value = value;
