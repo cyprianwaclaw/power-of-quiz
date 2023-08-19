@@ -27,8 +27,8 @@
     <p class="mb-6 text-lg font-bold mt-9">Liczba pytań</p>
     <InputRange
       :max="99"
-      v-model:min-value="minAnswersRange"
       v-model:max-value="maxAnswersRange"
+      v-model:min-value="minAnswersRange"
     />
     <p class="mb-6 text-lg font-bold mt-9">
       Czas trwania<span class="text-gray text-xs font-normal ml-[5px]">( minuty )</span>
