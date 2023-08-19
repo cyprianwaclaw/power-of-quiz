@@ -153,26 +153,26 @@ const perPageChange = async (value: number) => {
   await quiz.getAllQuiz(value, currentPage.value);
 };
 
-const pagination = () => {
-  const lastPageNumber = allQuiz.value.last_page;
+// const pagination = () => {
+//   const lastPageNumber = allQuiz.value.last_page;
 
-  // Oblicz indeks początkowy i końcowy stron, tak aby wyświetlać 5 stron z aktywnym środkiem.
-  let startPage = Math.max(1, currentPage.value - Math.floor(pageToShow / 2));
-  let endPage = Math.min(lastPageNumber, startPage + pageToShow - 1);
+//   // Oblicz indeks początkowy i końcowy stron, tak aby wyświetlać 5 stron z aktywnym środkiem.
+//   let startPage = Math.max(1, currentPage.value - Math.floor(pageToShow / 2));
+//   let endPage = Math.min(lastPageNumber, startPage + pageToShow - 1);
 
-  // Dostosuj indeks początkowy, jeśli końcowa strona jest za blisko końca.
-  if (endPage - startPage + 1 < pageToShow) {
-    startPage = Math.max(1, endPage - pageToShow + 1);
-  }
-  // Aktualizuj tablicę linksPagination z pełnymi informacjami o stronach.
-  allQuiz.value.links = [];
-  for (let i = startPage; i <= endPage; i++) {
-    const isActive = i === currentPage.value; // Sprawdza, czy strona jest aktywna
-    allQuiz.value.links.push({ label: i, url: `?page=${i}`, active: isActive });
-  }
+//   // Dostosuj indeks początkowy, jeśli końcowa strona jest za blisko końca.
+//   if (endPage - startPage + 1 < pageToShow) {
+//     startPage = Math.max(1, endPage - pageToShow + 1);
+//   }
+//   // Aktualizuj tablicę linksPagination z pełnymi informacjami o stronach.
+//   allQuiz.value.links = [];
+//   for (let i = startPage; i <= endPage; i++) {
+//     const isActive = i === currentPage.value; // Sprawdza, czy strona jest aktywna
+//     allQuiz.value.links.push({ label: i, url: `?page=${i}`, active: isActive });
+//   }
 
-  return allQuiz.value.links;
-};
+//   return allQuiz.value.links;
+// };
 
 const changePageButton = async (value: any) => {
   currentPage.value = value;
