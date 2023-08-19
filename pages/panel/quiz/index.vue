@@ -1,5 +1,5 @@
 <template>
-  <ModalDown :modalActive="filter" title="Filtruj quizy">
+  <ModalDown :modalActive="filter" title="Filtruj quizy" @close="filterShow()">
     <template #content>
       <ModalContentQuizFilterView
         @state="quizView"
@@ -8,7 +8,7 @@
       />
     </template>
   </ModalDown>
-  <ModalDown :modalActive="sorting" title="Sortowanie">
+  <ModalDown :modalActive="sorting" title="Sortowanie"  @close="sortingShow()">
     <template #content>
       <ModalContentQuizSortingView
         @state="quizView"
@@ -152,6 +152,13 @@ const perPageChange = async (value: number) => {
   perPageStart.value = value;
   await quiz.getAllQuiz(value, currentPage.value);
 };
+
+const pagination = () => {
+  const linksPagination = allQuiz.value.links;
+  const countPageArray = linksPagination.slice(1, allQuiz.value.links.length - 1);
+  return countPageArray;
+};
+
 
 // const pagination = () => {
 //   const lastPageNumber = allQuiz.value.last_page;
