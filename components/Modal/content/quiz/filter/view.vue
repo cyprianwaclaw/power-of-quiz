@@ -26,6 +26,7 @@
       </div>
     <p class="mb-6 text-lg font-bold mt-9">Liczba pytań</p>
     <InputRange
+    :min="1"
       :max="60"
       v-model:max-value="maxAnswersRange"
       v-model:min-value="minAnswersRange"
@@ -34,6 +35,7 @@
       Czas trwania<span class="text-gray text-xs font-normal ml-[5px]">( minuty )</span>
     </p>
     <InputRange
+    :min="1"
       :max="60"
       v-model:min-value="minTimeRange"
       v-model:max-value="maxTimeRange"

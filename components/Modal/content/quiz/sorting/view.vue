@@ -4,7 +4,7 @@
     <QuizSortAll @stateView="view" />
     <div class="mb-8">
       <p class="mb-2.5 text-lg font-bold">Liczba na stronie</p>
-      <InputSingleRange :max="60" v-model="perPage" />
+      <InputSingleRange :max="60" :min="2" v-model="perPage" />
     </div>
     <p class="mb-4 text-lg font-bold">Inne opcje sortowania</p>
     <CHOOSE_TEST 
