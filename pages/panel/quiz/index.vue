@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="flex justify-center mt-6">
-        <div class="flex gap-1" v-if="showFirst">
+        <div class="flex gap-1">
           <button @click="firstPage" v-if="currentPage !== 1">
             <Icon name="ph:caret-double-left-light" size="21" class="" />
           </button>
@@ -104,7 +104,6 @@ const sortingShow = () => {
   sorting.value = !sorting.value;
 };
 const sortingClose = () => {
-  showFirst.value = !showFirst.value;
   sorting.value = !sorting.value;
   currentPage.value = 1;
 };
