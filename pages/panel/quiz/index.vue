@@ -59,7 +59,7 @@
         </div>
         <div class="flex space-x-5 mx-3">
           <!-- {{pagination1()}} -->
-          <div v-for="(links, index) in pagination()" :key="index">
+          <div v-for="(links, index) in pagination2()" :key="index">
             <button
               @click="changePageButton(links.label)"
               class="mt-[3px]"
@@ -176,6 +176,28 @@ const pagination1 = () => {
   //   const lastIndex = 
   return currentIndex;
 };
+
+
+const pagination2 = () => {
+  const lastPageNumber = allQuiz.value.last_page;
+  const halfPageToShow = Math.floor(pageToShow / 2);
+
+  const startPage = Math.max(1, currentPage.value - halfPageToShow);
+  const endPage = Math.min(lastPageNumber, startPage + pageToShow - 1);
+
+  const newLinks = Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+    const pageNumber = startPage + i;
+    return {
+      label: pageNumber,
+      url: `?page=${pageNumber}`,
+      active: pageNumber === currentPage.value,
+    };
+  });
+
+  return newLinks;
+};
+
+
 // const pagination = () => {
 //   const lastPageNumber = allQuiz.value.last_page;
 
