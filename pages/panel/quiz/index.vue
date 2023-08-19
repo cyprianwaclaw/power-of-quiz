@@ -48,7 +48,7 @@
           <QuizTwoQuiz v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
         </div>
       </div>
-      <!-- <div class="flex justify-center mt-6">
+      <div class="flex justify-center mt-6">
         <div class="flex gap-1">
           <button @click="firstPage" v-if="allQuiz.current_page !== 1">
             <Icon name="ph:caret-double-left-light" size="21" class="" />
@@ -76,7 +76,7 @@
             <Icon name="ph:caret-double-right-light" size="21" class="" />
           </button>
         </div>
-      </div> -->
+      </div>
     </div>
   </NuxtLayout>
 </template>
