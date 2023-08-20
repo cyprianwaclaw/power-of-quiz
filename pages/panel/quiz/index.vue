@@ -105,7 +105,7 @@ const sortingShow = () => {
 };
 const sortingClose = () => {
   sorting.value = !sorting.value;
-  currentPage.value = 1;
+  firstPage()
 };
 const filter = ref(false);
 const filterShow = () => {
