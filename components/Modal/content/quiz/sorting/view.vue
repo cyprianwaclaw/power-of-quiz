@@ -1,5 +1,5 @@
 <template>
-     <div class="overflow-y-scroll h-[255px] right-8 left-8 pr-4">
+     <div class="overflow-y-scroll h-[275px] right-8 left-8 pr-4">
         <p class="mb-4 text-lg font-bold">Wybierz układ</p>
     <QuizSortAll @stateView="view" />
     <div class="mb-8">
