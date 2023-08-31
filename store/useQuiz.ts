@@ -147,7 +147,7 @@ export const useQuiz = defineStore('quiz', {
         async getAllQuiz1() {
             try {
                 this.loadingQuiz= true
-                const res = await axiosInstance.get("/quizzes?sort[1]=difficulty,desc&time=34")
+                const res = await axiosInstance.get("/quizzes?filters[$with][questions][count][$lt]=5&filters[$with][questions][count][$gte]=1&filters[category_id][$in][0]=1")
                 // const res = await axiosInstance.get(`/quizzes?sort[0]=time,desc&sort[1]=difficulty,desc`)
                 this.allQuiz1 = await res.data
                 this.loadingQuiz= false

@@ -26,6 +26,9 @@
   <NuxtLayout name="panel">
     <div class="pb-[90px]">
       <div class="flex justify-between place-items-center mb-4">
+      <!-- <pre>
+        {{ allQuiz1 }}
+      </pre> -->
         <div class="flex flex-row gap-2">
           <p class="text-[13px] text-gray-400">
             Strona {{ currentPage }}/{{ allQuiz.last_page }}
@@ -94,10 +97,10 @@ const currentPage = ref(1);
 const pageToShow = 5;
 
 const quiz = useQuiz();
-const { allQuiz } = storeToRefs(quiz);
-await quiz.getCategory();
+const { allQuiz, allQuiz1 } = storeToRefs(quiz);
+// await quiz.getCategory();
 await quiz.getAllQuiz(perPageStart.value, 1);
-
+await quiz.getAllQuiz1();
 const showFirst = ref(true)
 const sorting = ref(false);
 const sortingShow = () => {

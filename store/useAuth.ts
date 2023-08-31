@@ -4,14 +4,28 @@ import { defineStore } from 'pinia'
 export const useAuth = defineStore('auth', {
     state: () => ({
         loggedIn: localStorage.getItem("access_token") ? true : false,
-        error: {} as string,
-        access_token: []
+        error: {} as any,
+        access_token: [] as any
     }),
 
     actions: {
         async loginUser(email: string, password: string) {
             try {
                 const res = await axiosInstance.post('/login', {email, password})
+                this.access_token = await res.data.access_token
+                localStorage.setItem("access_token", this.access_token)
+                await useRouter().push('/panel')
+                window.location.reload();
+            } catch (error) {
+                this.error = error.response.data.message
+            }
+        },
+        
+        async registerUser(name:any, invitation:any, email:any, password:any, password_confirmation:any) {
+            try {
+                // const res = await axiosInstance.post('/register', {values})
+                const res = await axiosInstance.post('/register', {name, invitation, email, password, password_confirmation})
+
                 this.access_token = await res.data.access_token
                 localStorage.setItem("access_token", this.access_token)
                 await useRouter().push('/panel')

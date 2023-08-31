@@ -6,12 +6,12 @@ const API_URL = 'https://powerofquizlogin.com.pl/api'
 export const axiosInstance = axios.create({
     baseURL: API_URL,
     headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers':  '*',
-        'Access-Control-Allow-Credentials': 'true',
+        // 'Access-Control-Allow-Headers':  '*',
+        // 'Access-Control-Allow-Credentials': 'true',
         Accept: "application/json",
-        withCredentials: false,
+        credentials: false,
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         
 }
