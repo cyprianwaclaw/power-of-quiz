@@ -26,9 +26,9 @@
   <NuxtLayout name="panel">
     <div class="pb-[90px]">
       <div class="flex justify-between place-items-center mb-4">
-      <!-- <pre>
+      <pre>
         {{ allQuiz1 }}
-      </pre> -->
+      </pre>
         <div class="flex flex-row gap-2">
           <p class="text-[13px] text-gray-400">
             Strona {{ currentPage }}/{{ allQuiz.last_page }}
