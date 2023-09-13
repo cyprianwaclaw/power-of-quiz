@@ -331,3 +331,26 @@ export const checkCompany = (values: any, meta: any, company:any) => {
   export const scrollToTop =() =>{
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+
+  export const getQuizByCategory = async(cat_id: any, quizFunction:any) => {
+    let paramsArray = [];
+
+    if (Array.isArray(cat_id)) {
+      // Jeśli `cat_id` jest tablicą
+      cat_id.forEach((el) => {
+        const data = `filters[category_id][$in][${el}]=${el}`;
+        paramsArray.push(data);
+      });
+    } else {
+      // Jeśli `cat_id` jest pojedynczym stringiem
+      const data = `filters[category_id][$in][${cat_id}]=${cat_id}`;
+      paramsArray.push(data);
+    }
+  
+    const paramsCategory = paramsArray.join("&");
+    console.log(paramsCategory);
+  
+    // Przekazujemy paramsCategory do quizFunction, którą przekazujesz jako argument
+    await quizFunction(15, 1, paramsCategory);
+  }
