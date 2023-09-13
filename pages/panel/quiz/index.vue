@@ -26,9 +26,9 @@
   <NuxtLayout name="panel">
     <div class="pb-[90px]">
       <div class="flex justify-between place-items-center mb-4">
-      <pre>
-        {{ allQuiz1 }}
-      </pre>
+      <!-- <pre>
+        {{ testF()  }}
+      </pre> -->
         <div class="flex flex-row gap-2">
           <p class="text-[13px] text-gray-400">
             Strona {{ currentPage }}/{{ allQuiz.last_page }}
@@ -51,6 +51,11 @@
           <QuizTwoQuiz v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
         </div>
       </div>
+      <!-- <pre>
+ 
+        {{ route.query }}
+  
+      </pre> -->
       <div class="flex justify-center mt-6">
         <div class="flex gap-1">
           <button @click="firstPage" v-if="currentPage !== 1">
@@ -92,16 +97,82 @@ import { useQuiz } from "@/store/useQuiz";
 definePageMeta({
   middleware: "auth",
 });
+const router = useRouter();
+const currentRoute = ref(router.currentRoute.value);
+const route = useRoute()
 const perPageStart = ref(parseInt(localStorage.getItem("perPage") as any));
 const currentPage = ref(1);
 const pageToShow = 5;
 
 const quiz = useQuiz();
-const { allQuiz, allQuiz1 } = storeToRefs(quiz);
-// await quiz.getCategory();
-await quiz.getAllQuiz(perPageStart.value, 1);
-await quiz.getAllQuiz1();
-const showFirst = ref(true)
+const { allQuiz,} = storeToRefs(quiz);
+
+console.log(route.query.cat_id ? 'true' : 'false');
+
+// // const testF = async () => {
+//   if(route.query.cat_id ? 'true' : 'false') {
+//     let id =route.query.cat_id
+//     let paramsArray = [];
+    
+//     if (Array.isArray(id)) {
+//       // Jeśli `cat_id` jest tablicą
+//   id.forEach((el) => {
+//     const data = `filters[category_id][$in][${el}]=${el}`;
+//     paramsArray.push(data);
+//   });
+// } else {
+//   // Jeśli `cat_id` jest pojedynczym stringiem
+//   const data = `filters[category_id][$in][${id}]=${id}`;
+//   paramsArray.push(data);
+// }
+
+// const paramsCategory = paramsArray.join('&');
+// console.log(paramsCategory);
+
+// // Przekazujemy paramsCategory do quiz.getAllQuiz
+//  await quiz.getAllQuiz(perPageStart.value, 1, paramsCategory);
+// console.log(route.query)
+// } else{
+  
+// }
+// // }
+
+
+if (route.query.cat_id) {
+  let id = route.query.cat_id;
+  let paramsArray = [];
+
+  if (Array.isArray(id)) {
+    // Jeśli `cat_id` jest tablicą
+    id.forEach((el) => {
+      const data = `filters[category_id][$in][${el}]=${el}`;
+      paramsArray.push(data);
+    });
+  } else {
+    // Jeśli `cat_id` jest pojedynczym stringiem
+    const data = `filters[category_id][$in][${id}]=${id}`;
+    paramsArray.push(data);
+  }
+
+  const paramsCategory = paramsArray.join('&');
+  console.log(paramsCategory);
+
+  // Przekazujemy paramsCategory do quiz.getAllQuiz
+  await quiz.getAllQuiz(perPageStart.value, 1, paramsCategory);
+  console.log(route.query);
+} else {
+  // Brak `route.query.cat_id`, wykonaj to, co jest potrzebne, gdy go nie ma
+  await quiz.getAllQuiz(perPageStart.value, 1, null);
+}
+
+
+// await quiz.getAllQuiz(perPageStart.value, 1, null);
+
+
+
+
+
+
 const sorting = ref(false);
 const sortingShow = () => {
   sorting.value = !sorting.value;
@@ -114,6 +185,40 @@ const filter = ref(false);
 const filterShow = () => {
   filter.value = !filter.value;
 };
+
+
+const paramsCategory = ref();
+  console.log(paramsCategory.value);
+onBeforeRouteUpdate(async(to, from)=>{
+let id = to?.query.cat_id;
+
+if (id) {
+  let paramsArray = [];
+
+  if (Array.isArray(id)) {
+    // Jeśli `cat_id` jest tablicą
+    id.forEach((el) => {
+      const data = `filters[category_id][$in][${el}]=${el}`;
+      paramsArray.push(data);
+    });
+  } else {
+    // Jeśli `cat_id` jest pojedynczym stringiem
+    const data = `filters[category_id][$in][${id}]=${id}`;
+    paramsArray.push(data);
+  }
+
+  paramsCategory.value = paramsArray.join('&');
+  console.log(paramsCategory.value);
+
+  // Przekazujemy paramsCategory do quiz.getAllQuiz
+  await quiz.getAllQuiz(perPageStart.value, 1, paramsCategory.value);
+}
+
+
+})
+
+
+
 const view = ref();
 onMounted(() => {
   const checkEmitsData = () => {
@@ -129,32 +234,32 @@ const nextPage = async () => {
   if (currentPage.value < allQuiz.value.last_page) {
     scrollToTop();
     currentPage.value++;
-    await quiz.getAllQuiz(perPageStart.value, currentPage.value);
+    await quiz.getAllQuiz(perPageStart.value, currentPage.value, paramsCategory.value);
   }
 };
 
 const firstPage = async () => {
   scrollToTop();
   currentPage.value = 1;
-  await quiz.getAllQuiz(perPageStart.value, currentPage.value);
+  await quiz.getAllQuiz(perPageStart.value, currentPage.value, paramsCategory.value);
 };
 
 const lastPage = async () => {
   scrollToTop();
   currentPage.value = allQuiz.value.last_page;
-  await quiz.getAllQuiz(perPageStart.value, currentPage.value);
+  await quiz.getAllQuiz(perPageStart.value, currentPage.value, paramsCategory.value);
 };
 
 const previousPage = async () => {
   if (currentPage.value !== 1) {
     scrollToTop();
     currentPage.value--;
-    await quiz.getAllQuiz(perPageStart.value, currentPage.value);
+    await quiz.getAllQuiz(perPageStart.value, currentPage.value, paramsCategory.value);
   }
 };
 const perPageChange = async (value: number) => {
   perPageStart.value = value;
-  await quiz.getAllQuiz(value, currentPage.value);
+  await quiz.getAllQuiz(value, currentPage.value, paramsCategory.value);
 };
 
 const pagination = () => {
@@ -178,7 +283,7 @@ const pagination = () => {
 
 const changePageButton = async (value: any) => {
   currentPage.value = value;
-  await quiz.getAllQuiz(perPageStart.value, value);
+  await quiz.getAllQuiz(perPageStart.value, value, paramsCategory.value);
   scrollToTop();
 };
 </script>

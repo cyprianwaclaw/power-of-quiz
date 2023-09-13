@@ -13,6 +13,8 @@
       </label>
     </div>
     <p class="mb-2 text-lg font-bold mt-9">Kategoria</p>
+    <!-- {{ mapCategory }}
+    {{ params ? 'true': 'false' }} -->
     <div v-for="(category, index) in allCategories" :key="index">
         <label class="flex w-full mt-2">
           <input
@@ -51,7 +53,7 @@
 import { useQuiz } from "@/store/useQuiz";
 import { storeToRefs } from "pinia";
 const quiz = useQuiz();
-
+const router = useRouter();
 const { allQuiz, categories } = storeToRefs(quiz);
 // await quiz.getCategory();
 let category = categories.value;
@@ -68,33 +70,81 @@ const minAnswersRange = ref(4);
 const maxAnswersRange = ref(56);
 const minTimeRange = ref(4);
 const maxTimeRange = ref(56);
+const mapCategory = ref([]) as any;
 
-let mapCategory = (allCategories.value = category.map((single: any) => ({
+mapCategory.value = (allCategories.value = category.map((single: any) => ({
   id: single.id,
   name: single.name,
   selected: false,
 })));
+
+
+// const params = router.currentRoute.value.query.cat_id as any;
+// const test1 = Number(params[0]);
+
+// console.log(params[0]); // Wyświetli pierwszy element tablicy params
+
+// const test = mapCategory.value.filter((single: any) => single.id === test1);
+// test[0].selected = true;
+// console.log(test[0].selected); // Wyświetli pierwszy element tablicy mapCategory
+
+const params = router.currentRoute.value.query.cat_id as any;
+
+if (params) {
+  if (Array.isArray(params)) {
+    // Jeśli `cat_id` jest tablicą
+    params.forEach((param) => {
+      const test1 = Number(param);
+
+      console.log(param); // Wyświetli kolejne elementy tablicy params
+
+      mapCategory.value.forEach((single: any) => {
+        if (single.id === test1) {
+          single.selected = true;
+        }
+      });
+    });
+  } else {
+    // Jeśli `cat_id` jest pojedynczym stringiem
+    const test1 = Number(params);
+
+    console.log(params); // Wyświetli pojedynczy parametr
+
+    mapCategory.value.forEach((single: any) => {
+      if (single.id === test1) {
+        single.selected = true;
+      }
+    });
+  }
+}
+
+
+
+
+// })
+// filters[category_id][$in][0]=1
+const newCategories = ref([]);
+const toParams = ref()
+
+watch( router.currentRoute.value.query, (newValue) => {
+  console.log(newValue)
+})
+
+// if( params ? 'true': 'false'){
+//   console.log(params.value )
+// }
+
+watch(mapCategory.value, (newValue)=>{
+let selected = newValue.filter((single: any) => single.selected === true)
+toParams.value = selected.map((single: any) => single.id);
+
+})
 
 let difficulty = reactive([
   { name: "Łatwy", value: "easy", selected: false },
   { name: "Średni", value: "medium", selected: false },
   { name: "Trudny", value: "hard", selected: false },
 ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const sliderValue = ref(50);
 const currentView = ref();
@@ -110,14 +160,16 @@ watch(perPage, (newVal: any) => {
 });
 
 const saveChanges = ()=>{
-   if (currentView.value) {
-   emit("state", currentView.value);
-   localStorage.setItem('listView', currentView.value)
- }
- if (currentPerPage.value) {
- localStorage.setItem("perPage", currentPerPage.value);
- emit("perPage", currentPerPage.value);
- }
+//    if (currentView.value) {
+//    emit("state", currentView.value);
+//    localStorage.setItem('listView', currentView.value)
+//  }
+//  if (currentPerPage.value) {
+//  localStorage.setItem("perPage", currentPerPage.value);
+//  emit("perPage", currentPerPage.value);
+//  }
+console.log(toParams.value);
+router.push({ query: { cat_id: toParams.value }});
  emit("close");
 
 }
