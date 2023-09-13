@@ -339,17 +339,38 @@ export const checkCompany = (values: any, meta: any, company:any) => {
     if (Array.isArray(cat_id)) {
       // Jeśli `cat_id` jest tablicą
       cat_id.forEach((el) => {
-        const data = `filters[category_id][$in][${el}]=${el}`;
+        const data = `filters[category_id][$in]=${el}`;
         paramsArray.push(data);
       });
     } else {
       // Jeśli `cat_id` jest pojedynczym stringiem
-      const data = `filters[category_id][$in][${cat_id}]=${cat_id}`;
+      const data = `filters[category_id][$in]=${cat_id}`;
       paramsArray.push(data);
     }
   
     const paramsCategory = paramsArray.join("&");
-    console.log(paramsCategory);
+  
+    // Przekazujemy paramsCategory do quizFunction, którą przekazujesz jako argument
+    await quizFunction(15, 1, paramsCategory);
+  }
+
+
+  export const getQuizByDiffuculty = async(difficulty: any, quizFunction:any) => {
+    let paramsArray = [];
+
+    if (Array.isArray(difficulty)) {
+      // Jeśli `cat_id` jest tablicą
+      difficulty.forEach((el) => {
+        const data = `filters[difficulty][$in][${el}]=${el}`;
+        paramsArray.push(data);
+      });
+    } else {
+      // Jeśli `cat_id` jest pojedynczym stringiem
+      const data = `filters[difficulty][$in][${difficulty}]=${difficulty}`;
+      paramsArray.push(data);
+    }
+  
+    const paramsCategory = paramsArray.join("&");
   
     // Przekazujemy paramsCategory do quizFunction, którą przekazujesz jako argument
     await quizFunction(15, 1, paramsCategory);

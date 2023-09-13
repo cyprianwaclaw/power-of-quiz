@@ -5,6 +5,7 @@
         @state="quizView"
         @perPage="perPageChange"
         @close="filterShow"
+        @category = "category"
       />
     </template>
   </ModalDown>
@@ -66,93 +67,34 @@ definePageMeta({
 });
 const router = useRouter();
 const route = useRoute();
-// const perPageStart = ref(parseInt(localStorage.getItem("perPage") as any));
 const currentPage = ref(1);
 
 const quiz = useQuiz();
-const { allQuiz } = storeToRefs(quiz);
-const f = async()=>{
-  // filters(route.query.cat_id)
-  // await quiz.getAllQuiz(15, 1, 'filters[category_id][$in][0]=3');
-  if (route.query.cat_id) {
-  await getQuizByCategory(route.query.cat_id, quiz.getAllQuiz);
-} else{
+const { allQuiz, } = storeToRefs(quiz);
+const f = async () => {
+  let difficulty = route.query.difficulty;
+  let category = route.query.cat_id;
 
-  await quiz.getAllQuiz(15, 1, null);
-}
+  if (difficulty && category) {
+    // Jeśli oba parametry są obecne, tworzymy odpowiednie filtry
+    const difficultyFilter = createFilter("difficulty", difficulty);
+    const categoryFilter = createFilter("category_id", category);
 
-  console.log(route.query.cat_id);
-  
-}
-f()
-
-// if (route.query.cat_id) {
-//   let id = route.query.cat_id;
-//   let paramsArray = [];
-
-//   if (Array.isArray(id)) {
-//     // Jeśli `cat_id` jest tablicą
-//     id.forEach((el) => {
-//       const data = `filters[category_id][$in][${el}]=${el}`;
-//       paramsArray.push(data);
-//     });
-//   } else {
-//     // Jeśli `cat_id` jest pojedynczym stringiem
-//     const data = `filters[category_id][$in][${id}]=${id}`;
-//     paramsArray.push(data);
-//   }
-
-//   const paramsCategory = paramsArray.join("&");
-//   console.log(paramsCategory);
-
-//   // Przekazujemy paramsCategory do quiz.getAllQuiz
-//   await quiz.getAllQuiz(15, 1, paramsCategory);
-//   console.log(route.query);
-// } else {
-//   // Brak `route.query.cat_id`, wykonaj to, co jest potrzebne, gdy go nie ma
-//   await quiz.getAllQuiz(15, 1, null);
-// }
-
-
-// const getQuizByCategory = async(cat_id: any) => {
-//   let paramsArray = [];
-
-//   if (Array.isArray(cat_id)) {
-//     // Jeśli `cat_id` jest tablicą
-//     cat_id.forEach((el) => {
-//       const data = `filters[category_id][$in][${el}]=${el}`;
-//       paramsArray.push(data);
-//     });
-//   } else {
-//     // Jeśli `cat_id` jest pojedynczym stringiem
-//     const data = `filters[category_id][$in][${cat_id}]=${cat_id}`;
-//     paramsArray.push(data);
-//   }
-
-//   const paramsCategory = paramsArray.join("&");
-//   console.log(paramsCategory);
-
-//   // Przekazujemy paramsCategory do quiz.getAllQuiz
-//   await quiz.getAllQuiz(15, 1, paramsCategory);
-
-// }
-
-// if (route.query.cat_id) {
-//   await getQuizByCategory(route.query.cat_id, quiz.getAllQuiz);
-// }
-// } else {
-//   // Brak `route.query.cat_id`, wykonaj to, co jest potrzebne, gdy go nie ma
-//   await quiz.getAllQuiz(15, 1, null);
-// }
-// getQuizByCategory(route.query.cat_id)
-// Wywołanie funkcji z route.query.cat_id lub bez
-// if (route.query.cat_id) {
-//   await getQuizByCategory(route.query.cat_id);
-// } else {
-//   // Brak `route.query.cat_id`, wykonaj to, co jest potrzebne, gdy go nie ma
-//   await quiz.getAllQuiz(15, 1, null);
-// }
-
+    // Wywołujemy funkcję z obiema filtrami
+    await applyFilters([difficultyFilter, categoryFilter]);
+  } else if (difficulty) {
+    // Jeśli jest tylko difficulty, stosujemy tylko ten filtr
+    const difficultyFilter = createFilter("difficulty", difficulty);
+    await applyFilters([difficultyFilter]);
+  } else if (category) {
+    // Jeśli jest tylko category, stosujemy tylko ten filtr
+    const categoryFilter = createFilter("category_id", category);
+    await applyFilters([categoryFilter]);
+  } else {
+    // Jeśli brak parametrów, pobieramy wszystkie quizy
+    await quiz.getAllQuiz(15, 1, null);
+  }
+};
 
 
 const sorting = ref(false);
@@ -168,66 +110,72 @@ const filterShow = () => {
   filter.value = !filter.value;
 };
 
-const paramsCategory = ref();
 
-onBeforeRouteUpdate(async (to, from) => {
+// onBeforeRouteUpdate(async (to) => {
 
-  // console.log(filters(to.query.cat_id))
-  let id = to?.query.cat_id;
-console.log(id)
-  if (id) {
-  await getQuizByCategory(id, quiz.getAllQuiz);
+//   let difficulty= to?.query.difficulty;
+//   if (difficulty) {
+//     console.log(difficulty);
+//   // await getQuizByCategory(category, quiz.getAllQuiz);
+//   getQuizByDiffuculty(difficulty, quiz.getAllQuiz)
+//   }
+
+//   let category = to?.query.cat_id;
+//   if (category) {
+//   await getQuizByCategory(category, quiz.getAllQuiz);
+//   }
+// });
+
+onBeforeRouteUpdate(async (to) => {
+  let difficulty = to?.query.difficulty;
+  let category = to?.query.cat_id;
+
+  if (difficulty && category) {
+    // Jeśli oba parametry są obecne, tworzymy odpowiednie filtry
+    const difficultyFilter = createFilter("difficulty", difficulty);
+    const categoryFilter = createFilter("category_id", category);
+
+    // Wywołujemy funkcję z obiema filtrami
+    await applyFilters([difficultyFilter, categoryFilter]);
+  } else if (difficulty) {
+    // Jeśli jest tylko difficulty, stosujemy tylko ten filtr
+    const difficultyFilter = createFilter("difficulty", difficulty);
+    await applyFilters([difficultyFilter]);
+  } else if (category) {
+    // Jeśli jest tylko category, stosujemy tylko ten filtr
+    const categoryFilter = createFilter("category_id", category);
+    await applyFilters([categoryFilter]);
   }
-  // if (id) {
-  //   let paramsArray = [];
-
-  //   if (Array.isArray(id)) {
-  //     // Jeśli `cat_id` jest tablicą
-  //     id.forEach((el) => {
-  //       const data = `filters[category_id][$in][${el}]=${el}`;
-  //       paramsArray.push(data);
-  //     });
-  //   } else {
-  //     // Jeśli `cat_id` jest pojedynczym stringiem
-  //     const data = `filters[category_id][$in][${id}]=${id}`;
-  //     paramsArray.push(data);
-  //   }
-
-  //   paramsCategory.value = paramsArray.join("&");
-  //   // console.log(paramsCategory.value);
-
-  //   // Przekazujemy paramsCategory do quiz.getAllQuiz
-  //   await quiz.getAllQuiz(13, 1, paramsCategory.value);
-  // }
 });
 
+// Funkcja do tworzenia filtrów
+function createFilter(filterName, filterValue) {
+  let paramsArray = [];
+
+  if (Array.isArray(filterValue)) {
+    filterValue.forEach((el) => {
+      const data = `filters[${filterName}][$in]=${el}`;
+      paramsArray.push(data);
+    });
+  } else {
+    const data = `filters[${filterName}][$in]=${filterValue}`;
+    paramsArray.push(data);
+  }
+
+  return paramsArray.join("&");
+}
+
+// Funkcja do zastosowania filtrów
+async function applyFilters(filters) {
+  const params = filters.join("&");
+  await quiz.getAllQuiz(15, 1, params);
+}
 
 
-
-// const filters = async (params: any) => {
-//   const test = ref(''); // Zainicjuj ref jako pusty ciąg znaków
-//   if (params) {
-//     let paramsArray: string[] = [];
-//     if (Array.isArray(params)) {
-//       params.forEach((el: any) => {
-//         const dataString = `filters[category_id][$in][${el}]=${el}`;
-//         paramsArray.push(dataString);
-//       });
-//     }
-//     test.value = paramsArray.join("&");
- 
-//     // await quiz.getAllQuiz(12, 1, test.value );
-//     await quiz.getAllQuiz(13, 1, params );
-
-//   }
-// };
-// onMounted(() => {
-
-//   filters(2)
-// })
 
 const view = ref();
-onMounted(() => {
+onMounted( async () => {
+  f()
   const checkEmitsData = () => {
     view.value = view.value || localStorage.getItem("listView");
   };
