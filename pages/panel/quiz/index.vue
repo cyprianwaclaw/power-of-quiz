@@ -3,7 +3,6 @@
     <template #content>
       <ModalContentQuizFilterView
         @state="quizView"
-        @perPage="perPageChange"
         @close="filterShow"
         @category="category"
       />
@@ -11,14 +10,9 @@
   </ModalDown>
   <ModalDown :modalActive="sorting" title="Sortowanie" @close="sortingShow()">
     <template #content>
-      <ModalContentQuizSortingView
-        @state="quizView"
-        @perPage="perPageChange"
-        @close="sortingClose"
-      />
+      <ModalContentQuizSortingView @close="sortingClose" />
     </template>
   </ModalDown>
-  <!-- po zmianie czegoś current page musi powrócić do strony 1 -->
   <div class="fixed margin z-40 flex w-full justify-end">
     <div class="open-filter" @click="filterShow()">
       <Icon name="heroicons:adjustments-horizontal" size="32" color="white" />
@@ -49,27 +43,100 @@
           <QuizTwoQuiz v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
         </div>
       </div>
-      <pre>
-        <!-- {{ allQuiz1 }} -->
-        <!-- {{ filters(2) }} -->
-        <!-- {{ allQuiz }} -->
-      </pre>
+      <!-- //!paginacja -->
+      <div>
+        <div class="flex justify-center mt-8" v-if="allQuiz.last_page != 1">
+          <button v-if="currentPage != 1" @click="changePage(1)" class="mr-2">
+            <Icon name="ph:caret-double-left" size="26" class="-mt-1" />
+
+          </button>
+          <div
+            v-for="(page, index) in pageNumbers(allQuiz.last_page, currentPage)"
+            :key="index"
+          >
+            <p
+              class="w-6 cursor-pointer text-center"
+              @click="changePage(page)"
+              :class="{ active: page == currentPage }"
+            >
+              {{ page }}
+            </p>
+          </div>
+          <button v-if="currentPage != allQuiz.last_page" @click="changePage(allQuiz.last_page)" class="ml-2">
+            <Icon name="ph:caret-double-right" size="26" class="-mt-1" />
+          </button>
+
+        </div>
+      </div>
     </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
+import { number } from "yup";
 
-const perPageStart = ref();
-const currentPage = ref(1);
-const perPage = ref(15); // Inicjalizacja perPage z domyślną wartością
+definePageMeta({
+  middleware: "auth",
+});
 
 const route = useRoute();
+const router = useRouter();
+
 const quiz = useQuiz();
-const { allQuiz } = quiz;
+const { allQuiz } = storeToRefs(quiz);
+
+//!pagination
+
+const currentPage = ref(1);
+const pagesPerPage = 4; // Liczba stron na jednej stronie paginacji
+
+const pageNumbers = (lastPage:number, currentPage:number) => {
+  const pages = [];
+  const half = Math.floor(pagesPerPage / 2);
+
+  let startPage = currentPage - half;
+  let endPage = currentPage + half;
+
+  if (startPage < 1) {
+    startPage = 1;
+    endPage = pagesPerPage;
+  }
+
+  if (endPage > lastPage) {
+    endPage = lastPage;
+    startPage = lastPage - pagesPerPage + 1;
+    if (startPage < 1) {
+      startPage = 1;
+    }
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
+  }
+
+  return pages;
+};
+
+const changePage = (pageNumber:number) => {
+  scrollToTop();
+  const routeParams = { ...router.currentRoute.value.query };
+  const updatedQueryParams = { ...routeParams, page: pageNumber };
+
+  const check1 = () => {
+    if (routeParams) {
+      return updatedQueryParams;
+    } else {
+      return { page: pageNumber };
+    }
+  };
+
+  router.push({ query: check1() });
+  currentPage.value = pageNumber;
+};
+
+//!finished
 
 const f = async () => {
   let difficulty = route.query.difficulty;
@@ -78,57 +145,227 @@ const f = async () => {
   let max_count = route.query.max_count as any;
   let min_time = route.query.min_time as any;
   let max_time = route.query.max_time as any;
+  let per_page = route.query.per_page as any;
+  // let page = route.query.page as any;
+  let page = "page=" + route.query.page;
 
   if (difficulty && category) {
-    // Jeśli oba parametry są obecne, tworzymy odpowiednie filtry
     const difficultyFilter = createFilter("difficulty", difficulty);
     const categoryFilter = createFilter("category_id", category);
- const questionMinCountFilter = createFilterTwoParams("questions", "count", min_count, "$gte");
-    const questionMaxCountFilter = createFilterTwoParams("questions", "count", max_count, "$lt");
-    const questionMinTimeFilter =  createFilterTwoParamsTime("time", min_time, '$gte');
-    const questionMaxTimeFilter =  createFilterTwoParamsTime("time", max_time, '$lt');
+    const questionMinCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      min_count,
+      "$gte"
+    );
+    const questionMaxCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      max_count,
+      "$lt"
+    );
+    const questionMinTimeFilter = createFilterTwoParamsTime("time", min_time, "$gte");
+    const questionMaxTimeFilter = createFilterTwoParamsTime("time", max_time, "$lt");
 
-    await applyFilters([difficultyFilter, categoryFilter, questionMinCountFilter, questionMaxCountFilter, questionMinTimeFilter, questionMaxTimeFilter]);
+    await applyFilters(per_page, [
+      page,
+      difficultyFilter,
+      categoryFilter,
+      questionMinCountFilter,
+      questionMaxCountFilter,
+      questionMinTimeFilter,
+      questionMaxTimeFilter,
+    ]);
   } else if (difficulty) {
-    // Jeśli jest tylko difficulty, stosujemy tylko ten filtr
     const difficultyFilter = createFilter("difficulty", difficulty);
- const questionMinCountFilter = createFilterTwoParams("questions", "count", min_count, "$gte");
-    const questionMaxCountFilter = createFilterTwoParams("questions", "count", max_count, "$lt");
-    const questionMinTimeFilter =  createFilterTwoParamsTime("time", min_time, '$gte');
-    const questionMaxTimeFilter =  createFilterTwoParamsTime("time", max_time, '$lt');
+    const questionMinCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      min_count,
+      "$gte"
+    );
+    const questionMaxCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      max_count,
+      "$lt"
+    );
+    const questionMinTimeFilter = createFilterTwoParamsTime("time", min_time, "$gte");
+    const questionMaxTimeFilter = createFilterTwoParamsTime("time", max_time, "$lt");
 
-    await applyFilters([difficultyFilter, questionMinCountFilter, questionMaxCountFilter, questionMinTimeFilter, questionMaxTimeFilter]);
+    await applyFilters(per_page, [
+      page,
+      difficultyFilter,
+      questionMinCountFilter,
+      questionMaxCountFilter,
+      questionMinTimeFilter,
+      questionMaxTimeFilter,
+    ]);
   } else if (category) {
-
     const categoryFilter = createFilter("category_id", category);
-     const questionMinCountFilter = createFilterTwoParams("questions", "count", min_count, "$gte");
-    const questionMaxCountFilter = createFilterTwoParams("questions", "count", max_count, "$lt");
-    const questionMinTimeFilter =  createFilterTwoParamsTime("time", min_time, '$gte');
-    const questionMaxTimeFilter =  createFilterTwoParamsTime("time", max_time, '$lt');
+    const questionMinCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      min_count,
+      "$gte"
+    );
+    const questionMaxCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      max_count,
+      "$lt"
+    );
+    const questionMinTimeFilter = createFilterTwoParamsTime("time", min_time, "$gte");
+    const questionMaxTimeFilter = createFilterTwoParamsTime("time", max_time, "$lt");
 
-    await applyFilters([categoryFilter, questionMinCountFilter, questionMaxCountFilter, questionMinTimeFilter, questionMaxTimeFilter]);
+    await applyFilters(per_page, [
+      page,
+      categoryFilter,
+      questionMinCountFilter,
+      questionMaxCountFilter,
+      questionMinTimeFilter,
+      questionMaxTimeFilter,
+    ]);
   } else {
-
-    await quiz.getAllQuiz(perPageStart.value, 1, null);
+    await quiz.getAllQuiz(15, null);
   }
+};
+const changeFilterSorting = () => {
+  scrollToTop();
+  changePage(1)
 
-  // Po zmianie filtrów lub perPage, pobierz nowe dane
-  await fetchData();
+}
+
+const sorting = ref(false);
+const sortingShow = () => {
+  sorting.value = !sorting.value;
+};
+const sortingClose = () => {
+  // changeFilterSorting()
+  // changePage(1)
+
+  sorting.value = !sorting.value;
+};
+
+const filter = ref(false);
+const filterShow = () => {
+  // changeFilterSorting()
+  filter.value = !filter.value;
 };
 
 
-// Funkcja do tworzenia filtrów
-function createFilter(filterName:any, filterValue:any) {
+onBeforeRouteUpdate(async (to, from) => {
+  scrollToTop();
+  // let page = "page=" + to.query.page;
+
+let page = ''
+if(to.query.page === from.query.page){
+  currentPage.value = 1
+  page = "page=1";
+
+
+} else{
+ page = "page=" + to.query.page;
+
+}
+  let difficulty = to?.query.difficulty;
+  let category = to?.query.cat_id;
+  let min_count = to.query.min_count as any;
+  let max_count = to.query.max_count as any;
+  let min_time = to.query.min_time as any;
+  let max_time = to.query.max_time as any;
+  let per_page = to.query.per_page ? to.query.per_page : 15;
+  // let page = "page=" + to.query.page;
+
+  if (difficulty && category) {
+    const difficultyFilter = createFilter("difficulty", difficulty);
+    const categoryFilter = createFilter("category_id", category);
+    const questionMinCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      min_count,
+      "$gte"
+    );
+    const questionMaxCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      max_count,
+      "$lt"
+    );
+    const questionMinTimeFilter = createFilterTwoParamsTime("time", min_time, "$gte");
+    const questionMaxTimeFilter = createFilterTwoParamsTime("time", max_time, "$lt");
+
+    await applyFilters(per_page, [
+      page,
+      difficultyFilter,
+      categoryFilter,
+      questionMinCountFilter,
+      questionMaxCountFilter,
+      questionMinTimeFilter,
+      questionMaxTimeFilter,
+    ]);
+  } else if (difficulty) {
+    const difficultyFilter = createFilter("difficulty", difficulty);
+    const questionMinCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      min_count,
+      "$gte"
+    );
+    const questionMaxCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      max_count,
+      "$lt"
+    );
+    const questionMinTimeFilter = createFilterTwoParamsTime("time", min_time, "$gte");
+    const questionMaxTimeFilter = createFilterTwoParamsTime("time", max_time, "$lt");
+
+    await applyFilters(per_page, [
+      page,
+      difficultyFilter,
+      questionMinCountFilter,
+      questionMaxCountFilter,
+      questionMinTimeFilter,
+      questionMaxTimeFilter,
+    ]);
+  } else if (category) {
+    const categoryFilter = createFilter("category_id", category);
+    const questionMinCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      min_count,
+      "$gte"
+    );
+    const questionMaxCountFilter = createFilterTwoParams(
+      "questions",
+      "count",
+      max_count,
+      "$lt"
+    );
+    const questionMinTimeFilter = createFilterTwoParamsTime("time", min_time, "$gte");
+    const questionMaxTimeFilter = createFilterTwoParamsTime("time", max_time, "$lt");
+
+    await applyFilters(per_page, [
+      page,
+      categoryFilter,
+      questionMinCountFilter,
+      questionMaxCountFilter,
+      questionMinTimeFilter,
+      questionMaxTimeFilter,
+    ]);
+  }
+});
+
+function createFilter(filterName: any, filterValue: any) {
   let paramsArray = [];
   let index = 0;
 
   if (Array.isArray(filterValue)) {
     filterValue.forEach((el) => {
-      console.log(filterValue.length)
       const data = `filters[${filterName}][$in][${index}]=${el}`;
       paramsArray.push(data);
       index++;
-
     });
   } else {
     const data = `filters[${filterName}][$in][0]=${filterValue}`;
@@ -138,68 +375,46 @@ function createFilter(filterName:any, filterValue:any) {
   return paramsArray.join("&");
 }
 
-const perPageChange = async (value: number) => {
-  perPageStart.value = value;
-};
-
-
-function createFilterTwoParams(filterName1:any, filterName2:any,filterValue:any, name:any) {
+function createFilterTwoParams(
+  filterName1: any,
+  filterName2: any,
+  filterValue: any,
+  name: any
+) {
   let paramsArray = [];
-
-  // if (Array.isArray(filterValue)) {
-    // filterValue.forEach((el) => {
-      const data = `filters[$with][${filterName1}][${filterName2}][${name}]=${filterValue}`;
-      paramsArray.push(data);
-    // });
-  // } else {
-    // const data = `filters[${filterName}][$in]=${filterValue}`;
-    // paramsArray.push(data);
-  // }
+  const data = `filters[$with][${filterName1}][${filterName2}][${name}]=${filterValue}`;
+  paramsArray.push(data);
 
   return paramsArray.join("&");
 }
 
-function createFilterTwoParamsTime(filterName:any,filterValue:any, name:any) {
+function createFilterTwoParamsTime(filterName: any, filterValue: any, name: any) {
   let paramsArray = [];
-
-  // if (Array.isArray(filterValue)) {
-    // filterValue.forEach((el) => {
-      const data = `filters[${filterName}][${name}]=${filterValue}`;
-      paramsArray.push(data);
-    // });
-  // } else {
-    // const data = `filters[${filterName}][$in]=${filterValue}`;
-    // paramsArray.push(data);
-  // }
+  const data = `filters[${filterName}][${name}]=${filterValue}`;
+  paramsArray.push(data);
 
   return paramsArray.join("&");
 }
 
-// Funkcja do zastosowania filtrów
-async function applyFilters(filters:any) {
+async function applyFilters(perPage: any, filters: any) {
   const params = filters.join("&");
-  await quiz.getAllQuiz(perPageStart.value, 1, params);
+  await quiz.getAllQuiz(perPage, params);
 }
-const fetchData = async () => {
-  // Tutaj umieść kod do pobierania danych z API z uwzględnieniem perPage
-};
 
-// ... Pozostały kod ...
-
-
-// ... Pozostały kod ...
 const view = ref();
 onMounted(async () => {
-  // Inicjalizacja perPage
-  perPageStart.value = parseInt(localStorage.getItem("perPage") as any);
-  perPage.value = perPageStart.value;
   const checkEmitsData = () => {
     view.value = view.value || localStorage.getItem("listView");
   };
   checkEmitsData();
-  await f();
+  f();
 });
+
+const quizView = (value: any) => {
+  view.value = value;
+};
 </script>
+
 <style lang="scss" scoped>
 @import "@/assets/style/variables.scss";
 .margin {
@@ -218,6 +433,12 @@ onMounted(async () => {
   margin-top: 4px;
   margin-bottom: 4px;
 }
-</style>
+.active {
+  color: white;
+  background-color: #618cfb;
+  border-radius: 4px;
+  margin-right: 7px;
+  margin-left: 7px;
 
-<!-- Pozostały kod CSS -->
+}
+</style>
