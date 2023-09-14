@@ -133,10 +133,10 @@ export const useQuiz = defineStore('quiz', {
                 console.error(e)
             }
         },
-        async getAllQuiz(perPage:number, currentPage:number, category1:any) {
+        async getAllQuiz(perPage:number, category1:any) {
             try {
                 this.loadingQuiz= true
-                const res = await axiosInstance.get(`/quizzes?per_page=${perPage}&page=${currentPage}&${category1}`)
+                const res = await axiosInstance.get(`/quizzes?per_page=${perPage}&${category1}`)
                 // const res = await axiosInstance.get(`/quizzes?sort[0]=time,desc&sort[1]=difficulty,desc`)
                 this.allQuiz = await res.data.data
                 this.loadingQuiz= false
@@ -147,7 +147,7 @@ export const useQuiz = defineStore('quiz', {
         async getAllQuiz1() {
             try {
                 this.loadingQuiz= true
-                const res = await axiosInstance.get("/quizzes?filters[$with][questions][count][$lt]=5&filters[$with][questions][count][$gte]=1&filters[category_id][$in][0]=1")
+                const res = await axiosInstance.get("/quizzes?filters[$with][questions][count][$gte]=1&filters[$with][questions][count][$lt]=2&filters[category_id][$in]=1")
                 // const res = await axiosInstance.get(`/quizzes?sort[0]=time,desc&sort[1]=difficulty,desc`)
                 this.allQuiz1 = await res.data
                 this.loadingQuiz= false

@@ -333,45 +333,68 @@ export const checkCompany = (values: any, meta: any, company:any) => {
   }
 
 
-  export const getQuizByCategory = async(cat_id: any, quizFunction:any) => {
-    let paramsArray = [];
+  // export const getQuizByCategory = async(cat_id: any, quizFunction:any) => {
+  //   let paramsArray = [];
 
-    if (Array.isArray(cat_id)) {
-      // Jeśli `cat_id` jest tablicą
-      cat_id.forEach((el) => {
-        const data = `filters[category_id][$in]=${el}`;
-        paramsArray.push(data);
-      });
-    } else {
-      // Jeśli `cat_id` jest pojedynczym stringiem
-      const data = `filters[category_id][$in]=${cat_id}`;
-      paramsArray.push(data);
+  //   if (Array.isArray(cat_id)) {
+  //     // Jeśli `cat_id` jest tablicą
+  //     cat_id.forEach((el) => {
+  //       const data = `filters[category_id][$in]=${el}`;
+  //       paramsArray.push(data);
+  //     });
+  //   } else {
+  //     // Jeśli `cat_id` jest pojedynczym stringiem
+  //     const data = `filters[category_id][$in]=${cat_id}`;
+  //     paramsArray.push(data);
+  //   }
+  
+  //   const paramsCategory = paramsArray.join("&");
+  
+  //   // Przekazujemy paramsCategory do quizFunction, którą przekazujesz jako argument
+  //   await quizFunction(15, 1, paramsCategory);
+  // }
+
+
+  // export const getQuizByDiffuculty = async(difficulty: any, quizFunction:any) => {
+  //   let paramsArray = [];
+
+  //   if (Array.isArray(difficulty)) {
+  //     // Jeśli `cat_id` jest tablicą
+  //     difficulty.forEach((el) => {
+  //       const data = `filters[difficulty][$in][${el}]=${el}`;
+  //       paramsArray.push(data);
+  //     });
+  //   } else {
+  //     // Jeśli `cat_id` jest pojedynczym stringiem
+  //     const data = `filters[difficulty][$in][${difficulty}]=${difficulty}`;
+  //     paramsArray.push(data);
+  //   }
+  
+  //   const paramsCategory = paramsArray.join("&");
+  
+  //   // Przekazujemy paramsCategory do quizFunction, którą przekazujesz jako argument
+  //   await quizFunction(15, 1, paramsCategory);
+  // }
+
+  export const selectItemsByParams = (itemsList: any, params: any)=> {
+    if (params) {
+      if (Array.isArray(params)) {
+        params.forEach((param) => {
+          itemsList.value.forEach((item: any) => {
+            if (item.value === param || item.id === Number(param)) {
+              item.selected = true;
+            }
+          });
+        });
+      } else {
+        const paramValue = Array.isArray(params) ? params[0] : params;
+  
+        itemsList.value.forEach((item: any) => {
+          if (item.value === paramValue || item.id === Number(paramValue)) {
+            item.selected = true;
+          }
+        });
+      }
     }
-  
-    const paramsCategory = paramsArray.join("&");
-  
-    // Przekazujemy paramsCategory do quizFunction, którą przekazujesz jako argument
-    await quizFunction(15, 1, paramsCategory);
   }
-
-
-  export const getQuizByDiffuculty = async(difficulty: any, quizFunction:any) => {
-    let paramsArray = [];
-
-    if (Array.isArray(difficulty)) {
-      // Jeśli `cat_id` jest tablicą
-      difficulty.forEach((el) => {
-        const data = `filters[difficulty][$in][${el}]=${el}`;
-        paramsArray.push(data);
-      });
-    } else {
-      // Jeśli `cat_id` jest pojedynczym stringiem
-      const data = `filters[difficulty][$in][${difficulty}]=${difficulty}`;
-      paramsArray.push(data);
-    }
   
-    const paramsCategory = paramsArray.join("&");
-  
-    // Przekazujemy paramsCategory do quizFunction, którą przekazujesz jako argument
-    await quizFunction(15, 1, paramsCategory);
-  }

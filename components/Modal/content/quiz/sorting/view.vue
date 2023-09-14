@@ -1,67 +1,111 @@
 <template>
-     <div class="overflow-y-scroll h-[275px] right-8 left-8 pr-4">
-        <p class="mb-4 text-lg font-bold">Wybierz układ</p>
+  <div class="overflow-y-scroll h-[275px] right-8 left-8 pr-4">
+    <p class="mb-4 text-lg font-bold">Wybierz układ</p>
     <QuizSortAll @stateView="view" />
-    <!-- {{ first }} -->
-    <!-- {{ second }} -->
-    
-    <!-- {{ cookieData }} -->
     <div class="mb-8">
       <p class="mb-2.5 text-lg font-bold">Liczba na stronie</p>
       <InputSingleRange :max="60" :min="2" v-model="perPage" />
     </div>
     <p class="mb-4 text-lg font-bold">Inne opcje sortowania</p>
-    <ModalContentQuizSortingArray
-    
-    />
-    <button class="button-primary w-full mt-9 mb-5" @click="saveChanges">Zapisz zmiany</button>
+    <div v-for="(single, index) in otherSorting1" :key="index">
+      <label class="flex w-full mt-2">
+        <input
+          type="checkbox"
+          class="w-5 flex mb-[4px]"
+          v-model="single.checked"
+          @change="handleChange1(index)"
+        />
+        <p class="ml-2">{{ single.label }}</p>
+      </label>
+    </div>
+    <div v-for="(single, index) in otherSorting2" :key="index">
+      <label class="flex w-full mt-2">
+        <input
+          type="checkbox"
+          class="w-5 flex mb-[4px]"
+          v-model="single.checked"
+          @change="handleChange2(index)"
+        />
+        <div class="flex gap-[6px]">
+          <p class="ml-2">{{ single.label }} </p>
+          <p class="text-gray-400 text-[13px] mt-[4px]">{{ single.des }}</p>
+        </div>
+      </label>
+    </div>
+    <button class="button-primary w-full mt-9 mb-5" @click="saveChanges">
+      Zapisz zmiany
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
+const router = useRouter();
+
 const emit = defineEmits<{
   (e: "state", value: string): void;
-  (e: "perPage", value: number): void;
   (e: "close"): void;
+  (e: "change"): void;
 }>();
 
-const cookieData = useCookie('select');
-// cookieData.value.forEach(element => {
-//   // Sprawdzamy, czy obiekt ma właściwość "name" przed dostępem do niej
-//   if (element.hasOwnProperty('name')) {
-//     console.log(element.name);
-//   }
-// });
-const sliderValue = ref(50);
-const currentView = ref();
-const currentPerPage = ref();
+const otherSorting1 = ref([
+  { value: "sort", label: "Czas rosnąco", checked: false },
+  { value: "sort", label: "Czas malejąco", checked: false },
+]);
 
+const otherSorting2 = ref([
+  { value: "sort", label: "Trudność", des: "(łatwe, trudne)", checked: false },
+  { value: "sort", label: "Trudność",des: "(trudne, łatwe)", checked: false },
+]);
+
+const handleChange1 = (selected: any) => {
+  otherSorting1.value.forEach((single: any, index: any) => {
+    if (index !== selected) {
+      single.checked = false;
+    }
+  });
+};
+
+const handleChange2 = (selected: any) => {
+  otherSorting2.value.forEach((single: any, index: any) => {
+    if (index !== selected) {
+      single.checked = false;
+    }
+  });
+};
+
+const currentView = ref();
 const view = (value: string) => {
   currentView.value = value;
 };
-const perPage = ref(parseInt(localStorage.getItem("perPage") as any));
 
-watch(perPage, (newVal: any) => {
-  currentPerPage.value = newVal
-});
+const perPage = ref();
+const perPageParams = Number(router.currentRoute.value.query.per_page);
+perPage.value = perPageParams ? perPageParams : "15";
 
-const saveChanges = ()=>{
-    if (currentView.value) {
+const saveChanges = () => {
+
+// const test = otherSorting2.value.filter((single: any) => single.checked === true)[0].value;
+// console.log(test);
+  const routeParams = { ...router.currentRoute.value.query }; // Skopiowanie obiektu, aby uniknąć mutacji oryginalnego obiektu
+
+  const updatedQueryParams = { ...routeParams, per_page: perPage.value };
+
+  const check1 = () => {
+    if (routeParams) {
+      return updatedQueryParams;
+    } else {
+      return { per_page: perPage.value };
+    }
+  };
+
+  router.push({ query: check1() });
+
+  if (currentView.value) {
     emit("state", currentView.value);
-    localStorage.setItem('listView', currentView.value)
-  } 
-  if (currentPerPage.value) {
-  localStorage.setItem("perPage", currentPerPage.value);
-  emit("perPage", currentPerPage.value);
+    localStorage.setItem("listView", currentView.value);
   }
   emit("close");
-
-
-}
-
-
-
-
+};
 </script>
 
 <style lang="scss" scoped>

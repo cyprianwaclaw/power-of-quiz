@@ -5,10 +5,11 @@
         @state="quizView"
         @perPage="perPageChange"
         @close="filterShow"
+        @category="category"
       />
     </template>
   </ModalDown>
-  <ModalDown :modalActive="sorting" title="Sortowanie"  @close="sortingShow()">
+  <ModalDown :modalActive="sorting" title="Sortowanie" @close="sortingShow()">
     <template #content>
       <ModalContentQuizSortingView
         @state="quizView"
@@ -17,7 +18,7 @@
       />
     </template>
   </ModalDown>
-  <!-- po zmiene czogoś current page musi powrócić do strony 1 -->
+  <!-- po zmianie czegoś current page musi powrócić do strony 1 -->
   <div class="fixed margin z-40 flex w-full justify-end">
     <div class="open-filter" @click="filterShow()">
       <Icon name="heroicons:adjustments-horizontal" size="32" color="white" />
@@ -26,9 +27,6 @@
   <NuxtLayout name="panel">
     <div class="pb-[90px]">
       <div class="flex justify-between place-items-center mb-4">
-      <!-- <pre>
-        {{ testF()  }}
-      </pre> -->
         <div class="flex flex-row gap-2">
           <p class="text-[13px] text-gray-400">
             Strona {{ currentPage }}/{{ allQuiz.last_page }}
@@ -51,242 +49,157 @@
           <QuizTwoQuiz v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
         </div>
       </div>
-     <pre>
- 
-        <!-- {{ route.query }} -->
-  {{ allQuiz }}
+      <pre>
+        <!-- {{ allQuiz1 }} -->
+        <!-- {{ filters(2) }} -->
+        <!-- {{ allQuiz }} -->
       </pre>
-      <!-- <div class="flex justify-center mt-6">
-        <div class="flex gap-1">
-          <button @click="firstPage" v-if="currentPage !== 1">
-            <Icon name="ph:caret-double-left-light" size="21" class="" />
-          </button>
-          <button @click="previousPage" v-if="currentPage !== 1">
-            <Icon name="ph:caret-left-light" size="21" class="" />
-          </button>
-        </div>
-        <div class="flex space-x-5 mx-3">
-          <div v-for="(links, index) in pagination()" :key="index">
-            <button
-              @click="changePageButton(links.label)"
-              class="mt-[3px]"
-              :class="[links.active == true ? 'font-bold primary-color' : 'font-reular']"
-            >
-              {{ links.label }}
-            </button>
-          </div>
-        </div>
-        <div class="flex gap-1">
-          <button @click="nextPage" v-if="allQuiz.current_page !== allQuiz.last_page">
-            <Icon name="ph:caret-right-light" size="21" class="" />
-          </button>
-          <button @click="lastPage" v-if="allQuiz.current_page !== allQuiz.last_page">
-            <Icon name="ph:caret-double-right-light" size="21" class="" />
-          </button>
-        </div>
-      </div> -->
     </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
+import { ref, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useQuiz } from "@/store/useQuiz";
 
-definePageMeta({
-  middleware: "auth",
-});
-const router = useRouter();
-const route = useRoute()
-const perPageStart = ref(parseInt(localStorage.getItem("perPage") as any));
+const perPageStart = ref();
 const currentPage = ref(1);
+const perPage = ref(15); // Inicjalizacja perPage z domyślną wartością
 
+const route = useRoute();
 const quiz = useQuiz();
-const { allQuiz,} = storeToRefs(quiz);
+const { allQuiz } = quiz;
 
-console.log(route.query.cat_id ? 'true' : 'false');
+const f = async () => {
+  let difficulty = route.query.difficulty;
+  let category = route.query.cat_id;
+  let min_count = route.query.min_count as any;
+  let max_count = route.query.max_count as any;
+  let min_time = route.query.min_time as any;
+  let max_time = route.query.max_time as any;
 
-// // const testF = async () => {
-//   if(route.query.cat_id ? 'true' : 'false') {
-//     let id =route.query.cat_id
-//     let paramsArray = [];
-    
-//     if (Array.isArray(id)) {
-//       // Jeśli `cat_id` jest tablicą
-//   id.forEach((el) => {
-//     const data = `filters[category_id][$in][${el}]=${el}`;
-//     paramsArray.push(data);
-//   });
-// } else {
-//   // Jeśli `cat_id` jest pojedynczym stringiem
-//   const data = `filters[category_id][$in][${id}]=${id}`;
-//   paramsArray.push(data);
-// }
+  if (difficulty && category) {
+    // Jeśli oba parametry są obecne, tworzymy odpowiednie filtry
+    const difficultyFilter = createFilter("difficulty", difficulty);
+    const categoryFilter = createFilter("category_id", category);
+ const questionMinCountFilter = createFilterTwoParams("questions", "count", min_count, "$gte");
+    const questionMaxCountFilter = createFilterTwoParams("questions", "count", max_count, "$lt");
+    const questionMinTimeFilter =  createFilterTwoParamsTime("time", min_time, '$gte');
+    const questionMaxTimeFilter =  createFilterTwoParamsTime("time", max_time, '$lt');
 
-// const paramsCategory = paramsArray.join('&');
-// console.log(paramsCategory);
+    await applyFilters([difficultyFilter, categoryFilter, questionMinCountFilter, questionMaxCountFilter, questionMinTimeFilter, questionMaxTimeFilter]);
+  } else if (difficulty) {
+    // Jeśli jest tylko difficulty, stosujemy tylko ten filtr
+    const difficultyFilter = createFilter("difficulty", difficulty);
+ const questionMinCountFilter = createFilterTwoParams("questions", "count", min_count, "$gte");
+    const questionMaxCountFilter = createFilterTwoParams("questions", "count", max_count, "$lt");
+    const questionMinTimeFilter =  createFilterTwoParamsTime("time", min_time, '$gte');
+    const questionMaxTimeFilter =  createFilterTwoParamsTime("time", max_time, '$lt');
 
-// // Przekazujemy paramsCategory do quiz.getAllQuiz
-//  await quiz.getAllQuiz(perPageStart.value, 1, paramsCategory);
-// console.log(route.query)
-// } else{
-  
-// }
-// // }
+    await applyFilters([difficultyFilter, questionMinCountFilter, questionMaxCountFilter, questionMinTimeFilter, questionMaxTimeFilter]);
+  } else if (category) {
+
+    const categoryFilter = createFilter("category_id", category);
+     const questionMinCountFilter = createFilterTwoParams("questions", "count", min_count, "$gte");
+    const questionMaxCountFilter = createFilterTwoParams("questions", "count", max_count, "$lt");
+    const questionMinTimeFilter =  createFilterTwoParamsTime("time", min_time, '$gte');
+    const questionMaxTimeFilter =  createFilterTwoParamsTime("time", max_time, '$lt');
+
+    await applyFilters([categoryFilter, questionMinCountFilter, questionMaxCountFilter, questionMinTimeFilter, questionMaxTimeFilter]);
+  } else {
+
+    await quiz.getAllQuiz(perPageStart.value, 1, null);
+  }
+
+  // Po zmianie filtrów lub perPage, pobierz nowe dane
+  await fetchData();
+};
 
 
-if (route.query.cat_id) {
-  let id = route.query.cat_id;
+// Funkcja do tworzenia filtrów
+function createFilter(filterName:any, filterValue:any) {
   let paramsArray = [];
+  let index = 0;
 
-  if (Array.isArray(id)) {
-    // Jeśli `cat_id` jest tablicą
-    id.forEach((el) => {
-      const data = `filters[category_id][$in][${el}]=${el}`;
+  if (Array.isArray(filterValue)) {
+    filterValue.forEach((el) => {
+      console.log(filterValue.length)
+      const data = `filters[${filterName}][$in][${index}]=${el}`;
       paramsArray.push(data);
+      index++;
+
     });
   } else {
-    // Jeśli `cat_id` jest pojedynczym stringiem
-    const data = `filters[category_id][$in][${id}]=${id}`;
+    const data = `filters[${filterName}][$in][0]=${filterValue}`;
     paramsArray.push(data);
   }
 
-  const paramsCategory = paramsArray.join('&');
-  console.log(paramsCategory);
-
-  // Przekazujemy paramsCategory do quiz.getAllQuiz
-  await quiz.getAllQuiz(perPageStart.value, 1, paramsCategory);
-  console.log(route.query);
-} else {
-  // Brak `route.query.cat_id`, wykonaj to, co jest potrzebne, gdy go nie ma
-  await quiz.getAllQuiz(perPageStart.value, 1, null);
+  return paramsArray.join("&");
 }
 
-
-// await quiz.getAllQuiz(perPageStart.value, 1, null);
-
-
-
-
-
-
-const sorting = ref(false);
-const sortingShow = () => {
-  sorting.value = !sorting.value;
-};
-const sortingClose = () => {
-  sorting.value = !sorting.value;
-  // firstPage()
-};
-const filter = ref(false);
-const filterShow = () => {
-  filter.value = !filter.value;
+const perPageChange = async (value: number) => {
+  perPageStart.value = value;
 };
 
 
-const paramsCategory = ref();
-
-
-onBeforeRouteUpdate(async(to, from)=>{
-let id = to?.query.cat_id;
-
-if (id) {
+function createFilterTwoParams(filterName1:any, filterName2:any,filterValue:any, name:any) {
   let paramsArray = [];
 
-  if (Array.isArray(id)) {
-    // Jeśli `cat_id` jest tablicą
-    id.forEach((el) => {
-      const data = `filters[category_id][$in][${el}]=${el}`;
+  // if (Array.isArray(filterValue)) {
+    // filterValue.forEach((el) => {
+      const data = `filters[$with][${filterName1}][${filterName2}][${name}]=${filterValue}`;
       paramsArray.push(data);
-    });
-  } else {
-    // Jeśli `cat_id` jest pojedynczym stringiem
-    const data = `filters[category_id][$in][${id}]=${id}`;
-    paramsArray.push(data);
-  }
+    // });
+  // } else {
+    // const data = `filters[${filterName}][$in]=${filterValue}`;
+    // paramsArray.push(data);
+  // }
 
-  paramsCategory.value = paramsArray.join('&');
-  // console.log(paramsCategory.value);
-
-  // Przekazujemy paramsCategory do quiz.getAllQuiz
-  await quiz.getAllQuiz(perPageStart.value, 1, paramsCategory.value);
+  return paramsArray.join("&");
 }
 
+function createFilterTwoParamsTime(filterName:any,filterValue:any, name:any) {
+  let paramsArray = [];
 
-})
+  // if (Array.isArray(filterValue)) {
+    // filterValue.forEach((el) => {
+      const data = `filters[${filterName}][${name}]=${filterValue}`;
+      paramsArray.push(data);
+    // });
+  // } else {
+    // const data = `filters[${filterName}][$in]=${filterValue}`;
+    // paramsArray.push(data);
+  // }
+
+  return paramsArray.join("&");
+}
+
+// Funkcja do zastosowania filtrów
+async function applyFilters(filters:any) {
+  const params = filters.join("&");
+  await quiz.getAllQuiz(perPageStart.value, 1, params);
+}
+const fetchData = async () => {
+  // Tutaj umieść kod do pobierania danych z API z uwzględnieniem perPage
+};
+
+// ... Pozostały kod ...
 
 
-
+// ... Pozostały kod ...
 const view = ref();
-onMounted(() => {
+onMounted(async () => {
+  // Inicjalizacja perPage
+  perPageStart.value = parseInt(localStorage.getItem("perPage") as any);
+  perPage.value = perPageStart.value;
   const checkEmitsData = () => {
     view.value = view.value || localStorage.getItem("listView");
   };
   checkEmitsData();
+  await f();
 });
-const quizView = (value: string) => {
-  view.value = value;
-};
-
-// const pageToShow = 5;
-// const nextPage = async () => {
-//   if (currentPage.value < allQuiz.value.last_page) {
-//     scrollToTop();
-//     currentPage.value++;
-//     await quiz.getAllQuiz(perPageStart.value, currentPage.value, paramsCategory.value);
-//   }
-// };
-
-// const firstPage = async () => {
-//   scrollToTop();
-//   currentPage.value = 1;
-//   await quiz.getAllQuiz(perPageStart.value, currentPage.value, paramsCategory.value);
-// };
-
-// const lastPage = async () => {
-//   scrollToTop();
-//   currentPage.value = allQuiz.value.last_page;
-//   await quiz.getAllQuiz(perPageStart.value, currentPage.value, paramsCategory.value);
-// };
-
-// const previousPage = async () => {
-//   if (currentPage.value !== 1) {
-//     scrollToTop();
-//     currentPage.value--;
-//     await quiz.getAllQuiz(perPageStart.value, currentPage.value, paramsCategory.value);
-//   }
-// };
-// const perPageChange = async (value: number) => {
-//   perPageStart.value = value;
-//   await quiz.getAllQuiz(value, currentPage.value, paramsCategory.value);
-// };
-
-// const pagination = () => {
-//   const lastPageNumber = allQuiz.value.last_page;
-//   const halfPageToShow = Math.floor(pageToShow / 2);
-
-//   const startPage = Math.max(1, currentPage.value - halfPageToShow);
-//   const endPage = Math.min(lastPageNumber, startPage + pageToShow - 1);
-
-//   const newLinks = Array.from({ length: endPage - startPage + 1 }, (_, i) => {
-//     const pageNumber = startPage + i;
-//     return {
-//       label: pageNumber,
-//       url: `?page=${pageNumber}`,
-//       active: pageNumber === currentPage.value,
-//     };
-//   });
-
-//   return newLinks;
-// };
-
-// const changePageButton = async (value: any) => {
-//   currentPage.value = value;
-//   await quiz.getAllQuiz(perPageStart.value, value, paramsCategory.value);
-//   scrollToTop();
-// };
 </script>
-
 <style lang="scss" scoped>
 @import "@/assets/style/variables.scss";
 .margin {
@@ -306,3 +219,5 @@ const quizView = (value: string) => {
   margin-bottom: 4px;
 }
 </style>
+
+<!-- Pozostały kod CSS -->
