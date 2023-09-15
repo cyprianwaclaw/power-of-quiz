@@ -63,10 +63,6 @@
 import { storeToRefs } from "pinia";
 import { useUser } from "@/store/useUser";
 import { useQuiz } from "@/store/useQuiz";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css/pagination";
-import { Pagination } from "swiper";
-import "swiper/css";
 
 definePageMeta({
   middleware: "auth",

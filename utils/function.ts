@@ -137,7 +137,7 @@ export const categoryMapping = (allCategories:any, quiz:any)=>{
   const filtered = allCategories.filter((cat:any)=>
     quiz.category_id == cat.id
   )
-  return filtered[0].name
+  return filtered[0]
   }
   
   

@@ -22,11 +22,17 @@
     </template>
   </ModalAlert>
 
-  <ModalDown :modalActive="isOpenMobile" title="Quiz" @close="isCloseMobile()">
-    <template #content>
-      <ModalContentSingleQuiz :quiz="quiz" />
-    </template>
-  </ModalDown>
+     <ModalDown
+      :modalActive="isOpenMobile"
+      title="Quiz"
+      @close= "isCloseMobile" 
+      >
+      <template #content>
+        <ModalContentSingleQuiz
+        :quiz="quiz"
+        />
+        </template>
+        </ModalDown>
   <div
     class="border-transparent rounded-[24px] lg:rounded-[12px] w-[260px] lg:w-full"
     :style="`background-image: url(${quiz.image}); background-size: cover;`"
@@ -55,6 +61,21 @@
     :style="`background-image: url(${quiz.image}); background-size: cover;`"
     @click="isModal()"
   >
+  <!-- <div v-if="isOpenMobile">
+sasasas
+  </div> -->
+
+  <!-- <ModalDown
+  :modalActive="isOpenMobile"
+  title="Quiz"
+  @close= "isCloseMobile" 
+  >
+  <template #content>
+    <ModalContentSingleQuiz
+    :quiz="quiz"
+    />
+    </template>
+    </ModalDown> -->
     <div class="bg-image w-[260px] lg:w-full rounded-[24px] lg:rounded-[12px] cursor-pointer">
       <div class="details">
         <h3 class="title hover:underline-offset-4 ">{{ quiz.title }}</h3>
@@ -88,7 +109,7 @@ const isOpenDesktop = ref(false);
 const isModal = () => {
   if (window.screen.width <= 900) {
     isOpenMobile.value = true;
-    console.log(window.screen.width);
+    // console.log(window.screen.width);
   } else {
     isOpenDesktop.value = true;
   }
