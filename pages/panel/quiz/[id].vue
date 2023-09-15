@@ -1,15 +1,22 @@
 <template>
+
   <div class="h-screen">
   <NavUser />
     <div class="pt-[95px] px-8">
-      {{ checkAnswerAlert() }}
       <img :src="singleQuiz.image" class="image-single" />
-        <div v-for="(quiz, index) in current" :key="index" class="mt-2">
-          <div class="w-full justify-center flex mb-[15px]">
-            <p class="text-base font-medium tracking-wider">{{ quiz?.question }}</p>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div v-for="(answer, index) in quiz?.answers" :key="index" @click="postAnswer(quiz.id, answer.id)" class="grid place-items-center h-[84px] border bg-[#DEE7FF]">
+      <div v-for="(quiz, index) in current" :key="index" class="mt-2">
+        <div class="w-full justify-center flex mb-[15px]">
+          <p class="text-base font-medium tracking-wider">{{ quiz?.question }}</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            {{ answer }}
+            <div v-for="(answer, index) in quiz?.answers" :key="index" @click="postAnswer(quiz.id, answer.id)" 
+            :class="[ 
+              answer.id == select && checkAnswerAlert() == false ? 'bg-red-400':'bg-[#DEE7FF]',
+              answer.id == select && checkAnswerAlert() == true ? 'bg-green-400':'bg-[#DEE7FF]',
+            ]"
+            class="grid place-items-center h-[84px] border cursor-pointer">
               <p>{{ answer.answer }}</p>
             </div>
           </div>
@@ -33,20 +40,27 @@ const current = ref<any>(startQuiz.value);
 const checkAnswer = ref(null);
 
 // await quizState.getNextQuestion(start.submission_id)
-
+let select = ref()
 const postAnswer = async (question_id: any, ansewer_id: any) => {
   await quizState.postAnswerNextQuestion(start.submission_id, question_id, ansewer_id);
   let next = nextQuestion.value
    startQuiz.value = null
    checkAnswer.value = next.is_correct
-   current.value = next
+   select = ansewer_id
+   setTimeout(async () => {
+      current.value = next
+
+   }, 1000)
 };
 
+// const test = () => {
+//   if(select)
+// }
 const checkAnswerAlert = ()=>{
   if(checkAnswer.value == 0){
-return 'błedna odpowiedz'
+return false
   } else if(checkAnswer.value == 1){
-    return "poprawna odpowiedz"
+    return true
   }
 }
 </script>
@@ -143,5 +157,9 @@ return 'błedna odpowiedz'
   top: 50%;
   left: 50%;
   transform: translate(-50% -50%);
+}
+.active{
+  background-color: $color-error;
+  color: white;
 }
 </style>
