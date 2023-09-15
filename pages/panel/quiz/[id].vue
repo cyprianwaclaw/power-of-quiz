@@ -10,13 +10,24 @@
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            {{ answer }}
+          <!-- {{ select }} -->
+          <!-- {{ checkAnswerAlert() }} -->
+          <!-- :class="[ 
+            answer.id == select ? 'bg-red-400':'bg-[#DEE7FF]',
+            ]" -->
+            <!-- :class="[
+              classObject(answer.id, select, checkAnswer.value)===true ? 'bg-green-300':'',
+              classObject(answer.id, select, checkAnswer.value)===false ? 'bg-red-300':'',
+            ]" -->
             <div v-for="(answer, index) in quiz?.answers" :key="index" @click="postAnswer(quiz.id, answer.id)" 
-            :class="[ 
-              answer.id == select && checkAnswerAlert() == false ? 'bg-red-400':'bg-[#DEE7FF]',
-              answer.id == select && checkAnswerAlert() == true ? 'bg-green-400':'bg-[#DEE7FF]',
-            ]"
+            :class="{
+              'bg-green-300': classObject(answer.id, select, checkAnswer) === true,
+              'bg-red-300': classObject(answer.id, select, checkAnswer) === false,
+            }"
+            
             class="grid place-items-center h-[84px] border cursor-pointer">
+              <!-- {{ classObject(answer.id, select, checkAnswer) }} -->
+              <!-- answer.id == select && checkAnswerAlert() == true ? 'bg-green-400':'bg-[#DEE7FF]', -->
               <p>{{ answer.answer }}</p>
             </div>
           </div>
@@ -37,7 +48,7 @@ const {singleQuiz, startQuiz, nextQuestion, getNextQuestion1 } = storeToRefs(qui
 let start: any = startQuiz.value;
 
 const current = ref<any>(startQuiz.value);
-const checkAnswer = ref(null);
+const checkAnswer = ref(null) as any;
 
 // await quizState.getNextQuestion(start.submission_id)
 let select = ref()
@@ -56,13 +67,30 @@ const postAnswer = async (question_id: any, ansewer_id: any) => {
 // const test = () => {
 //   if(select)
 // }
-const checkAnswerAlert = ()=>{
-  if(checkAnswer.value == 0){
-return false
-  } else if(checkAnswer.value == 1){
-    return true
-  }
-}
+// const checkAnswerAlert = ()=>{
+//   if(checkAnswer.value == 0){
+// return false
+//   } else if(checkAnswer.value == 1){
+//     return true
+//   }
+// }
+
+// const classObject = (answer:any, select:any, isCorrect:any) => {
+
+// if(answer == select && isCorrect == 1){
+//   return true
+// } else if(answer == select && isCorrect == 0){
+//   return false
+// }
+// else {
+  
+// }
+
+// }
+const classObject = (answer: any, select: any, isCorrect: any) => {
+  return answer === select && isCorrect === 1 ? true : false;
+};
+
 </script>
 
 <style scoped lang="scss">
