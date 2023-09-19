@@ -38,7 +38,7 @@
           </div>
           <div class="row-table-start">
             <h2 class="title">{{ AddAnswer(correctAnswer, inCorrectAnswer) }}</h2>
-            <p class="text-des-mobile">Liczba udzielonych odpowiedzi</p>
+            <p class="text-des-mobile">Liczba udzielonych odpowiedzi:</p>
             <div class="flex columns-2 mt-5 mb-2">
               <div class="flex flex-col w-full">
                 <p class="correct">{{ correctAnswer }}</p>
