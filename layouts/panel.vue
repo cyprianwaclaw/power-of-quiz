@@ -1,5 +1,7 @@
 <template>
   <!-- <div class="pb-[120px]"> -->
+  <!-- <div class="pb-32"> -->
+
       <NavUser />
     <div class="own-container min-h-screen page-background ">
       <slot />

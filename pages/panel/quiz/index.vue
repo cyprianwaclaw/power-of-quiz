@@ -18,8 +18,7 @@
       <Icon name="heroicons:adjustments-horizontal" size="32" color="white" />
     </div>
   </div>
-  <NuxtLayout name="panel">
-    <div class="pb-[90px]">
+  <NuxtLayout name="default">
       <div class="flex justify-between place-items-center mb-4">
         <div class="flex flex-row gap-2">
           <p class="text-[13px] text-gray-400">
@@ -45,7 +44,7 @@
       </div>
       <!-- //!paginacja -->
       <div>
-        <div class="flex justify-center mt-8" v-if="allQuiz.last_page != 1">
+        <div class="flex justify-center mt-12" v-if="allQuiz.last_page != 1">
           <button v-if="currentPage != 1" @click="changePage(1)" class="mr-2">
             <Icon name="ph:caret-double-left" size="26" class="-mt-1" />
 
@@ -68,7 +67,6 @@
 
         </div>
       </div>
-    </div>
   </NuxtLayout>
 </template>
 

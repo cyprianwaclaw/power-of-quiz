@@ -22,7 +22,7 @@
                 <div class="vl"></div>
                 <p class="des">{{ quiz?.difficulty }}</p>
                 <div class="vl"></div>
-                <p class="des">{{ categoryMapping(categories, quiz) }}</p>
+                <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p>
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@
               <div class="vl"></div>
               <p class="des">{{ quiz?.difficulty }}</p>
               <div class="vl"></div>
-              <p class="des">{{ categoryMapping(categories, quiz) }}</p>
+              <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p>
             </div>
           </div>
         </div>

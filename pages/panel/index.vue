@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="panel">
+  <NuxtLayout name="default">
     <div class="flex flex-col justify-center w-full mb-10  lg:mb-16  mt-4 md:mt-5 lg:mt-8">
       <div class="flex items-place-center">
         <div class="md:flex">
@@ -34,7 +34,7 @@
         <div
         class=" -mr-8 lg:grid lg:static md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 lg:mx-0 lg:px-0 lg:gap-8 gap-8 flex flex-row overflow-auto overflow-x-scroll -mx-8 px-8 scrollbar-hide"
         >
-        <QuizForYou v-for="(quiz, index) in forYou" :key="index" :quiz="quiz" />
+        <QuizForYou v-for="(quiz, index) in quizForYou" :key="index" :quiz="quiz" />
       </div>
       <userStatistics class="md:hidden flex mt-14" />
     <div class=" mt-14 ">
@@ -43,7 +43,7 @@
       <div
       class=" -mr-8 lg:grid lg:static md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 lg:mx-0 lg:px-0 lg:gap-8 gap-8 flex flex-row overflow-auto overflow-x-scroll -mx-8 px-8 scrollbar-hide"
       >
-        <QuizForYou v-for="(quiz, index) in populars" :key="index" :quiz="quiz" />
+        <QuizForYou v-for="(quiz, index) in popularQuiz" :key="index" :quiz="quiz" />
       </div>
     </div>
     <PakietHero text="true" class="md:hidden  mt-14" />
@@ -53,7 +53,7 @@
       <div
       class=" -mr-8 lg:grid lg:static md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 lg:mx-0 lg:px-0 lg:gap-8 gap-8 flex flex-row overflow-auto overflow-x-scroll -mx-8 px-8 scrollbar-hide"
       >
-        <QuizForYou v-for="(quiz, index) in latest" :key="index" :quiz="quiz" />
+        <QuizForYou v-for="(quiz, index) in popularQuiz" :key="index" :quiz="quiz" />
       </div>
     </div>
   </NuxtLayout>
@@ -78,18 +78,6 @@ await quizStore.getQuizForYou();
 await quizStore.getLatestQuiz();
 await quizStore.getPopularQuiz();
 
-let category = categories.value;
-const allCategories: any = ref();
-
-let mapCategory = (allCategories.value = category.map((single: any) => ({
-  id: single.id,
-  name: single.name,
-  selected: false,
-})));
-
-let forYou = quizesValue(quizForYou.value, mapCategory);
-let populars = quizesValue(popularQuiz.value, mapCategory);
-let latest = quizesValue(quizLatest.value, mapCategory);
 </script>
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";

@@ -688,3 +688,69 @@
                         border-radius: 12px !important;
                     }
                 }
+                
+                .quest {
+                    // margin: 33px 27px;
+                    height: 100px;
+                    position: relative;
+                    //padding-top: 11%;
+                    //background: linear-gradient(100.61deg, #3863D1 12.67%, #618CFB 88.68%, #497CFF 88.68%);
+                    background: linear-gradient( 103.38deg, #3961c9 -9.26%, #618cfb 119.62%, #497cff 119.62%);
+                    border-radius: 16px;
+                    p {
+                        font-family: "Manrope";
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 14px;
+                        line-height: 15px;
+                        text-align: center;
+                        color: #dbdbdb;
+                        letter-spacing: 1.12px;
+                    }
+                }
+                
+                .questOK {
+                    height: 100px;
+                    position: relative;
+                    background-color: $color-success;
+                    // background: linear-gradient(
+                    //   103.38deg,
+                    //   #3961c9 -9.26%,
+                    //   #618cfb 119.62%,
+                    //   #497cff 119.62%
+                    // );
+                    border-radius: 16px;
+                    p {
+                        font-family: "Manrope";
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 14px;
+                        line-height: 15px;
+                        text-align: center;
+                        color: #dbdbdb;
+                        letter-spacing: 1.12px;
+                    }
+                }
+                
+                .quest-bg-ERROR {
+                    height: 100px;
+                    position: relative;
+                    background-color: $color-error;
+                    // background: linear-gradient(
+                    //   103.38deg,
+                    //   #3961c9 -9.26%,
+                    //   #618cfb 119.62%,
+                    //   #497cff 119.62%
+                    // );
+                    border-radius: 16px;
+                    p {
+                        font-family: "Manrope";
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 14px;
+                        line-height: 15px;
+                        text-align: center;
+                        color: #dbdbdb;
+                        letter-spacing: 1.12px;
+                    }
+                }

@@ -13,7 +13,7 @@
     <div class="mt-4 mb-7 gap-[5px] flex flex-col">
       <div class="flex flex-row">
         <p class="text-base text-[#a7a2a2] font-thin">Kategoria:</p>
-        <p class="text-base primary-color font-medium ml-[4px]">{{ categoryMapping(categories, quiz) }}</p> 
+        <p class="text-base primary-color font-medium ml-[4px]">{{ categoryMapping(categories, quiz)?.name }}</p> 
       </div>
       <div class="flex flex-row">
         <p class="text-base text-[#a7a2a2] font-thin">Liczba pytań:</p>

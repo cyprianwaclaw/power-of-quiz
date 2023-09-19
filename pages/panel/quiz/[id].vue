@@ -1,37 +1,26 @@
 <template>
-
   <div class="h-screen">
-  <NavUser />
+    <NavUser />
     <div class="pt-[95px] px-8">
       <img :src="singleQuiz.image" class="image-single" />
-      <div v-for="(quiz, index) in current" :key="index" class="mt-2">
-        <div class="w-full justify-center flex mb-[15px]">
-          <p class="text-base font-medium tracking-wider">{{ quiz?.question }}</p>
-        </div>
-
+      <p class="text-[20px] font-medium tracking-wider text-center mt-[24px] mb-[12px]">{{ current.next_question.question }}</p>
+      <div v-for="(quiz, index) in current" :key="index">
         <div class="grid grid-cols-2 gap-4">
-          <!-- {{ select }} -->
-          <!-- {{ checkAnswerAlert() }} -->
-          <!-- :class="[ 
-            answer.id == select ? 'bg-red-400':'bg-[#DEE7FF]',
-            ]" -->
-            <!-- :class="[
-              classObject(answer.id, select, checkAnswer.value)===true ? 'bg-green-300':'',
-              classObject(answer.id, select, checkAnswer.value)===false ? 'bg-red-300':'',
-            ]" -->
-            <div v-for="(answer, index) in quiz?.answers" :key="index" @click="postAnswer(quiz.id, answer.id)" 
+          <div
+            v-for="(answer, index) in quiz?.answers"
+            :key="index"
+            @click="postAnswer(quiz.id, answer.id)"
             :class="{
-              'bg-green-300': classObject(answer.id, select, checkAnswer) === true,
-              'bg-red-300': classObject(answer.id, select, checkAnswer) === false,
+              'questOK': answer.id === select && isCorrect,
+              'questERROR': answer.id === select && isInCorrect,
+              'quest': answer.id !== select || (!isCorrect && !isInCorrect)
             }"
-            
-            class="grid place-items-center h-[84px] border cursor-pointer">
-              <!-- {{ classObject(answer.id, select, checkAnswer) }} -->
-              <!-- answer.id == select && checkAnswerAlert() == true ? 'bg-green-400':'bg-[#DEE7FF]', -->
-              <p>{{ answer.answer }}</p>
-            </div>
+              class="grid place-items-center h-[84px] border cursor-pointe"
+              >
+            <p>{{ answer.answer }}</p>
           </div>
         </div>
+      </div>
     </div>
     <NavBottom />
   </div>
@@ -44,53 +33,38 @@ const route = useRoute();
 const quizState = useQuiz();
 await quizState.getSingleQuiz(route.params.id);
 await quizState.startingQuiz(route.params.id);
-const {singleQuiz, startQuiz, nextQuestion, getNextQuestion1 } = storeToRefs(quizState);
+const { singleQuiz, startQuiz, nextQuestion, getNextQuestion1 } = storeToRefs(quizState);
 let start: any = startQuiz.value;
-
 const current = ref<any>(startQuiz.value);
-const checkAnswer = ref(null) as any;
+const isCorrect = ref(false) as any;
+const isInCorrect = ref(false) as any;
 
-// await quizState.getNextQuestion(start.submission_id)
-let select = ref()
+const select = ref(null);
 const postAnswer = async (question_id: any, ansewer_id: any) => {
   await quizState.postAnswerNextQuestion(start.submission_id, question_id, ansewer_id);
-  let next = nextQuestion.value
-   startQuiz.value = null
-   checkAnswer.value = next.is_correct
-   select = ansewer_id
-   setTimeout(async () => {
-      current.value = next
-
-   }, 1000)
+  let next = nextQuestion.value;
+  select.value = ansewer_id;
+  startQuiz.value = null;
+  checkAnswerAlert(next.is_correct);
+  console.log(next.is_correct);
+  setTimeout(async () => {
+    current.value = next;
+  }, 400);
 };
 
-// const test = () => {
-//   if(select)
-// }
-// const checkAnswerAlert = ()=>{
-//   if(checkAnswer.value == 0){
-// return false
-//   } else if(checkAnswer.value == 1){
-//     return true
-//   }
-// }
-
-// const classObject = (answer:any, select:any, isCorrect:any) => {
-
-// if(answer == select && isCorrect == 1){
-//   return true
-// } else if(answer == select && isCorrect == 0){
-//   return false
-// }
-// else {
-  
-// }
-
-// }
-const classObject = (answer: any, select: any, isCorrect: any) => {
-  return answer === select && isCorrect === 1 ? true : false;
+const checkAnswerAlert = (check: any) => {
+  if (check == 0) {
+    isInCorrect.value = true;
+    setTimeout(()=>{
+      isInCorrect.value = false;
+    }, 360)
+  } else if (check == 1) {
+    isCorrect.value = true;
+    setTimeout(()=>{
+      isCorrect.value = false;
+    }, 360)
+  }
 };
-
 </script>
 
 <style scoped lang="scss">
@@ -100,41 +74,8 @@ const classObject = (answer: any, select: any, isCorrect: any) => {
   border: 1px solid $border;
   border-radius: 12px;
   height: 200px;
-}
-
-.circle-answer {
-  height: 38px;
-  width: 38px;
-  margin-left: 7px;
-  position: relative;
-  background-color: $secondary;
-  border-radius: 200px;
-}
-.circle-answer-text {
-  position: absolute;
-  font-size: 21px;
-  font-weight: 600;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.answer {
-  text-align: center;
-  padding: 15px;
-  font-size: 14px;
-  // height: 52px;
-  font-weight: 700;
-  padding-left: 10px;
-}
-.single-answer {
-  display: flex;
   width: 100%;
-  place-items: center;
-  margin-top: 16px;
-  border: 1px solid $primary;
-  border-radius: 12px;
-  background-color: #dee7ff;
+  margin-bottom: 14px;
 }
 
 .single-answer:focus {
@@ -146,11 +87,11 @@ const classObject = (answer: any, select: any, isCorrect: any) => {
   background-color: #dee7ff;
 }
 
-.quest-bg {
-  margin: 33px 27px;
-  height: 200px;
+.quest {
+ // margin: 33px 27px;
+  height: 100px;
   position: relative;
-  padding-top: 11%;
+  //padding-top: 11%;
   //background: linear-gradient(100.61deg, #3863D1 12.67%, #618CFB 88.68%, #497CFF 88.68%);
   background: linear-gradient(
     103.38deg,
@@ -162,32 +103,57 @@ const classObject = (answer: any, select: any, isCorrect: any) => {
   p {
     font-family: "Manrope";
     font-style: normal;
-    font-weight: 700;
-    font-size: 11px;
+    font-weight: 500;
+    font-size: 14px;
     line-height: 15px;
     text-align: center;
     color: #dbdbdb;
+    letter-spacing: 1.12px;
   }
-  h5 {
+}
+.questOK {
+  height: 100px;
+  position: relative;
+  background-color: $color-success;
+ // background: linear-gradient(
+ //   103.38deg,
+ //   #3961c9 -9.26%,
+ //   #618cfb 119.62%,
+ //   #497cff 119.62%
+ // );
+  border-radius: 16px;
+  p {
     font-family: "Manrope";
-    margin: 2px 32px;
     font-style: normal;
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 27px;
-    /* or 153% */
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
     text-align: center;
-    color: #ffffff;
+    color: #dbdbdb;
+    letter-spacing: 1.12px;
   }
 }
-.content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50% -50%);
-}
-.active{
+.questERROR {
+  height: 100px;
+  position: relative;
   background-color: $color-error;
-  color: white;
+ // background: linear-gradient(
+ //   103.38deg,
+ //   #3961c9 -9.26%,
+ //   #618cfb 119.62%,
+ //   #497cff 119.62%
+ // );
+  border-radius: 16px;
+  p {
+    font-family: "Manrope";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+    text-align: center;
+    color: #dbdbdb;
+    letter-spacing: 1.12px;
+  }
 }
+
 </style>
