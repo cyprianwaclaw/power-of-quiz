@@ -1,4 +1,5 @@
 {
     "nuxt.isNuxtApp": false,
-    "vue.codeActions.enabled": false
+    "vue.codeActions.enabled": false,
+    "BracketHighlighter.enableExtension": false
 }

@@ -96,8 +96,8 @@ const {
   invitedCount,
 } = storeToRefs(userStore);
 
-let correctAnswer: number = correctAnswers.value;
-let inCorrectAnswer: number = inCorrectAnswers.value;
+let correctAnswer: number = correctAnswers.value <= 0 ? correctAnswers.value : 0;
+let inCorrectAnswer: number = inCorrectAnswers.value <= 0 ? inCorrectAnswers.value : 0;
 let users: number = invitedCount.value;
 let current = ref(currentUser.value)
 

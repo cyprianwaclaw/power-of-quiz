@@ -64,7 +64,9 @@ export function RouteChange(name: string) {
 }
 
 export function AddAnswer(correct: number, incorrect: number){
+
   return correct + incorrect
+
   }
 
  export  function ChangePlaceholderInput(name: any, text:any){

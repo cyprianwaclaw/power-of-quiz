@@ -60,24 +60,25 @@
         A teraz...<br />
         wybierz <span class="primary-color"> swój</span> pakiet
       </p>
-      <div class="flex justify-center mt-12">
-        <PakietCard
-          textStandard="Płatność tygodniowa"
-          textPremium="Płatność miesięczna"
-          priceMonth="70"
-          des="Oszczędzasz  14 zł"
-          priceWeek="21"
-        />
-      </div>
-      <div class="flex justify-center radius-own">
-        <NuxtLink
-          to="/"
-          class="w-[275px] bg-white radius-own flex place-items-center justify-center py-5"
-        >
-          <p class="primary-color font-medium mr-[3px]">Przejdź do płatności</p>
-          <Icon name="carbon:chevron-right" size="20" class="primary-color" />
-        </NuxtLink>
-      </div>
+<div class="w-full border-transparent rounded-2xl bg-white p-[24px]  mt-[46px]">
+  <div class="flex items-end justify-between">
+    <div class="flex flex-col">
+      <p class="text-[16px]">Pakiet tygodniowy</p>
+      <p class="text-[32px] font-medium">{{ plansObject[0].price }} zł</p>
+    </div>
+    <button class="button-primary" @click="payToPlan( plansObject[0].id )">Zapłac</button>
+  </div>
+</div>
+<div class="w-full border-transparent rounded-2xl bg-white  p-[24px] mt-[28px]">
+  <div class="flex items-end justify-between">
+    <div class="flex flex-col">
+      <p class="text-[16px]">Pakiet miesięczny</p>
+      <p class="text-[32px] font-medium">{{ plansObject[1].price }} zł</p>
+      <p class="text-[13px] text-gray-500 -mt-1">Oszczedzasz 16 zł</p>
+    </div>
+    <button class="button-primary" @click="payToPlan( plansObject[1].id )">Zapłac</button>
+  </div>
+</div>
     </div>
   </NuxtLayout>
 </template>
@@ -86,6 +87,17 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper';
 import 'swiper/css';
+import { storeToRefs } from 'pinia';
+import {useUser} from '@/store/useUser'
+const {plans, redirect} = storeToRefs(useUser())
+await useUser().getPlans()
+const plansObject = plans.value as any
+
+const payToPlan = async(planId: number)=>{
+  await useUser().postBuyPlan(planId)
+window.open(redirect.value)
+
+}
 </script>
 <style scoped lang="scss">
 @import "@/assets/style/variables";

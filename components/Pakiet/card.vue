@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-</template>
+</template>  
 <script setup lang="ts">
 const props = defineProps({
   textStandard: {

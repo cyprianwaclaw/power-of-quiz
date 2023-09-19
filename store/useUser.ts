@@ -12,6 +12,8 @@ export const useUser = defineStore('user', {
         allUser: [],
         payouts: [] as any,
         invoices: [] as any,
+        plans: [] as any,
+        redirect: [] as any,
         payments: [] as any,
         invitedCount: {} as number,
         getPersonal: {} as Personal,
@@ -110,6 +112,23 @@ export const useUser = defineStore('user', {
             try {
                 const res = await axiosInstance.get('/plans')
                 this.invoices = await res.data
+            }  catch (error:any) {
+                this.errorMessage = error.response.data
+            }
+        },
+     
+        async getPlans() {
+            try {
+                const res = await axiosInstance.get('/plans')
+                this.plans = await res.data.data
+            }  catch (error:any) {
+                this.errorMessage = error.response.data
+            }
+        },
+        async postBuyPlan(plan:any) {
+            try {
+                const res = await axiosInstance.post('/buy-plan', {plan})
+                this.redirect = await res.data.data
             }  catch (error:any) {
                 this.errorMessage = error.response.data
             }
