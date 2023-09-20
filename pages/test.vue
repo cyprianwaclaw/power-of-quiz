@@ -1,4 +1,6 @@
 <template>
+
+  <img src="@/assets/file/button-show.png"/>
   <ModalDown :modalActive="filter" title="Filtruj quizy" @close="filterShow()">
     <template #content>
       <ModalContentQuizFilterView
