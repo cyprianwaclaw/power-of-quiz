@@ -1,5 +1,5 @@
 <template>
-    <!-- <div class="pb-24"> -->
+    <div class="pb-24">
         <NavUser />
       <div class="own-container min-h-screen page-background">
         <div class="mb-[52px] flex justify-end -mr-3">
@@ -17,7 +17,7 @@
       <div class="sm:hidden">
         <NavBottom />
       </div>
-    <!-- </div> -->
+    </div>
   </template>
   
   <script setup lang="ts">

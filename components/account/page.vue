@@ -14,6 +14,7 @@
           </div>
         </div>
       </div>
+      <button @click="$emit('logout')"><p class="text-start">Wyloguj się</p></button>
     </div>
     <div class="flex shrink"
     :class="[active == 'settings' ? 'retangle': 'retangle-white']"
@@ -25,6 +26,7 @@
 <script setup lang="ts">
 const currentComponent = ref()
 const active = ref()
+const emit = defineEmits(['logout'])
 const links = [
   { title: "Pakiety", component: "package" },
   {

@@ -2,9 +2,9 @@
   <ModalSearch :modalActive="openSearch" @close="isClose" />
   <div class="fixed z-20 w-full">
     <div
-      class="flex bg-white border place-items-center justify-between h-16 border-b-gray-300 z-40 px-6"
+      class="flex bg-white border place-items-center justify-between h-16 border-b-gray-300 z-40 px-6 xl:gap-[100px] md:gap-[24px]"
     >
-      <div class="flex items-center shrink-0 lg:pr-[80px]">
+      <div class="flex items-center shrink-0">
         <NuxtLink to="/panel" class="md:mr-14">
           <img src="@/assets/file/logo.png" class="w-[175px]" />
         </NuxtLink>
@@ -16,30 +16,32 @@
           </NuxtLink>
         </div>
       </div>
-      <div class="sm:hidden flex place-items-center gap-4">
-        <button @click="openSearch = !openSearch" v-if="!openSearch">
+      <div
+        class="flex place-items-center gap-[32px] -mt-[2px] shrink-1 w-[800px]"
+      >
+        <InputSearch />
+        <div class=" shrink-0 lg:flex hidden">
+          <userCard @open="openMenuDesktop" />
+        </div>
+      </div>
+      <NavOpenMenu class="hidden sm:flex lg:hidden" />
+      <div class=" sm:hidden flex place-items-center">
+        <button @click="openSearch = !openSearch" v-if="!openSearch" class="justify-end flex">
           <Icon name="ph:magnifying-glass-light" size="30" class="search-icon" />
         </button>
         <button @click="openSearch = !openSearch" v-else>
           <Icon name="carbon:close" size="30" class="search-icon" />
         </button>
       </div>
-      <div class="lg:flex-1 shrink place-items-center lg:gap-7 max-w-[1000px] hidden sm:flex lg:hidden">
-        <InputSearch/>
-        <div class="hidden sm:flex lg:hidden shrink-0">
-          <userCard @open="openMenuDesktop" />
-        </div>
-        <!-- <div class="sm:hidden flex place-items-center gap-4">
-          <button @click="openSearch = !openSearch" v-if="!openSearch">
-            <Icon name="ph:magnifying-glass-light" size="30" class="search-icon" />
-          </button>
-          <button @click="openSearch = !openSearch" v-else>
-            <Icon name="carbon:close" size="30" class="search-icon" />
-          </button>
-        </div> -->
-        <NavOpenMenu class="hidden sm:flex lg:hidden" />
-      </div>
     </div>
+    <!-- <div class=" flex place-items-center w-full">
+      <button @click="openSearch = !openSearch" v-if="!openSearch" class="justify-end flex">
+        <Icon name="ph:magnifying-glass-light" size="30" class="search-icon" />
+      </button>
+      <button @click="openSearch = !openSearch" v-else>
+        <Icon name="carbon:close" size="30" class="search-icon" />
+      </button>
+    </div> -->
   </div>
 </template>
 <script setup lang="ts">

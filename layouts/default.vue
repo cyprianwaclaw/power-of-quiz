@@ -1,13 +1,14 @@
 <template>
-  <!-- <div class="pb-[120px]"> -->
-  <div class="pb-[100px]">
-
+  <div class="md:first-letter:pb-[200px] lg:relative pb-[150px] ">
       <NavUser />
     <div class="own-container min-h-screen page-background ">
       <slot />
     </div> 
     <div class="md:hidden">
       <NavBottom />
+    </div>
+    <div class="hidden md:flex">
+      <NavBottomDesktop/>
     </div>
   </div>
 </template>

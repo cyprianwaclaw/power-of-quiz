@@ -12,9 +12,9 @@
       <slot />
     </div>
     </div>
-    <div class="sm:hidden">
+    <!-- <div class="sm:hidden"> -->
       <NavBottom />
-    </div>
+    <!-- </div> -->
   </div>
 </template>
 

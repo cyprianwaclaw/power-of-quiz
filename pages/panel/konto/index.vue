@@ -52,6 +52,7 @@
       </div>
     </div>
 <AccountPage
+@logout="logoutUser()"
 />
     </NuxtLayout>
   </template>

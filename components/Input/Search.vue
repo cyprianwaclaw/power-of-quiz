@@ -1,6 +1,7 @@
 <template>
   <div v-if="isOpen" class="dark-blur-background z-30"></div>
-  <div class="py-8 md:py-0 flex place-items-center relative w-full">
+  <div class="py-8 md:py-0 place-items-center relative w-full md:flex hidden">
+    
     <input
       class="z-40 w-full"
       @click="openSearch()"
@@ -107,6 +108,7 @@ const searchInput: any = computed(() => {
 }
 
 input {
+  margin-top:0px;
   width: 100%;
   font-size: 15px;
   border: 2px solid transparent;
