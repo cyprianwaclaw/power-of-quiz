@@ -9,7 +9,7 @@
         <div class="flex flex-row">
           <p>Kategoria:</p>
           <p class="text-base primary-color font-medium ml-[4px]">
-            {{ quiz.category[0].name }}
+            {{ categoryMapping(categories, quiz)?.name }}
           </p>
         </div>
         <div class="flex flex-row">
@@ -45,8 +45,11 @@
 
 <script setup lang="ts">
 import { Quiz } from "@/types";
-
+import { useQuiz } from "@/store/useQuiz";
+import { storeToRefs } from "pinia";
 defineProps<{ quiz: Quiz }>();
+const {categories } = storeToRefs(useQuiz());
+
 </script>
 
 <style scoped lang="scss">
