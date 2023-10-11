@@ -94,7 +94,6 @@ let mapCategory = (allCategories.value = category.map((single: any) => ({
   selected: false,
 })));
 
-
 let populars = quizesValue(popularQuiz.value, mapCategory);
 
 const searchInput: any = computed(() => {
@@ -102,8 +101,6 @@ const searchInput: any = computed(() => {
   quiz.title.toLowerCase().includes(search.value)
   );
 });
-
-
 
 watch(search, async (newValue: any) => {
   if (newValue.length > 0) {
@@ -131,7 +128,7 @@ watch(openSearch, async (newValue: any) => {
   }
 });
 
-function click() {
+const click = () => {
   openSearch.value = false;
   quiz.add(search.value);
   search.value = "";
@@ -147,18 +144,6 @@ const onEnter = (el:any, done:any) => {
     onComplete: done,
   });
 };
-
-const onAfterEnter = (el: any) => {
-  // Do something after enter animation
-}
-
-const onEnterCancelled = (el: any) => {
-  // Handle cancelled enter animation
-}
-
-const onBeforeLeave = (el: any) => {
-  // Do something before leave animation
-}
 
 const onLeave = (el: any, done: any) => {
   gsap.to(el, {

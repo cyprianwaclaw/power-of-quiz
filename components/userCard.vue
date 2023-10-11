@@ -1,15 +1,14 @@
 <template>
   <div>
     <div v-if="isOpen" class="dark-blur-background z-40"></div>
-
-    <button class="click flex place-items-center hero-button py-2" @click="openMenu()">
+    <button class="click flex place-items-center hero-button" @click="openMenu()">
       <div v-if="user.avatar_path">
         <img :src="user.avatar_path" class="w-[37px] border-[#EDEDED] rounded-full" />
       </div>
-      <div v-else class="mr-3">
+      <div v-else>
         <Icon name="carbon:user-avatar-filled" color="#BFCBEE" class="w-10 h-10" />
       </div>
-      <div class="xl:block xl:ml-4 justify-start hidden">
+      <div class="xl:flex xl:flex-col hidden ml-2">
         <p class="text-[14px]">{{ user.name }} {{ user?.surname }}</p>
         <div v-if="premium" class="flex">
           <p class="text-[12px] primary-color font-semibold">PREMIUM</p>

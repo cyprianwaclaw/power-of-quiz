@@ -19,54 +19,62 @@
     </div>
   </div>
   <NuxtLayout name="default">
-      <div class="flex justify-between place-items-center mb-4">
-        <div class="flex flex-row gap-2">
-          <p class="text-[13px] text-gray-400">
-            Strona {{ currentPage }}/{{ allQuiz.last_page }}
-          </p>
-          <div class="vl"></div>
-          <p class="text-[13px] text-gray-400">{{ allQuiz.total }} wyników</p>
-        </div>
-        <div class="flex">
-          <button @click="sortingShow">Sortuj</button>
-        </div>
+    <!-- <pre>
+      {{ allQuiz }}
+        </pre
+    > -->
+    <div class="flex justify-between place-items-center mb-4">
+      <div class="flex flex-row gap-2">
+        <p class="text-[13px] text-gray-400">
+          Strona {{ currentPage }}/{{ allQuiz.last_page }}
+        </p>
+        <div class="vl"></div>
+        <p class="text-[13px] text-gray-400">{{ allQuiz.total }} wyników</p>
       </div>
-      <div v-if="view == 'two'">
-        <QuizCard v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
+      <div class="flex">
+        <button @click="sortingShow">Sortuj</button>
       </div>
-      <div v-if="view == 'three'">
-        <QuizSearchCard v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
+    </div>
+    <div v-if="view == 'two'">
+      <QuizCard v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
+    </div>
+    <div v-if="view == 'three'">
+      <QuizSearchCard v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
+    </div>
+    <div v-if="view == 'four'">
+      <div class="grid grid-cols-2 gap-6">
+        <QuizTwoQuiz v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
       </div>
-      <div v-if="view == 'four'">
-        <div class="grid grid-cols-2 gap-6">
-          <QuizTwoQuiz v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
-        </div>
-      </div>
-      <!-- //!paginacja -->
-      <div>
-        <div class="flex justify-center mt-12" v-if="allQuiz.last_page != 1">
-          <button v-if="currentPage != 1" @click="changePage(1)" class="mr-2">
-            <Icon name="ph:caret-double-left" size="26" class="-mt-1" />
-
-          </button>
-          <div
-            v-for="(page, index) in pageNumbers(allQuiz.last_page, currentPage)"
-            :key="index"
+    </div>
+    <!-- //!pagination-->
+    <div>
+      <div class="flex justify-center mt-12" v-if="allQuiz.last_page != 1">
+        <button v-if="currentPage != 1" @click="changePage(1)" class="mr-2">
+          <Icon name="ph:caret-double-left" size="26" class="-mt-1" />
+        </button>
+        <div
+          v-for="(page, index) in pageNumbers(allQuiz.last_page, currentPage)"
+          :key="index"
+        >
+          <p
+            class="w-6 cursor-pointer text-center"
+            @click="changePage(page)"
+            :class="{ active: page == currentPage }"
           >
-            <p
-              class="w-6 cursor-pointer text-center"
-              @click="changePage(page)"
-              :class="{ active: page == currentPage }"
-            >
-              {{ page }}
-            </p>
-          </div>
-          <button v-if="currentPage != allQuiz.last_page" @click="changePage(allQuiz.last_page)" class="ml-2">
-            <Icon name="ph:caret-double-right" size="26" class="-mt-1" />
-          </button>
-
+            {{ page }}
+          </p>
         </div>
+        <button
+          v-if="currentPage != allQuiz.last_page"
+          @click="changePage(allQuiz.last_page)"
+          class="ml-2"
+        >
+          <Icon name="ph:caret-double-right" size="26" class="-mt-1" />
+        </button>
       </div>
+    </div>
+    <!-- <Pagination :last_page="allQuiz.last_page" /> -->
+    <!-- //!finished-->
   </NuxtLayout>
 </template>
 
@@ -90,7 +98,7 @@ const { allQuiz } = storeToRefs(quiz);
 const currentPage = ref(1);
 const pagesPerPage = 4; // Liczba stron na jednej stronie paginacji
 
-const pageNumbers = (lastPage:number, currentPage:number) => {
+const pageNumbers = (lastPage: number, currentPage: number) => {
   const pages = [];
   const half = Math.floor(pagesPerPage / 2);
 
@@ -117,7 +125,7 @@ const pageNumbers = (lastPage:number, currentPage:number) => {
   return pages;
 };
 
-const changePage = (pageNumber:number) => {
+const changePage = (pageNumber: number) => {
   scrollToTop();
   const routeParams = { ...router.currentRoute.value.query };
   const updatedQueryParams = { ...routeParams, page: pageNumber };
@@ -144,9 +152,9 @@ const f = async () => {
   let min_time = route.query.min_time as any;
   let max_time = route.query.max_time as any;
   let per_page = route.query.per_page as any;
-  // let page = route.query.page as any;
+  let page1 = route.query.page as any;
   let page = "page=" + route.query.page;
-
+// console.log(page1)
   if (difficulty && category) {
     const difficultyFilter = createFilter("difficulty", difficulty);
     const categoryFilter = createFilter("category_id", category);
@@ -174,7 +182,9 @@ const f = async () => {
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-  } else if (difficulty) {
+// console.log(page1)
+  } 
+  else if (difficulty) {
     const difficultyFilter = createFilter("difficulty", difficulty);
     const questionMinCountFilter = createFilterTwoParams(
       "questions",
@@ -199,7 +209,8 @@ const f = async () => {
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-  } else if (category) {
+  } 
+  else if (category) {
     const categoryFilter = createFilter("category_id", category);
     const questionMinCountFilter = createFilterTwoParams(
       "questions",
@@ -230,50 +241,41 @@ const f = async () => {
 };
 const changeFilterSorting = () => {
   scrollToTop();
-  changePage(1)
-
-}
+  changePage(1);
+};
 
 const sorting = ref(false);
 const sortingShow = () => {
   sorting.value = !sorting.value;
 };
 const sortingClose = () => {
-  // changeFilterSorting()
-  // changePage(1)
-
   sorting.value = !sorting.value;
 };
 
 const filter = ref(false);
 const filterShow = () => {
-  // changeFilterSorting()
   filter.value = !filter.value;
 };
 
-
 onBeforeRouteUpdate(async (to, from) => {
   scrollToTop();
-  // let page = "page=" + to.query.page;
 
-let page = ''
-if(to.query.page === from.query.page){
-  currentPage.value = 1
-  page = "page=1";
+  let page = "";
+  if (to.query.page === from.query.page) {
+    currentPage.value = 1;
+    page = "page=1";
+  } else {
+    page = "page=" + to.query.page;
+  }
 
-
-} else{
- page = "page=" + to.query.page;
-
-}
+  // console.log(page);
   let difficulty = to?.query.difficulty;
   let category = to?.query.cat_id;
   let min_count = to.query.min_count as any;
   let max_count = to.query.max_count as any;
   let min_time = to.query.min_time as any;
   let max_time = to.query.max_time as any;
-  let per_page = to.query.per_page ? to.query.per_page : 15;
-  // let page = "page=" + to.query.page;
+  let per_page = to.query.per_page ? to.query.per_page : 15 as number;
 
   if (difficulty && category) {
     const difficultyFilter = createFilter("difficulty", difficulty);
@@ -302,7 +304,8 @@ if(to.query.page === from.query.page){
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-  } else if (difficulty) {
+  } 
+  else if (difficulty) {
     const difficultyFilter = createFilter("difficulty", difficulty);
     const questionMinCountFilter = createFilterTwoParams(
       "questions",
@@ -327,7 +330,8 @@ if(to.query.page === from.query.page){
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-  } else if (category) {
+  } 
+  else if (category) {
     const categoryFilter = createFilter("category_id", category);
     const questionMinCountFilter = createFilterTwoParams(
       "questions",
@@ -353,7 +357,17 @@ if(to.query.page === from.query.page){
       questionMaxTimeFilter,
     ]);
   }
+  else{
+    console.log("No filters applied")
+    console.log(page)
+    await quiz.getAllQuiz(per_page as number, page);
+
+  }
 });
+
+
+
+
 
 function createFilter(filterName: any, filterValue: any) {
   let paramsArray = [];
@@ -437,6 +451,5 @@ const quizView = (value: any) => {
   border-radius: 4px;
   margin-right: 7px;
   margin-left: 7px;
-
 }
 </style>

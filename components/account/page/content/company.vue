@@ -18,25 +18,27 @@
       @invalid-submit="onInvalidSubmit"
       v-slot="{ values, meta }"
     >
+    <!-- {{ meta.valid }}
+    {{ values }} -->
       <div class="flex place-items-center gap-12 flex-col">
         <div class="flex flex-col w-full gap-4">
           <InputNotSuccess
             name="name"
-            :value="company.name"
+            :value="company?.name"
             type="text"
             placeholder="Nazwa działalności gospodarczej"
           />
           <div class="flex flex-row gap-6">
             <InputNotSuccess
               name="nip"
-              :value="company.nip"
+              :value="company?.nip"
               type="text"
               placeholder="Numer NIP"
             />
             <InputNotSuccess
               name="regon"
-              :value="company.regon"
-              type="number"
+              :value="company?.regon"
+              type="text"
               placeholder="Numer REGON"
             />
           </div>
@@ -46,14 +48,14 @@
             <div class="w-[112px]">
               <InputNotSuccess
                 name="postcode"
-                :value="company.address.postcode"
+                :value="company?.address?.postcode"
                 type="text"
                 placeholder="Kod"
               />
             </div>
             <InputNotSuccess
               name="city"
-              :value="company.address.city"
+              :value="company?.address?.city"
               type="text"
               placeholder="Miejscowość"
             />
@@ -61,14 +63,14 @@
           <div class="flex flex-row gap-3">
             <InputNotSuccess
               name="street"
-              :value="company.address.street"
+              :value="company?.address?.street"
               type="text"
               placeholder="Nazwa ulica"
             />
             <div class="w-[142px]">
               <InputNotSuccess
                 name="building"
-                :value="company.address.building_number"
+                :value="company?.address?.building_number"
                 type="text"
                 placeholder="Budynek"
               />
@@ -76,7 +78,7 @@
             <div class="w-[142px]">
               <InputNotSuccess
                 name="house"
-                :value="company.address.house_number"
+                :value="company?.address?.house_number"
                 type="text"
                 placeholder="Lokal"
               />
@@ -85,8 +87,8 @@
         </div>
       </div>
       <div class="justify-end flex mt-10">
-        <button class="button-primary" v-if="checkCompany(values, meta, company)">
-          Zapisz zmiany
+     <button class="button-primary" v-if="checkCompany(values, meta, company)">
+         Zapisz zmiany
         </button>
         <button class="button-primary-disabled cursor-not-allowed" v-else disabled>
           Zapisz zmiany
@@ -123,17 +125,19 @@ const updateCompany = (values: any) => {
 const schemaCompany = yup.object().shape({
   name: yup
   .string()
-    .test("valid-name", "Nieprawidłowe imię", (value) => {
+    .test("valid-name", "Nieprawidłowa nazwa działalności", (value) => {
       if (!value) return true;
-      const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-zA-ZĄĆĘŁŃÓŚŹŻąćęłńóśźż\s]*$/u;
+      const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-zA-ZĄĆĘŁŃÓŚŹŻąćęłńóśźż0-9\s]*$/u;
       return nameRegex.test(value);
     })
     .max(35, "Nazwa działalności nie może mieć więcej niż 35 znaków"),
   nip: yup.string()
     .matches(/^[0-9 ]*$/, "Dozwolone tylko cyfry")
+    .min(10, "NIP ma 10 cyfr")
     .max(10, "NIP ma 10 cyfr"),
   regon: yup.string()
     .matches(/^[0-9 ]*$/, "Dozwolone tylko cyfry")
+    .min(9, "REGON ma 9 cyfr")
     .max(9, "REGON ma 9 cyfr"),
     postcode: yup  .string()
     .test("valid-name", "Nieprawidłowy kod pocztowy", (value) => {
@@ -141,10 +145,15 @@ const schemaCompany = yup.object().shape({
       const  nameRegex = /^[0-9]{2}-[0-9]{3}$/;
       return nameRegex.test(value);
     }),
-    street: yup.string(),
+    street: yup.string()
+    .test("valid-name", "Nieprawidłowa nazwa ulicy", (value) => {
+      if (!value) return true;
+      const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ0-9][a-zA-ZĄĆĘŁŃÓŚŹŻąćęłńóśźż0-9\s]*$/u;
+      return nameRegex.test(value);
+    }),
     city: yup
     .string()
-    .test("valid-name", "Nieprawidłowe imię", (value) => {
+    .test("valid-name", "Nieprawidłowa nazwa miejscowości", (value) => {
       if (!value) return true;
       const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-zA-ZĄĆĘŁŃÓŚŹŻąćęłńóśźż\s]*$/u;
       return nameRegex.test(value);

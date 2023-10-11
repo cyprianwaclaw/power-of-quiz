@@ -19,7 +19,7 @@
       <div
         class="flex place-items-center gap-[32px] -mt-[2px] shrink-1 w-[800px]"
       >
-        <InputSearch />
+        <InputSearch/>
         <div class=" shrink-0 lg:flex hidden">
           <userCard @open="openMenuDesktop" />
         </div>
@@ -34,14 +34,6 @@
         </button>
       </div>
     </div>
-    <!-- <div class=" flex place-items-center w-full">
-      <button @click="openSearch = !openSearch" v-if="!openSearch" class="justify-end flex">
-        <Icon name="ph:magnifying-glass-light" size="30" class="search-icon" />
-      </button>
-      <button @click="openSearch = !openSearch" v-else>
-        <Icon name="carbon:close" size="30" class="search-icon" />
-      </button>
-    </div> -->
   </div>
 </template>
 <script setup lang="ts">
@@ -82,12 +74,6 @@ const searchInput: any = computed(() => {
   );
 });
 
-function deleteItem() {
-  console.log("delete");
-}
-
-function newStorge() {}
-
 watch(search, async (newValue: any) => {
   if (newValue.length > 0) {
     await quiz.getAllName();
@@ -104,7 +90,6 @@ watch(searchInput, async (newValue: any) => {
 
 watch(openSearch, async (newValue: any) => {
   if (newValue) {
-    // zrobić ifa gdy nie ma popularnych
     await quiz.getPopularQuiz();
     document.body.style.overflow = "hidden";
     document.body.style.userSelect = "none";
@@ -114,12 +99,6 @@ watch(openSearch, async (newValue: any) => {
   }
 });
 
-function click() {
-  openSearch.value = false;
-  quiz.add(search.value);
-  search.value = "";
-  // useRouter().push("/panel/quiz/szukaj");
-}
 </script>
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";

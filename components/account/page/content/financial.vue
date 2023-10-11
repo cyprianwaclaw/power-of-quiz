@@ -7,38 +7,38 @@
     status="success"
     @close="successShow()"
   />
+  <!-- assasasa -->
   <div class="retangle">
     <p class="text-[22px] font-medium mb-8">Dane do wypłaty środków</p>
     <Form
       @submit="updateFinancial"
       :validation-schema="schemaFinancial"
       v-slot="{ values, meta }"
-    >
+      >
       <div class="flex place-items-center gap-12">
         <div class="flex flex-col w-full gap-4">
           <InputNotSuccess
             name="bank_name"
-            :value="financial.bank_name"
+            :value="financial?.bank_name"
             type="text"
             placeholder="Nazwa banku"
           />
           <div class="flex flex-row gap-6">
             <InputNotSuccess
               name="iban"
-              :value="financial.iban"
+              :value="financial?.iban"
               type="text"
               placeholder="Number IBAN Twojego konta"
             />
             <InputNotSuccess
               name="swift"
-              :value="financial.swift"
+              :value="financial?.swift"
               type="text"
               placeholder="Numer SWIFT banku"
             />
           </div>
         </div>
       </div>
-      <!-- {{ values }} -->
       <div class="justify-end flex mt-10">
         <button class="button-primary" v-if="checkFinancial(values, meta, financial)">
           Zapisz zmiany
@@ -73,8 +73,12 @@ const updateFinancial = (values: any) => {
 };
 
 const schemaFinancial = yup.object().shape({
-  bank_name: yup.string(),
-
+  bank_name: yup.string()
+  .test("valid-name", "Nieprawidłowa nazwa banku", (value) => {
+      if (!value) return true;
+      const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ0-9][a-zA-ZĄĆĘŁŃÓŚŹŻąćęłńóśźż0-9\s]*$/u;
+      return nameRegex.test(value);
+    }),
   iban: yup.string()
       .test("valid-iban", "Nieprawidłowy numer IBAN", (value) => {
         if (!value || value === "") return true;

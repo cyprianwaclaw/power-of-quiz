@@ -10,11 +10,16 @@
 import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
 import { useUser } from "@/store/useUser";
-
+const test = ref()
 const userStore = useUser();
 const { currentUser } = storeToRefs(userStore);
 await userStore.getUser();
 let user = currentUser.value;
+
+const { getFinancial, all } = storeToRefs(userStore);
+await userStore.getSettingsUser();
+let financial = getFinancial.value;
+
 </script>
   
   <style scoped lang="scss">

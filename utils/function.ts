@@ -282,21 +282,22 @@ export const openModal= (open:boolean)=>{
 }
 
 export const checkCompany = (values: any, meta: any, company:any) => {
-  if (!meta.valid) {
-    return false;
-  } else if (
-    values.name == company.name &&
-    values.nip == company.nip &&
-    values.regon == company.regon &&
-    values.city == company.address.city &&
-    values.postcode == company.address.postcode &&
-    values.street == company.address.street &&
-    values.building == company.address.building_number &&
-    values.house == company.address.house_number
+  if (
+    values.name == company?.name &&
+    values.nip == company?.nip &&
+    values.regon == company?.regon &&
+    values.city == company?.address?.city &&
+    values.postcode == company?.address?.postcode &&
+    values.street == company?.address?.street &&
+    values.building == company?.address?.building_number &&
+    values.house == company?.address?.house_number
   ) {
     return false;
+  } else
+  if (meta.valid && (values?.name?.length>0 || values?.nip?.length>0 ||values?.regon?.length>0 || values?.city?.length>0 || values?.postcode?.length>0 || values?.street?.length>0 || values?.building?.length>0 || values?.house?.length>0 )) {
+    return true
   } else {
-    return true;
+    return false;
   }
 };
 
@@ -305,10 +306,10 @@ export const checkCompany = (values: any, meta: any, company:any) => {
     if (!meta.valid) {
       return false;
     } else if (
-      values.name == personal.name &&
-      values.surname == personal.surname &&
-      values.email == personal.email &&
-      values.phone == personal.phone
+      values.name == personal?.name &&
+      values.surname == personal?.surname &&
+      values.email == personal?.email &&
+      values.phone == personal?.phone
     ) {
       return false;
     } else {
@@ -316,67 +317,27 @@ export const checkCompany = (values: any, meta: any, company:any) => {
     }
   };
 
+
   export const checkFinancial = (values: any, meta: any, financial:any) => {
-    if (!meta.valid) {
-      return false;
-    } else if (
-      values.bank_name == financial.bank_name &&
-      values.iban == financial.iban &&
-      values.swift == financial.swift
+    if (
+      values.bank_name == financial?.bank_name &&
+      values.iban == financial?.iban &&
+      values.swift == financial?.swift
     ) {
       return false;
+    } else
+    if (meta.valid && (values?.bank_name?.length>0  && values?.iban?.length>0 && values?.swift?.length>0  )) {
+
+    // if (meta.valid && (values?.bank_name?.length>0 || values?.iban?.length>0 ||values?.swift?.length>0  )) {
+      return true
     } else {
-      return true;
+      return false;
     }
   };
 
   export const scrollToTop =() =>{
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-
-  // export const getQuizByCategory = async(cat_id: any, quizFunction:any) => {
-  //   let paramsArray = [];
-
-  //   if (Array.isArray(cat_id)) {
-  //     // Jeśli `cat_id` jest tablicą
-  //     cat_id.forEach((el) => {
-  //       const data = `filters[category_id][$in]=${el}`;
-  //       paramsArray.push(data);
-  //     });
-  //   } else {
-  //     // Jeśli `cat_id` jest pojedynczym stringiem
-  //     const data = `filters[category_id][$in]=${cat_id}`;
-  //     paramsArray.push(data);
-  //   }
-  
-  //   const paramsCategory = paramsArray.join("&");
-  
-  //   // Przekazujemy paramsCategory do quizFunction, którą przekazujesz jako argument
-  //   await quizFunction(15, 1, paramsCategory);
-  // }
-
-
-  // export const getQuizByDiffuculty = async(difficulty: any, quizFunction:any) => {
-  //   let paramsArray = [];
-
-  //   if (Array.isArray(difficulty)) {
-  //     // Jeśli `cat_id` jest tablicą
-  //     difficulty.forEach((el) => {
-  //       const data = `filters[difficulty][$in][${el}]=${el}`;
-  //       paramsArray.push(data);
-  //     });
-  //   } else {
-  //     // Jeśli `cat_id` jest pojedynczym stringiem
-  //     const data = `filters[difficulty][$in][${difficulty}]=${difficulty}`;
-  //     paramsArray.push(data);
-  //   }
-  
-  //   const paramsCategory = paramsArray.join("&");
-  
-  //   // Przekazujemy paramsCategory do quizFunction, którą przekazujesz jako argument
-  //   await quizFunction(15, 1, paramsCategory);
-  // }
 
   export const selectItemsByParams = (itemsList: any, params: any)=> {
     if (params) {

@@ -21,15 +21,15 @@
             accept="image/*"
             class="default-file-input"
           />
-          <h1 class="flex md:hidden">Kliknij tutaj aby dodać zdjęcie</h1>
-          <h1 class="hidden md:flex justify-center">Kliknij tutaj aby dodać zdjęcie,<br> lub upusc tutaj zdjecie</h1>
+          <h1 class="flex md:hidden cursor-pointer">Kliknij tutaj aby dodać zdjęcie</h1>
+          <h1 class="hidden md:flex justify-center cursor-pointer">Kliknij tutaj aby dodać zdjęcie,<br> lub upusc tutaj zdjecie</h1>
         </label>
       </div>
     </div>
     <div v-if="croppedImage" class="mt-[5px] mx-[3px]">
       <div class="flex justify-between mt-[16px] mb-[5px]">
-          <p class="font-semibold text-sm red" @click="removeImage()">Usuń</p>
-          <p  @click="cropImage()" class="font-semibold text-sm primary-color">Ustaw zdjęcie</p>
+          <p class="font-semibold text-sm red cursor-pointer" @click="removeImage()">Usuń</p>
+          <p  @click="cropImage()" class="font-semibold text-sm primary-color cursor-pointer">Ustaw zdjęcie</p>
       </div>
     </div>
   </div>

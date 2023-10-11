@@ -10,6 +10,7 @@ export const useUser = defineStore('user', {
         inCorrectAnswers: {} as number,
         invitedUser: [],
         allUser: [],
+        all:[] as any,
         payouts: [] as any,
         invoices: [] as any,
         plans: [] as any,
@@ -65,6 +66,7 @@ export const useUser = defineStore('user', {
                 this.getPersonal = await res.data.personal
                 this.getFinancial = await res.data.financial
                 this.getCompany = await res.data.company
+                this.all = res.data
             } catch { }
         },
         async updateUserPersonal(name: string, surname: string, email: string, phone: any) {

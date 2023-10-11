@@ -42,19 +42,19 @@
         </div>
       </button>
     </div>
-    <div v-if="!isUser">
-      <div class="grid place-items-center mt-10">
+    <div v-if="mapUser.length<=0 ">
+      <div class="grid place-items-center mt-10 md:mt-16">
         <Icon name="ph:users" size="166" color="#CFD8E0" />
         <p class="invite-text -mt-2 mb-5">Brak znajomych</p>
-        <p class="font-base font-semibold primary-color place-items-center">
+        <!-- <p class="font-base font-semibold primary-color place-items-center">
           Dlaczego warto polecać
           <Icon name="carbon:chevron-right" size="21" class="primary-color" />
-        </p>
+        </p> -->
       </div>
     </div>
     <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-20">
       <SingleInvitedUser
-        v-for="(user, index) in users"
+        v-for="(user, index) in mapUser"
         :key="index"
         :user="user"
       />
@@ -103,6 +103,14 @@ function copyToken(token: any) {
   tooltip.value = !tooltip.value;
   setTimeout(() => (tooltip.value = false), 1700);
 }
+
+const mapUser = users.map((user:any)=>({
+  is_photo: user.avatar_path,
+  photo: ' https://powerofquizlogin.com.pl/storage/user-avatar/'+user.avatar_path,
+  id: user.id,
+  name:user.name,
+  is_premium: user.is_premium,
+}))
 </script>
 <style scoped>
 .invite-text {

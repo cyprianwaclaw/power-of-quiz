@@ -16,7 +16,7 @@
     </div>
     <div v-else>
       <div class="white-retangle-image">
-        <label class="image-retangle md:mt-3">
+        <label class="image-retangle md:mt-3 cursor-pointer">
           <Icon
             name="carbon:cloud-upload"
             size="38"
@@ -38,15 +38,15 @@
     <div v-if="croppedImage" class="mt-[5px] mx-[3px]">
       <div v-if="upladFinish" class="flex justify-end border-transparent rounded-lg">
         <button
-          @click="$emit('close')"
+          @click="isNew()"
           class="px-4 py-2 mt-[-5px] border-transparent rounded-lg"
         >
-          <p class="font-semibold text-[15px] primary-color">Gotowe</p>
+          <p class="font-semibold text-[15px] primary-color cursor-pointer">Gotowe</p>
         </button>
       </div>
       <div v-else class="flex justify-between mt-[16px] mb-[5px]">
-          <p class="font-semibold text-sm red"  @click="removeImage()">Usuń</p>
-          <p class="font-semibold text-sm primary-color" @click="cropImage">Ustaw zdjęcie</p>
+          <p class="font-semibold text-sm red cursor-pointer"  @click="removeImage()">Usuń</p>
+          <p class="font-semibold text-sm primary-color cursor-pointer" @click="cropImage">Ustaw zdjęcie</p>
       </div>
     </div>
   </div>
@@ -129,6 +129,10 @@ onMounted(() => {
     initializeCropper();
   }
 });
+const isNew = () =>{
+  emit('close')
+  location.reload();
+}
 </script>
 
 <style scoped lang="scss">

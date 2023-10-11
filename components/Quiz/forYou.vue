@@ -10,75 +10,53 @@
     redirect="/panel/pakiety"
     @close="isAlert"
   />
-  <ModalAlert
-    :modalActive="isOpenDesktop"
-    name="singleQuiz"
-    @close="isCloseDesktop()"
-  >
-  <template #content>
-    <ModalContentSingleQuizAlert
-    :quiz="quiz"
-    />
+  <ModalAlert :modalActive="isOpenDesktop" name="singleQuiz" @close="isCloseDesktop()">
+    <template #content>
+      <ModalContentSingleQuizAlert :quiz="quiz" />
     </template>
   </ModalAlert>
 
-     <ModalDown
-      :modalActive="isOpenMobile"
-      title="Quiz"
-      @close= "isCloseMobile" 
-      >
-      <template #content>
-        <ModalContentSingleQuiz
-        :quiz="quiz"
-        />
-        </template>
-        </ModalDown>
+  <ModalDown :modalActive="isOpenMobile" title="Quiz" @close="isCloseMobile">
+    <template #content>
+      <ModalContentSingleQuiz :quiz="quiz" />
+    </template>
+  </ModalDown>
   <div
+    v-if="!hasPremium"
     class="border-transparent rounded-[24px] lg:rounded-[12px] w-[260px] lg:w-full"
     :style="`background-image: url(${quiz.image}); background-size: cover;`"
-    @click="isModal()"
-    v-if="!hasPremium"
+    @click="isAlert()"
   >
     <!-- nie ma premium -->
-    <div class="bg-image w-[260px] lg:w-full rounded-[24px] lg:rounded-[12px] cursor-pointer">
+    <div
+      class="bg-image w-[260px] lg:w-full rounded-[24px] lg:rounded-[12px] cursor-pointer"
+    >
       <div class="details">
-        <h3 class="title hover:underline-offset-4 ">{{ quiz.title }}</h3>
+        <h3 class="title hover:underline-offset-4">{{ quiz.title }}</h3>
         <div class="flex mt-3 gap-3 float-left">
           <!-- <p class="des">{{ quiz.questions_count }} pytań</p>
           <div class="vl"></div> -->
           <p class="des">{{ quiz.time }} min</p>
           <div class="vl"></div>
-          <p class="des">{{  changeDifficult(quiz.difficulty)  }}</p>
+          <p class="des">{{ changeDifficult(quiz.difficulty) }}</p>
           <div class="vl"></div>
-          <p class="des">{{ categoryMapping(categories, quiz)?.name}}</p>
+          <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p>
         </div>
       </div>
     </div>
   </div>
+  <!-- ma premium -->
   <div
     v-else
     class="border-transparent rounded-[24px] lg:rounded-[12px] w-[260px] lg:w-full"
     :style="`background-image: url(${quiz.image}); background-size: cover;`"
     @click="isModal()"
   >
-  <!-- <div v-if="isOpenMobile">
-sasasas
-  </div> -->
-
-  <!-- <ModalDown
-  :modalActive="isOpenMobile"
-  title="Quiz"
-  @close= "isCloseMobile" 
-  >
-  <template #content>
-    <ModalContentSingleQuiz
-    :quiz="quiz"
-    />
-    </template>
-    </ModalDown> -->
-    <div class="bg-image w-[260px] lg:w-full rounded-[24px] lg:rounded-[12px] cursor-pointer">
+    <div
+      class="bg-image w-[260px] lg:w-full rounded-[24px] lg:rounded-[12px] cursor-pointer"
+    >
       <div class="details">
-        <h3 class="title hover:underline-offset-4 ">{{ quiz.title }}</h3>
+        <h3 class="title hover:underline-offset-4">{{ quiz.title }}</h3>
         <div class="flex mt-3 gap-3 float-left">
           <!-- <p class="des">{{ quiz.questions_count }} pytań</p>
         <div class="vl"></div> -->
@@ -86,7 +64,7 @@ sasasas
           <div class="vl"></div>
           <p class="des">{{ changeDifficult(quiz.difficulty) }}</p>
           <div class="vl"></div>
-          <p class="des">{{ categoryMapping(categories, quiz)?.name}}</p>
+          <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p>
         </div>
       </div>
     </div>
@@ -102,7 +80,7 @@ import { storeToRefs } from "pinia";
 defineProps<{ quiz: Quiz }>();
 
 const { hasPremium } = storeToRefs(useUser());
-const {categories } = storeToRefs(useQuiz());
+const { categories } = storeToRefs(useQuiz());
 const userPlan = hasPremium;
 const isOpen = ref(false);
 const isOpenMobile = ref(false);
