@@ -23,10 +23,14 @@
       {{ allQuiz }}
         </pre
     > -->
+    <div v-if=isLoading class="flex justify-center">
+     <p class=text-center>Ładowanie wyników...</p>
+          </div>
+          <div v-else>
     <div class="flex justify-between place-items-center mb-4">
       <div class="flex flex-row gap-2">
         <p class="text-[13px] text-gray-400">
-          Strona {{ currentPage }}/{{ allQuiz.last_page }}
+          Strona {{ route.query.page ? route.query.page : 1}}/{{ allQuiz.last_page }}
         </p>
         <div class="vl"></div>
         <p class="text-[13px] text-gray-400">{{ allQuiz.total }} wyników</p>
@@ -46,35 +50,8 @@
         <QuizTwoQuiz v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
       </div>
     </div>
-    <!-- //!pagination-->
-    <div>
-      <div class="flex justify-center mt-12" v-if="allQuiz.last_page != 1">
-        <button v-if="currentPage != 1" @click="changePage(1)" class="mr-2">
-          <Icon name="ph:caret-double-left" size="26" class="-mt-1" />
-        </button>
-        <div
-          v-for="(page, index) in pageNumbers(allQuiz.last_page, currentPage)"
-          :key="index"
-        >
-          <p
-            class="w-6 cursor-pointer text-center"
-            @click="changePage(page)"
-            :class="{ active: page == currentPage }"
-          >
-            {{ page }}
-          </p>
-        </div>
-        <button
-          v-if="currentPage != allQuiz.last_page"
-          @click="changePage(allQuiz.last_page)"
-          class="ml-2"
-        >
-          <Icon name="ph:caret-double-right" size="26" class="-mt-1" />
-        </button>
-      </div>
-    </div>
-    <!-- <Pagination :last_page="allQuiz.last_page" /> -->
-    <!-- //!finished-->
+    <Pagination :last_page="allQuiz.last_page" />
+  </div>
   </NuxtLayout>
 </template>
 
@@ -89,60 +66,9 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
-
+const isLoading = ref(true)
 const quiz = useQuiz();
 const { allQuiz } = storeToRefs(quiz);
-
-//!pagination
-
-const currentPage = ref(1);
-const pagesPerPage = 4; // Liczba stron na jednej stronie paginacji
-
-const pageNumbers = (lastPage: number, currentPage: number) => {
-  const pages = [];
-  const half = Math.floor(pagesPerPage / 2);
-
-  let startPage = currentPage - half;
-  let endPage = currentPage + half;
-
-  if (startPage < 1) {
-    startPage = 1;
-    endPage = pagesPerPage;
-  }
-
-  if (endPage > lastPage) {
-    endPage = lastPage;
-    startPage = lastPage - pagesPerPage + 1;
-    if (startPage < 1) {
-      startPage = 1;
-    }
-  }
-
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
-  }
-
-  return pages;
-};
-
-const changePage = (pageNumber: number) => {
-  scrollToTop();
-  const routeParams = { ...router.currentRoute.value.query };
-  const updatedQueryParams = { ...routeParams, page: pageNumber };
-
-  const check1 = () => {
-    if (routeParams) {
-      return updatedQueryParams;
-    } else {
-      return { page: pageNumber };
-    }
-  };
-
-  router.push({ query: check1() });
-  currentPage.value = pageNumber;
-};
-
-//!finished
 
 const f = async () => {
   let difficulty = route.query.difficulty;
@@ -151,7 +77,7 @@ const f = async () => {
   let max_count = route.query.max_count as any;
   let min_time = route.query.min_time as any;
   let max_time = route.query.max_time as any;
-  let per_page = route.query.per_page as any;
+  let per_page = route.query.per_page ? route.query.per_page : 15 as any;
   let page1 = route.query.page as any;
   let page = "page=" + route.query.page;
 // console.log(page1)
@@ -236,12 +162,9 @@ const f = async () => {
       questionMaxTimeFilter,
     ]);
   } else {
-    await quiz.getAllQuiz(15, null);
+    await quiz.getAllQuiz(per_page, page);
   }
-};
-const changeFilterSorting = () => {
-  scrollToTop();
-  changePage(1);
+  isLoading.value = false
 };
 
 const sorting = ref(false);
@@ -262,7 +185,6 @@ onBeforeRouteUpdate(async (to, from) => {
 
   let page = "";
   if (to.query.page === from.query.page) {
-    currentPage.value = 1;
     page = "page=1";
   } else {
     page = "page=" + to.query.page;
@@ -358,8 +280,6 @@ onBeforeRouteUpdate(async (to, from) => {
     ]);
   }
   else{
-    console.log("No filters applied")
-    console.log(page)
     await quiz.getAllQuiz(per_page as number, page);
 
   }

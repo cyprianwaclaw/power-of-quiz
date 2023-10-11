@@ -136,6 +136,7 @@ const saveChanges = () => {
         max_count: maxAnswersRange.value,
         max_time: maxTimeRange.value,
         min_time: minTimeRange.value,
+        page:1 
       };
     } else if (routeParams && toParams.value) {
       return {
@@ -145,6 +146,7 @@ const saveChanges = () => {
         max_count: maxAnswersRange.value,
         max_time: maxTimeRange.value,
         min_time: minTimeRange.value,
+        page:1 
       };
     } else if (routeParams && toParamsDifficulty.value) {
       return {
@@ -154,6 +156,7 @@ const saveChanges = () => {
         max_count: maxAnswersRange.value,
         max_time: maxTimeRange.value,
         min_time: minTimeRange.value,
+        page:1 
       };
     } else {
       return {
@@ -162,6 +165,7 @@ const saveChanges = () => {
         max_count: maxAnswersRange.value,
         max_time: maxTimeRange.value,
         min_time: minTimeRange.value,
+        page:1 
       };
     }
   };

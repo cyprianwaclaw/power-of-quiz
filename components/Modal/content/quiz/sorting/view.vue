@@ -88,13 +88,13 @@ const saveChanges = () => {
 // console.log(test);
   const routeParams = { ...router.currentRoute.value.query }; // Skopiowanie obiektu, aby uniknąć mutacji oryginalnego obiektu
 
-  const updatedQueryParams = { ...routeParams, per_page: perPage.value };
+  const updatedQueryParams = { ...routeParams, per_page: perPage.value, page:1 };
 
   const check1 = () => {
     if (routeParams) {
       return updatedQueryParams;
     } else {
-      return { per_page: perPage.value };
+      return { per_page: perPage.value, page:1 };
     }
   };
 
