@@ -336,7 +336,7 @@ export const checkCompany = (values: any, meta: any, company:any) => {
   };
 
   export const scrollToTop =() =>{
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0 });
   }
 
   export const selectItemsByParams = (itemsList: any, params: any)=> {
