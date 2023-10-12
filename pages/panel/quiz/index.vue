@@ -190,7 +190,7 @@ onBeforeRouteUpdate(async (to, from) => {
   } else {
     page = "page=" + to.query.page;
   }
-
+console.log(page)
   let difficulty = to?.query.difficulty;
   let category = to?.query.cat_id;
   let min_count = to.query.min_count as any;
@@ -200,7 +200,7 @@ onBeforeRouteUpdate(async (to, from) => {
   let changeView = to.query.view;
   let per_page = to.query.per_page ? to.query.per_page : 15 as number;
 
-  view.value = changeView 
+  view.value = changeView || localStorage.getItem("listView")
 
   if (difficulty && category) {
     const difficultyFilter = createFilter("difficulty", difficulty);
