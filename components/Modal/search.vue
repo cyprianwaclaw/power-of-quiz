@@ -1,93 +1,93 @@
 <template>
-    <div class="fixed z-50 left-0 bottom-0 w-full top-[60px] bg-white" v-if="props.modalActive">
-      <div class="flex place-items-center bg-white flex-col mx-5">
-        <input name="search" class="mb-6 mt-6" v-model="search" placeholder="Wyszukaj quiz..." />
-          <button class="serach_color" @click="click" v-if="search">
-            <Icon
-              name="ph:magnifying-glass"
-              size="22"
-              color="white"
-              class="search_icon_color"
-            />
-          </button>
-          <button class="serach_color_disabled" disabled v-else>
-            <Icon
-              name="ph:magnifying-glass"
-              size="22"
-              color="white"
-              class="search_icon_color"
-            />
-          </button>
-        <div v-if="!search" class="flex w-full flex-col">
-            <LazyQuizLastResults/>
-            <p class="mb-4 font-semibold text-xl mt-5">Popularne quizy</p>
-            <div class="overflow-y-auto rounded-xl h-screen scrollbar-hide pb-[360px]">
-              <div v-for="quiz in populars" :key="quiz" class="">
-                <QuizSearchCard :quiz="quiz" />
-              </div>
-            </div>
-        </div>
+  <!-- {{ props.modalActive }} -->
+  <div
+    class="fixed z-50 left-0 bottom-0 w-full top-[60px] bg-white"
+    v-if="props.modalActive"
+  >
+    <div class="flex place-items-center bg-white flex-col mx-5 relative">
+      <input
+        class="w-full pl-[50px] mt-5 mb-4"
+        placeholder="Wyszukaj quiz..."
+        v-model="search"
+      />
+      <div class="flex absolute left-7 top-[40px]">
+        <Icon
+          name="ph:magnifying-glass"
+          size="27"
+          color="#c4c4c4"
+          class="search_icon_color"
+        />
       </div>
-      <div class="overflow-auto h-screen relative bg-white rounded-xl flex flex-col mx-6 scrollbar-hide  pb-[240px]">
-        <div v-for="quiz in searchInput" :key="quiz" >
-          <div v-if="search.length">
+      <div v-if="!search" class="flex w-full flex-col">
+        <LazyQuizLastResults />
+        <p class="mb-4 font-semibold text-xl mt-5">Popularne quizy</p>
+        <div class="overflow-y-auto rounded-xl h-screen scrollbar-hide pb-[360px]">
+          <div v-for="quiz in populars" :key="quiz" class="">
             <QuizSearchCard :quiz="quiz" />
           </div>
         </div>
       </div>
-      <div>
-        <div v-if="results">
-          <button class="serach_color_disabled" @click="$emit('close')" disabled>
-            <Icon
-              name="ph:magnifying-glass"
-              size="22"
-              color="white"
-              class="search_icon_color"
-            />
-          </button>
-            <div class="absolute top-28 left-6 right-6 z-20 ">
-              <p class="text-2xl font-semibold primary-color -mt-1">Brak wyników</p>
-              <p class="text-gray mt-3 w-3/4 leading-7">
-                  nie znaleziono wyników dla:
-                  <span class="serach-vmodel break-words">{{ search }}</span> spróbuj inaczej
-                  wpisać frazę
-                </p>
-                <p class="mb-4 font-semibold text-xl mt-10">Popularne quizy</p>
-                <div class="overflow-y-auto rounded-xl h-screen scrollbar-hide pb-[420px]">
-                    <div v-for="quiz in populars" :key="quiz" class="">
-                        <QuizSearchCard :quiz="quiz" />
-                    </div>
-                </div>
-            </div>
+    </div>
+    <div
+      class="overflow-auto h-screen relative bg-white rounded-xl flex flex-col mx-6 scrollbar-hide pb-[240px]"
+    >
+      <div v-for="quiz in searchInput" :key="quiz">
+        <div v-if="search.length">
+          <QuizSearchCard :quiz="quiz" />
         </div>
       </div>
     </div>
-    <!-- </Transition> -->
+      <div v-if="results">
+        <button class="serach_color_disabled" @click="$emit('close')" disabled>
+          <Icon
+            name="ph:magnifying-glass"
+            size="22"
+            color="white"
+            class="search_icon_color"
+          />
+        </button>
+        <div class="absolute top-28 left-6 right-6 z-20">
+          <p class="text-2xl font-semibold primary-color -mt-1">Brak wyników</p>
+          <p class="text-gray mt-3 w-3/4 leading-7">
+            nie znaleziono wyników dla:
+            <span class="serach-vmodel break-words">{{ search }}</span> spróbuj inaczej
+            wpisać frazę
+          </p>
+          <p class="mb-4 font-semibold text-xl mt-10">Popularne quizy</p>
+          <div class="overflow-y-auto rounded-xl h-screen scrollbar-hide pb-[420px]">
+            <div v-for="quiz in populars" :key="quiz" class="">
+              <QuizSearchCard :quiz="quiz" />
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
-import gsap from 'gsap'
+import gsap from "gsap";
+import { boolean } from "yup";
 
 const props = defineProps({
   modalActive: {
     type: Boolean,
     required: true,
   },
-})
+});
 
-const emit = defineEmits(['close'])
 
 const quiz = useQuiz();
 const { allQuizName, popularQuiz, loadingQuiz, categories } = storeToRefs(quiz);
-const openSearch = ref(false);
 await quiz.getCategory();
-const results = ref(false);
+const results = ref() as any;
 const search: any = ref();
 
 let category = categories.value;
 const allCategories: any = ref();
-
+onMounted(()=>{
+  results.value = false
+})
 let mapCategory = (allCategories.value = category.map((single: any) => ({
   id: single.id,
   name: single.name,
@@ -98,7 +98,7 @@ let populars = quizesValue(popularQuiz.value, mapCategory);
 
 const searchInput: any = computed(() => {
   return quizesValue(allQuizName.value, mapCategory).filter((quiz: any) =>
-  quiz.title.toLowerCase().includes(search.value)
+    quiz.title.toLowerCase().includes(search.value)
   );
 });
 
@@ -116,27 +116,18 @@ watch(searchInput, async (newValue: any) => {
   }
 });
 
-watch(openSearch, async (newValue: any) => {
-  if (newValue) {
-    // zrobić ifa gdy nie ma popularnych
-    await quiz.getPopularQuiz();
-    document.body.style.overflow = "hidden";
-    document.body.style.userSelect = "none";
-  } else {
-    document.body.style.overflow = "auto";
-    document.body.style.userSelect = "auto";
-  }
-});
+// watch(openSearch, async (newValue: any) => {
+//   if (newValue) {
+//     await quiz.getPopularQuiz();
+//     document.body.style.overflow = "hidden";
+//     document.body.style.userSelect = "none";
+//   } else {
+//     document.body.style.overflow = "auto";
+//     document.body.style.userSelect = "auto";
+//   }
+// });
 
-const click = () => {
-  openSearch.value = false;
-  quiz.add(search.value);
-  search.value = "";
-  // useRouter().push("/panel/quiz/szukaj");
-}
-
-
-const onEnter = (el:any, done:any) => {
+const onEnter = (el: any, done: any) => {
   gsap.from(el, {
     ease: "power1.out",
     y: -200,
@@ -151,16 +142,15 @@ const onLeave = (el: any, done: any) => {
     y: -1000,
     duration: 0.7,
     onComplete: done,
-  })
+  });
+};
+if(props.modalActive == true){
+  console.log("Modal is active")
 }
-
-const onAfterLeave = (el: any) => {
-  // Do something after leave animation
-}
-
-const onLeaveCancelled = (el: any) => {
-  // Handle cancelled leave animation
-}
+let test = ref(props.modalActive)
+watch(test, (newValue:boolean)=>{
+  console.log(newValue)
+})
 </script>
 
 <style scoped lang="scss">
@@ -188,12 +178,12 @@ const onLeaveCancelled = (el: any) => {
     margin-top: 3px;
   }
   .serach_color_disabled {
-    background-color: #aec5ff;
+    background-color: #ffffff;
     border-radius: 8px;
-    width: 54px;
+    //width: 54px;
     position: absolute;
     top: 21px;
-    right: 20px;
+    left: 20px;
     height: 43px;
     margin-top: 3px;
   }

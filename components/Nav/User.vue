@@ -1,5 +1,5 @@
 <template>
-  <ModalSearch :modalActive="openSearch" @close="isClose" />
+  <ModalSearch :modalActive="openSearch"/>
   <div class="fixed z-20 w-full">
     <div
       class="flex bg-white border place-items-center justify-between h-16 border-b-gray-300 z-40 px-6 xl:gap-[100px] md:gap-[24px]"
