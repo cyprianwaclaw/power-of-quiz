@@ -19,10 +19,6 @@
     </div>
   </div>
   <NuxtLayout name="default">
-    <!-- <pre>
-      {{ allQuiz }}
-        </pre
-    > -->
     <div v-if=isLoading class="flex justify-center">
      <p class=text-center>Ładowanie wyników...</p>
           </div>
@@ -78,10 +74,8 @@ const f = async () => {
   let min_time = route.query.min_time as any;
   let max_time = route.query.max_time as any;
   let per_page = route.query.per_page ? route.query.per_page : 15 as any;
-  let page1 = route.query.page as any;
   let page = "page=" + route.query.page;
 
-// console.log(page1)
   if (difficulty && category) {
     const difficultyFilter = createFilter("difficulty", difficulty);
     const categoryFilter = createFilter("category_id", category);
@@ -109,7 +103,6 @@ const f = async () => {
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-// console.log(page1)
   } 
   else if (difficulty) {
     const difficultyFilter = createFilter("difficulty", difficulty);
@@ -315,7 +308,6 @@ function createFilterTwoParams(
   let paramsArray = [];
   const data = `filters[$with][${filterName1}][${filterName2}][${name}]=${filterValue}`;
   paramsArray.push(data);
-
   return paramsArray.join("&");
 }
 
@@ -339,7 +331,6 @@ onMounted(async () => {
 });
 
 const quizView = () => {
-  // view.value = value;
   console.log('value')
 };
 
