@@ -84,26 +84,25 @@ perPage.value = perPageParams ? perPageParams : "15";
 
 const saveChanges = () => {
 
-// const test = otherSorting2.value.filter((single: any) => single.checked === true)[0].value;
-// console.log(test);
   const routeParams = { ...router.currentRoute.value.query }; // Skopiowanie obiektu, aby uniknąć mutacji oryginalnego obiektu
 
-  const updatedQueryParams = { ...routeParams, per_page: perPage.value, page:1 };
+  const updatedQueryParams = { ...routeParams, per_page: perPage.value, page:1, view: currentView.value };
 
   const check1 = () => {
     if (routeParams) {
       return updatedQueryParams;
     } else {
-      return { per_page: perPage.value, page:1 };
+      return { per_page: perPage.value, page:1, view: currentView.value };
     }
   };
 
   router.push({ query: check1() });
 
   if (currentView.value) {
-    emit("state", currentView.value);
     localStorage.setItem("listView", currentView.value);
   }
+  console.log(currentView.value);
+
   emit("close");
 };
 </script>

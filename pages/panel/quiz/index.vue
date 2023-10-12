@@ -1,8 +1,8 @@
 <template>
   <ModalDown :modalActive="filter" title="Filtruj quizy" @close="filterShow()">
     <template #content>
+      <!-- @state="quizView" -->
       <ModalContentQuizFilterView
-        @state="quizView"
         @close="filterShow"
         @category="category"
       />
@@ -80,6 +80,7 @@ const f = async () => {
   let per_page = route.query.per_page ? route.query.per_page : 15 as any;
   let page1 = route.query.page as any;
   let page = "page=" + route.query.page;
+
 // console.log(page1)
   if (difficulty && category) {
     const difficultyFilter = createFilter("difficulty", difficulty);
@@ -190,14 +191,16 @@ onBeforeRouteUpdate(async (to, from) => {
     page = "page=" + to.query.page;
   }
 
-  // console.log(page);
   let difficulty = to?.query.difficulty;
   let category = to?.query.cat_id;
   let min_count = to.query.min_count as any;
   let max_count = to.query.max_count as any;
   let min_time = to.query.min_time as any;
   let max_time = to.query.max_time as any;
+  let changeView = to.query.view;
   let per_page = to.query.per_page ? to.query.per_page : 15 as number;
+
+  view.value = changeView 
 
   if (difficulty && category) {
     const difficultyFilter = createFilter("difficulty", difficulty);
@@ -285,10 +288,6 @@ onBeforeRouteUpdate(async (to, from) => {
   }
 });
 
-
-
-
-
 function createFilter(filterName: any, filterValue: any) {
   let paramsArray = [];
   let index = 0;
@@ -335,16 +334,15 @@ async function applyFilters(perPage: any, filters: any) {
 
 const view = ref();
 onMounted(async () => {
-  const checkEmitsData = () => {
     view.value = view.value || localStorage.getItem("listView");
-  };
-  checkEmitsData();
   f();
 });
 
-const quizView = (value: any) => {
-  view.value = value;
+const quizView = () => {
+  // view.value = value;
+  console.log('value')
 };
+
 </script>
 
 <style lang="scss" scoped>
