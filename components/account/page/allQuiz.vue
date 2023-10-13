@@ -2,7 +2,11 @@
   <div class="flex w-full flex-col">
     <p class="text-3xl font-semibold mb-5">Wszystkie quizy</p>
     <div class="grid grid-cols-3 gap-6 w-full">
-      <QuizDesktopCard v-for="quiz in userQuizAll" :key="quiz" :quiz="quiz"/>
+<!-- {{ currentUser.id }} -->
+      <pre>
+        {{ allQuiz }}
+      </pre>
+      <!-- <QuizDesktopCard v-for="quiz in allQuiz" :key="quiz" :quiz="quiz"/> -->
     </div>
   </div>
   </template>
@@ -18,13 +22,13 @@ definePageMeta({
 
 const userStore = useUser();
 const { currentUser } = storeToRefs(userStore);
-await userStore.getUser();
-let user = currentUser.value;
-
+// await userStore.getUser();
+// let currentUser = currentUser.value;
+console.log(currentUser.value.id)
 const quizStore = useQuiz();
 const {allQuiz} = storeToRefs(quizStore);
-await quizStore.getAllQuiz();
-let userQuizAll = allQuiz.value.filter((quiz: any) => quiz.user_id === user.id);
+await quizStore.getAllQuiz(15, null);
+// let userQuizAll = allQuiz.value.filter((quiz: any) => quiz.user_id === user.id);
 </script>
   
   <style scoped lang="scss">

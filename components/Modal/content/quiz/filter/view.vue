@@ -108,7 +108,6 @@ const toParamsDifficulty = ref();
 watch(difficulty.value, (newValue) => {
   let selected = newValue.filter((single: any) => single.selected === true);
   toParamsDifficulty.value = selected.map((single: any) => single.value);
-  // console.log(toParamsDifficulty.value)
 });
 
 const currentView = ref();

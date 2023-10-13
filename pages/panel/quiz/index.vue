@@ -1,11 +1,7 @@
 <template>
   <ModalDown :modalActive="filter" title="Filtruj quizy" @close="filterShow()">
     <template #content>
-      <!-- @state="quizView" -->
-      <ModalContentQuizFilterView
-        @close="filterShow"
-        @category="category"
-      />
+      <ModalContentQuizFilterView @close="filterShow" @category="category" />
     </template>
   </ModalDown>
   <ModalDown :modalActive="sorting" title="Sortowanie" @close="sortingShow()">
@@ -19,35 +15,35 @@
     </div>
   </div>
   <NuxtLayout name="default">
-    <div v-if=isLoading class="flex justify-center">
-     <p class=text-center>Ładowanie wyników...</p>
-          </div>
-          <div v-else>
-    <div class="flex justify-between place-items-center mb-4">
-      <div class="flex flex-row gap-2">
-        <p class="text-[13px] text-gray-400">
-          Strona {{ route.query.page ? route.query.page : 1}}/{{ allQuiz.last_page }}
-        </p>
-        <div class="vl"></div>
-        <p class="text-[13px] text-gray-400">{{ allQuiz.total }} wyników</p>
+    <div v-if="isLoading" class="flex justify-center">
+      <p class="text-center">Ładowanie wyników...</p>
+    </div>
+    <div v-else class="-mb-14">
+      <div class="flex justify-between place-items-center mb-4">
+        <div class="flex flex-row gap-2">
+          <p class="text-[13px] text-gray-400">
+            Strona {{ route.query.page ? route.query.page : 1 }}/{{ allQuiz.last_page }}
+          </p>
+          <div class="vl"></div>
+          <p class="text-[13px] text-gray-400">{{ allQuiz.total }} wyników</p>
+        </div>
+        <div class="flex">
+          <button @click="sortingShow">Sortuj</button>
+        </div>
       </div>
-      <div class="flex">
-        <button @click="sortingShow">Sortuj</button>
+      <div v-if="view == 'two'">
+        <QuizCard v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
       </div>
-    </div>
-    <div v-if="view == 'two'">
-      <QuizCard v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
-    </div>
-    <div v-if="view == 'three'">
-      <QuizSearchCard v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
-    </div>
-    <div v-if="view == 'four'">
-      <div class="grid grid-cols-2 gap-6">
-        <QuizTwoQuiz v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
+      <div v-if="view == 'three'">
+        <QuizSearchCard v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
       </div>
+      <div v-if="view == 'four'">
+        <div class="grid grid-cols-2 gap-6">
+          <QuizTwoQuiz v-for="quiz in allQuiz.data" :key="quiz?.id" :quiz="quiz" />
+        </div>
+      </div>
+      <Pagination :last_page="allQuiz.last_page" />
     </div>
-    <Pagination :last_page="allQuiz.last_page" />
-  </div>
   </NuxtLayout>
 </template>
 
@@ -62,7 +58,7 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
-const isLoading = ref(true)
+const isLoading = ref(true);
 const quiz = useQuiz();
 const { allQuiz } = storeToRefs(quiz);
 
@@ -73,7 +69,7 @@ const f = async () => {
   let max_count = route.query.max_count as any;
   let min_time = route.query.min_time as any;
   let max_time = route.query.max_time as any;
-  let per_page = route.query.per_page ? route.query.per_page : 15 as any;
+  let per_page = route.query.per_page ? route.query.per_page : (15 as any);
   let page = "page=" + route.query.page;
 
   if (difficulty && category) {
@@ -103,8 +99,7 @@ const f = async () => {
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-  } 
-  else if (difficulty) {
+  } else if (difficulty) {
     const difficultyFilter = createFilter("difficulty", difficulty);
     const questionMinCountFilter = createFilterTwoParams(
       "questions",
@@ -129,8 +124,7 @@ const f = async () => {
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-  } 
-  else if (category) {
+  } else if (category) {
     const categoryFilter = createFilter("category_id", category);
     const questionMinCountFilter = createFilterTwoParams(
       "questions",
@@ -158,7 +152,7 @@ const f = async () => {
   } else {
     await quiz.getAllQuiz(per_page, page);
   }
-  isLoading.value = false
+  isLoading.value = false;
 };
 
 const sorting = ref(false);
@@ -183,7 +177,6 @@ onBeforeRouteUpdate(async (to, from) => {
   } else {
     page = "page=" + to.query.page;
   }
-console.log(page)
   let difficulty = to?.query.difficulty;
   let category = to?.query.cat_id;
   let min_count = to.query.min_count as any;
@@ -191,9 +184,9 @@ console.log(page)
   let min_time = to.query.min_time as any;
   let max_time = to.query.max_time as any;
   let changeView = to.query.view;
-  let per_page = to.query.per_page ? to.query.per_page : 15 as number;
+  let per_page = to.query.per_page ? to.query.per_page : (15 as number);
 
-  view.value = changeView || localStorage.getItem("listView")
+  view.value = changeView || localStorage.getItem("listView");
 
   if (difficulty && category) {
     const difficultyFilter = createFilter("difficulty", difficulty);
@@ -222,8 +215,7 @@ console.log(page)
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-  } 
-  else if (difficulty) {
+  } else if (difficulty) {
     const difficultyFilter = createFilter("difficulty", difficulty);
     const questionMinCountFilter = createFilterTwoParams(
       "questions",
@@ -248,8 +240,7 @@ console.log(page)
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-  } 
-  else if (category) {
+  } else if (category) {
     const categoryFilter = createFilter("category_id", category);
     const questionMinCountFilter = createFilterTwoParams(
       "questions",
@@ -274,10 +265,8 @@ console.log(page)
       questionMinTimeFilter,
       questionMaxTimeFilter,
     ]);
-  }
-  else{
+  } else {
     await quiz.getAllQuiz(per_page as number, page);
-
   }
 });
 
@@ -326,14 +315,13 @@ async function applyFilters(perPage: any, filters: any) {
 
 const view = ref();
 onMounted(async () => {
-    view.value = view.value || localStorage.getItem("listView");
+  view.value = view.value || localStorage.getItem("listView");
   f();
 });
 
 const quizView = () => {
-  console.log('value')
+  console.log("value");
 };
-
 </script>
 
 <style lang="scss" scoped>

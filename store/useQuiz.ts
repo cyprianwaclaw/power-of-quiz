@@ -144,12 +144,12 @@ export const useQuiz = defineStore('quiz', {
                 console.error(e)
             }
         },
-        async getAllQuiz1() {
+        async getAllQuiz1(perPage:number, filters:any) {
             try {
                 this.loadingQuiz= true
-                const res = await axiosInstance.get("/quizzes?filters[$with][questions][count][$gte]=1&filters[$with][questions][count][$lt]=2&filters[category_id][$in]=1")
+                const res = await axiosInstance.get(`/quizzes/all?per_page=${perPage}&${filters}`)
                 // const res = await axiosInstance.get(`/quizzes?sort[0]=time,desc&sort[1]=difficulty,desc`)
-                this.allQuiz1 = await res.data
+                this.allQuiz = await res.data.data
                 this.loadingQuiz= false
             } catch (e) {
                 console.error(e)
