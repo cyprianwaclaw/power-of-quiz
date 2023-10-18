@@ -169,8 +169,6 @@ const filterShow = () => {
 };
 
 onBeforeRouteUpdate(async (to, from) => {
-  scrollToTop();
-
   let page = "";
   if (to.query.page === from.query.page) {
     page = "page=1";

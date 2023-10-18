@@ -75,6 +75,7 @@ onMounted(() => {
   }
 });
 onBeforeRouteUpdate(async (to, from) => {
+  scrollToTop();
   const page = to.query.page;
   currentPage.value = Number(page);
 });
