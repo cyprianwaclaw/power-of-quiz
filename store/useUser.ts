@@ -10,15 +10,16 @@ export const useUser = defineStore('user', {
         inCorrectAnswers: {} as number,
         invitedUser: [],
         allUser: [],
-        all:[] as any,
+        all: [] as any,
         payouts: [] as any,
         invoices: [] as any,
         plans: [] as any,
         redirect: [] as any,
         payments: [] as any,
+        settings: [] as any,
         invitedCount: {} as number,
         getPersonal: {} as Personal,
-        getCompany: {} as Company,
+        getCompany: [] as Company[],
         getFinancial: {} as Financial,
         success: {} as boolean,
         errorMessage: {} as string,
@@ -64,6 +65,7 @@ export const useUser = defineStore('user', {
             try {
                 const res = await axiosInstance.get('/user/settings')
                 this.getPersonal = await res.data.personal
+                this.settings = await res.data
                 this.getFinancial = await res.data.financial
                 this.getCompany = await res.data.company
                 this.all = res.data
@@ -71,34 +73,34 @@ export const useUser = defineStore('user', {
         },
         async updateUserPersonal(name: string, surname: string, email: string, phone: any) {
             try {
-                const res = await axiosInstance.post('/user/settings',{name, surname, email, phone})
+                const res = await axiosInstance.post('/user/settings', { name, surname, email, phone })
                 this.success = await res.data.success
                 // this.success = await res.data
-            }  catch(error:any) {
-                this.errorMessage = error.response.data
-            }
-        }, 
-        async updateUserFinancial(iban:string, bank_name:string, swift:string) {
-            try {
-                const res = await axiosInstance.post('/user/settings',{iban, bank_name, swift})
-                this.success = await res.data.success
-            }  catch(error:any) {
-                this.errorMessage = error.response.data
-            }
-        }, 
-        async updateUserCompany(company_name:any, nip:any, regon:any,  city: string, postcode: string, street: string, building_number: any, house_number:any) {
-            try {
-                const res = await axiosInstance.post('/user/settings',{company_name, nip, regon,city, postcode, street, building_number, house_number })
-                this.success = await res.data.success
-            }  catch (error:any) {
+            } catch (error: any) {
                 this.errorMessage = error.response.data
             }
         },
-        async getPayoutsObject(user_id:any) {
+        async updateUserFinancial(iban: string, bank_name: string, swift: string) {
+            try {
+                const res = await axiosInstance.post('/user/settings', { iban, bank_name, swift })
+                this.success = await res.data.success
+            } catch (error: any) {
+                this.errorMessage = error.response.data
+            }
+        },
+        async updateUserCompany(company_name: any, nip: any, regon: any, city: string, postcode: string, street: string, building_number: any, house_number: any) {
+            try {
+                const res = await axiosInstance.post('/user/settings', { company_name, nip, regon, city, postcode, street, building_number, house_number })
+                this.success = await res.data.success
+            } catch (error: any) {
+                this.errorMessage = error.response.data
+            }
+        },
+        async getPayoutsObject(user_id: any) {
             try {
                 const res = await axiosInstance.get(`/payouts/${user_id}`)
                 this.payouts = await res.data.data
-            }  catch (error:any) {
+            } catch (error: any) {
                 this.errorMessage = error.response.data
             }
         },
@@ -106,32 +108,32 @@ export const useUser = defineStore('user', {
             try {
                 const res = await axiosInstance.get('/payments')
                 this.payments = await res.data
-            }  catch (error:any) {
+            } catch (error: any) {
                 this.errorMessage = error.response.data
             }
-        },        
+        },
         async getUserInvoices() {
             try {
                 const res = await axiosInstance.get('/plans')
                 this.invoices = await res.data
-            }  catch (error:any) {
+            } catch (error: any) {
                 this.errorMessage = error.response.data
             }
         },
-     
+
         async getPlans() {
             try {
                 const res = await axiosInstance.get('/plans')
                 this.plans = await res.data.data
-            }  catch (error:any) {
+            } catch (error: any) {
                 this.errorMessage = error.response.data
             }
         },
-        async postBuyPlan(plan:any) {
+        async postBuyPlan(plan: any) {
             try {
-                const res = await axiosInstance.post('/buy-plan', {plan})
+                const res = await axiosInstance.post('/buy-plan', { plan })
                 this.redirect = await res.data.data
-            }  catch (error:any) {
+            } catch (error: any) {
                 this.errorMessage = error.response.data
             }
         },

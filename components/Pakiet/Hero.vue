@@ -35,6 +35,7 @@
 import { storeToRefs } from "pinia";
 import { useUser } from "@/store/useUser";
 
+
 const props = defineProps({
   text: {
     type: String,
@@ -42,4 +43,5 @@ const props = defineProps({
   },
 });
 const { hasPremium } = storeToRefs(useUser());
+
 </script>

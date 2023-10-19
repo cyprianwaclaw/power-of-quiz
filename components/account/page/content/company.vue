@@ -18,8 +18,6 @@
       @invalid-submit="onInvalidSubmit"
       v-slot="{ values, meta }"
     >
-    <!-- {{ meta.valid }}
-    {{ values }} -->
       <div class="flex place-items-center gap-12 flex-col">
         <div class="flex flex-col w-full gap-4">
           <InputNotSuccess
@@ -87,7 +85,7 @@
         </div>
       </div>
       <div class="justify-end flex mt-10">
-     <button class="button-primary" v-if="checkCompany(values, meta, company)">
+     <button class="button-primary" v-if="checkCompany(values, meta.valid, company)">
          Zapisz zmiany
         </button>
         <button class="button-primary-disabled cursor-not-allowed" v-else disabled>
@@ -130,11 +128,13 @@ const schemaCompany = yup.object().shape({
       const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-zA-ZĄĆĘŁŃÓŚŹŻąćęłńóśźż0-9\s]*$/u;
       return nameRegex.test(value);
     })
-    .max(35, "Nazwa działalności nie może mieć więcej niż 35 znaków"),
+    .max(35, "Nazwa działalności nie może mieć więcej niż 35 znaków")
+    .required("Pole wymagane"),
   nip: yup.string()
     .matches(/^[0-9 ]*$/, "Dozwolone tylko cyfry")
     .min(10, "NIP ma 10 cyfr")
-    .max(10, "NIP ma 10 cyfr"),
+    .max(10, "NIP ma 10 cyfr")
+    .required("Pole wymagane"),
   regon: yup.string()
     .matches(/^[0-9 ]*$/, "Dozwolone tylko cyfry")
     .min(9, "REGON ma 9 cyfr")
@@ -144,7 +144,8 @@ const schemaCompany = yup.object().shape({
       if (!value) return true;
       const  nameRegex = /^[0-9]{2}-[0-9]{3}$/;
       return nameRegex.test(value);
-    }),
+    })
+    .required("Pole wymagane"),
     street: yup.string()
     .test("valid-name", "Nieprawidłowa nazwa ulicy", (value) => {
       if (!value) return true;
@@ -158,9 +159,12 @@ const schemaCompany = yup.object().shape({
       const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-zA-ZĄĆĘŁŃÓŚŹŻąćęłńóśźż\s]*$/u;
       return nameRegex.test(value);
     })
+    .required("Pole wymagane")
     .max(20, "Nazwa miescowości nie może mieć więcej niż 20 znaków"),
-    building: yup.string(),
-    house: yup.string(),
+    building: yup.string()
+    .required("Pole wymagane"),
+    house: yup.string()
+    .required("Pole wymagane"),
 
 });
 

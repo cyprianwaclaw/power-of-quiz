@@ -60,6 +60,9 @@ export type selectOption ={
 
 export type whiteRetangle = {
   text?: string;
+  text1?: string;
+  notext?: string;
+  istextNo?: boolean;
   mode?: string;
   des?: string;
   link?: string;

@@ -13,6 +13,10 @@
         <Icon size="26" class="primary-color mr-2" v-if="newArray[index].firstIcon" />
         <div class="flex flex-col w-full">
           <p class="text-des-mobile1">{{ item.des }}</p>
+          <div v-if="item.istextNo == true">
+           <!-- <p> {{ item?.noText }}</p> -->
+           <p> {{ item?.text1?.length > 0 ? item?.text1 : item?.noText  }}</p>
+          </div>
           <h2 class="title-menu-mobile1" v-if="item.text">
             {{ truncateText(item?.text, 25)?.name }}
             <span :class="[truncateText(item?.text, 25)?.class]">
@@ -32,9 +36,15 @@
                 :maxlength="item.maxlength"
                 rows="1"
               ></textarea>
-              <p class="justify-end flex -mb-1 -mr-[6px] text-[12px] mt-3" v-if="item.value.length"
-              :class="[item.value.length === item.maxlength ? 'text-red-500' : 'text-gray' ]"
-              >{{item.value.length}} / {{item.maxlength}}</p>
+              <p
+                class="justify-end flex -mb-1 -mr-[6px] text-[12px] mt-3"
+                v-if="item.value.length"
+                :class="[
+                  item.value.length === item.maxlength ? 'text-red-500' : 'text-gray',
+                ]"
+              >
+                {{ item.value.length }} / {{ item.maxlength }}
+              </p>
             </div>
             <!-- wszystkie sloty, które będziemy gdzieś wykorzystywać -->
             <slot name="select" v-if="item.type == 'select'" />
@@ -90,6 +100,7 @@ import { whiteRetangle } from "@/types";
 import { defineEmits, defineProps, ref } from "vue";
 
 const emit = defineEmits(["open"]);
+
 const props = defineProps({
   array: {
     type: Array as () => whiteRetangle[],
