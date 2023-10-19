@@ -9,41 +9,6 @@
         Odkryj pełnię<br />
         możliwości w pakiecie <span class="primary-color"> Premium</span>
       </h1>
-      <div class="relative mb-12 mt-4">
-        <swiper
-          :pagination="true"
-          :modules="[Pagination]"
-          :slidesPerView="'auto'"
-          :centeredSlides="true"
-          :spaceBetween="10"
-        >
-          <swiper-slide>
-            <PakietCard
-              textStandard="Przeglądanie serwisu"
-              textPremium="Granie w quizy"
-            />
-          </swiper-slide>
-          <swiper-slide>
-            <PakietCard
-              textStandard="Przeglądanie serwisu"
-              textPremium="Granie w quizy"
-            />
-          </swiper-slide>
-          <swiper-slide>
-            <PakietCard
-              textStandard="Przeglądanie serwisu"
-              textPremium="Granie w quizy"
-            />
-          </swiper-slide>
-          <swiper-slide>
-            <PakietCard
-              textStandard="Przeglądanie serwisu"
-              textPremium="Granie w quizy"
-            />
-          </swiper-slide>
-          <div class="swiper-pagination"></div>
-        </swiper>
-      </div>
       <div class="bg-white w-full border-transparent rounded-2xl">
         <div class="w-full flex justify-end pt-[28px] pr-[30px] gap-6">
           <p class="text-[14px] font-semibold">Standard</p>
@@ -81,7 +46,7 @@
           A teraz...<br />
           wybierz <span class="primary-color"> swój</span> pakiet
         </p>
-        <div class="w-full border-transparent rounded-2xl bg-white p-[24px] mt-[46px]">
+        <div class="w-full rounded-2xl bg-white p-[24px] mt-[46px] border ">
           <div class="flex items-end justify-between">
             <div class="flex flex-col">
               <p class="text-[16px]">Pakiet tygodniowy</p>
@@ -92,7 +57,7 @@
             </button>
           </div>
         </div>
-        <div class="w-full border-transparent rounded-2xl bg-white p-[24px] mt-[28px]">
+        <div class="w-full border rounded-2xl bg-white p-[24px] mt-[28px]">
           <div class="flex items-end justify-between">
             <div class="flex flex-col">
               <p class="text-[16px]">Pakiet miesięczny</p>

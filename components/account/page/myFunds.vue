@@ -31,16 +31,10 @@
     </div>
     <p class="text-3xl font-semibold mb-6 mt-10">Historia wypłat</p>
     <div class="flex flex-col">
-      <div v-if="payouts">
+      <div v-if="Object.keys(payouts).length > 0 ? false : true">
         <div class="grid place-items-center my-10">
           <Icon name="ph:hand-coins-light" size="166" color="#CFD8E0" />
           <p class="empty">Brak wypłat</p>
-          <!-- <NuxtLink to="/panel/quiz/dodaj-nowy">
-            <p class="font-base font-semibold primary-color place-items-center">
-              Dodaj nowy
-              <Icon name="carbon:chevron-right" size="21" class="primary-color" />
-            </p>
-          </NuxtLink> -->
         </div>
       </div>
       <div
