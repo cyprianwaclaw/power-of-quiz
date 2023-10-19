@@ -31,8 +31,17 @@
     </div>
     <p class="text-3xl font-semibold mb-6 mt-10">Historia wypłat</p>
     <div class="flex flex-col">
-      <div v-if="!payouts">
-        <p>brak wypłat</p>
+      <div v-if="payouts">
+        <div class="grid place-items-center my-10">
+          <Icon name="ph:hand-coins-light" size="166" color="#CFD8E0" />
+          <p class="empty">Brak wypłat</p>
+          <!-- <NuxtLink to="/panel/quiz/dodaj-nowy">
+            <p class="font-base font-semibold primary-color place-items-center">
+              Dodaj nowy
+              <Icon name="carbon:chevron-right" size="21" class="primary-color" />
+            </p>
+          </NuxtLink> -->
+        </div>
       </div>
       <div
         v-else
@@ -84,4 +93,23 @@ let ownPayouts = Object.values(payouts.value).map((single: any) => ({
 
 <style scoped lang="scss">
 @import "@/assets/style/variables.scss";
+
+.invite-text {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 38px;
+  color: #cfd8e0;
+}
+.empty{
+  margin-top: 12px;
+  margin-bottom: 12px;
+  color: #cfd8e0;
+  font-size: 38px;
+  font-weight: 800;
+}
+.vl {
+  border-left: 1px solid rgb(156 163 175);
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
 </style>

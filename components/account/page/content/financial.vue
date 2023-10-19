@@ -27,13 +27,13 @@
               name="iban"
               :value="financial?.iban"
               type="text"
-              placeholder="Number IBAN Twojego konta"
+              placeholder="Number IBAN"
             />
             <InputNotSuccess
               name="swift"
               :value="financial?.swift"
               type="text"
-              placeholder="Numer SWIFT banku"
+              placeholder="Numer SWIFT"
             />
           </div>
         </div>
@@ -69,7 +69,6 @@ let financial = getFinancial.value;
 
 const updateFinancial = (values: any) => {
   userStore.updateUserFinancial(values.iban, values.bank_name, values.swift);
-  console.log(values);
   successShow();
 };
 

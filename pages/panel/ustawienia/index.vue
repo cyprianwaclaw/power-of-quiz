@@ -75,35 +75,35 @@ const mapAndAddValues = (data: any) => {
   return {
     company: [
       {
-        text1: data.company.name, // Zmiana klucza "0" na "text1"
+        text1: data?.company?.name, // Zmiana klucza "0" na "text1"
         des: "Nazwa działalności",
         noText: "Brak",
         istextNo: true,
       },
       {
-        text1: data.company.nip,
+        text1: data?.company?.nip,
         des: "NIP",
         noText: "Brak",
         istextNo: true,
       },
-      { text: "Zobacz pełne dane", link: "/panel/ustawienia/dane-faktura" },
+      { text: "Zobacz pełne dane", link: "/panel/ustawienia/edycja/dane-faktura" },
     ],
     financial: [
       {
-        text1: data.financial.iban,
-        des: "Nazwa działalności",
+        text1: data?.financial?.iban,
+        des: "Numer IBAN",
         noText: "Brak",
         istextNo: true,
       },
       {
-        text1: data.financial.bank_name,
-        des: "Nazwa działalności",
+        text1: data?.financial?.bank_name,
+        des: "Nazwa banku",
         noText: "Brak",
         istextNo: true,
       },
       {
-        text1: data.financial.swift,
-        des: "Nazwa działalności",
+        text1: data?.financial?.swift,
+        des: "Numer SWIFT",
         noText: "Brak",
         istextNo: true,
       },

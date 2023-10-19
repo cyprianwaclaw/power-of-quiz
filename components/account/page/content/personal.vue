@@ -60,7 +60,7 @@
               name="email"
               :value="personal.email"
               type="text"
-              placeholder="Imię"
+              placeholder="Adres e-mail"
             />
             <InputNotSuccess
               name="phone"

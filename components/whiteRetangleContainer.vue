@@ -15,7 +15,7 @@
           <p class="text-des-mobile1">{{ item.des }}</p>
           <div v-if="item.istextNo == true">
            <!-- <p> {{ item?.noText }}</p> -->
-           <p> {{ item?.text1?.length > 0 ? item?.text1 : item?.noText  }}</p>
+           <p :class="[item?.text1?.length > 0 ? '':'font-thin primary-color']"> {{ item?.text1?.length > 0 ? item?.text1 : item?.noText  }}</p>
           </div>
           <h2 class="title-menu-mobile1" v-if="item.text">
             {{ truncateText(item?.text, 25)?.name }}

@@ -6,13 +6,6 @@
     closeButton="Okej"
     @close="ModalSuccess()"
   />
-  <ModalAlert
-  v-if="isOpenError"
-  title="Uups!"
-  des="Wprowdzone dane są błędne, zweryfikuj ich poprawność i spróbuj ponownie"
-  closeButton="Próbuje dalej"
-  @close="ModalError()"
-/>
 
   <NuxtLayout name="edit-settings">
     <div class="mb-8">
@@ -20,68 +13,49 @@
     </div>
     <div class="white-retangle">
       <Form
-        @submit="onSubmit"
-        v-slot="{values}"
-        :validation-schema="schema"
-        @invalid-submit="onInvalidSubmit"
+      @submit="updatePersonal"
+      :validation-schema="schemaPersonal"
+      v-slot="{ values, meta }"
       >
         <div class="row-table -mt-2">
-          <InputSettings
-            :color="namePlaceholder.class"
-            name="name"
-            label="Imię"
-            id="name"
-            type="name"
-            :placeholder="namePlaceholder.placeholder"
-          />
+          <InputNotSuccess
+          name="name"
+          :value="personal.name"
+          type="text"
+          placeholder="Imię"
+        />
         </div>
         <div class="row-table">
-          <InputSettings
-            :color="surnamePlaceholder.class"
-            name="surname"
-            label="Nazwisko"
-            id="surname"
-            type="surname"
-            :placeholder="surnamePlaceholder.placeholder"
-          />
+          <InputNotSuccess
+          name="surname"
+          :value="personal.surname"
+          type="text"
+          placeholder="Nazwisko"
+        />
         </div>
         <div class="row-table">
-          <InputSettings
-            :color="emailPlaceholder.class"
-            name="email"
-            label="Adres e-mail"
-            id="email"
-            type="email"
-            :placeholder="emailPlaceholder.placeholder"
-          />
+          <InputNotSuccess
+          name="email"
+          :value="personal.email"
+          type="text"
+          placeholder="Adres e-mail"
+        />
         </div>
         <div class="row-table-end">
-          <InputSettings
-            :color="phonePlaceholder.class"
-            name="phone"
-            label="Numer telefonu"
-            id="phone"
-            type="tel"
-            :placeholder="phonePlaceholder.placeholder"
-          />
+               <InputNotSuccess
+              name="phone"
+              :value="personal.phone"
+              type="number"
+              placeholder="Numer telefonu"
+              />
         </div>
-        <div
-        class="mt-3 mb-4 mr-7 justify-end flex"
-        v-if="
-          values.name ||
-          values.surname ||
-          values.email||
-          values.phone
-            ? false
-            : true
-        "
-      >
-        <button class="button-primary-disabled" disabled id="submit" type="submit">
-          Gotowe
+        <div class="mt-3 mb-4 mr-7 justify-end flex">
+        <button class="button-primary" v-if="checkPersonal(values, meta.valid, personal)">
+          Zapisz zmiany
         </button>
-      </div>
-      <div v-else   class="mt-3 mb-4 mr-7 justify-end flex">
-        <button class="button-primary" id="submit" type="submit">Gotowe</button>
+        <button class="button-primary-disabled cursor-not-allowed" v-else disabled>
+          Zapisz zmiany
+        </button>
       </div>
       </Form>
     </div>
@@ -89,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import * as Yup from "yup";
+import * as yup from "yup";
 import { storeToRefs } from "pinia";
 import { Form } from "vee-validate";
 import { useUser } from "@/store/useUser";
@@ -99,63 +73,54 @@ definePageMeta({
   middleware: "auth",
 });
 
-const isOpenError = ref(false)
+
 const isOpenSuccess = ref(false)
+
 const userStore = useUser();
+const { currentUser, getPersonal } = storeToRefs(userStore);
+await userStore.getUser();
 await userStore.getSettingsUser();
-const { getPersonal, errorMessage, success } = storeToRefs(userStore);
-const personal = getPersonal.value;
+let user = currentUser.value;
+let personal = getPersonal.value;
 
-const schema = Yup.object().shape({
-  name: Yup.string()
-    .matches(/^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*$/, "Imię nie może zawiarać cyfr")
-    .max(20, "Imię nie może być dłuższe niż 20 znaków"),
-  surname: Yup.string()
-    .matches(/^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*$/, "Nazwisko nie może zawiarać cyfr")
-    .max(35, "Nazwisko nie może być dłuższe niż 35 znaków"),
-  email: Yup.string()
-    .email("Błędny email")
-    .max(35, "Email nie może być dłuższe niż 35  znaków"),
-  // odpowiedź z api
-  phone: Yup.string()
-    .matches(/^[0-9 ]*$/)
-    .max(9, "Numer telefonu musi mieć 9 cyfr"),
+const updatePersonal = (values: any) => {
+  userStore.updateUserPersonal(values.name, values.surname, values.email, values.phone);
+  ModalSuccess();
+};
+
+const schemaPersonal = yup.object().shape({
+  name: yup
+    .string()
+    .test("valid-name", "Nieprawidłowe imię", (value) => {
+      if (!value) return true;
+      const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż\s]*$/u;
+      return nameRegex.test(value);
+    })
+    .max(20, "Imię nie może mieć więcej niż 20 znaków"),
+  surname: yup
+    .string()
+    .test("valid-surname", "Nieprawidłowe nazwisko", (value) => {
+      if (!value) return false;
+      const surnameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż\s]*$/u;
+      return surnameRegex.test(value);
+    })
+    .max(20, "Nazwisko nie może mieć więcej niż 20 znaków"),
+  email: yup.string().test("valid-email", "Nieprawidłowy adres e-mail", (value) => {
+    // if (!value) return false;
+    if (!value || value === "") return true;
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    return emailRegex.test(value);
+  }),
+  phone: yup.string().test("valid-phone", "Błędny format numeru telefonu", (value) => {
+    if (!value || value === "") return true;
+    const phoneRegex = /^\d{9}$/;
+    return phoneRegex.test(value) && parseInt(value) > 0;
+  }),
 });
-
-const namePlaceholder = ChangePlaceholderInput(personal.name, "Wprowadź imię");
-const surnamePlaceholder = ChangePlaceholderInput(personal.surname, "Wprowadź nazwisko");
-const emailPlaceholder = ChangePlaceholderInput(personal.email, "Wprowadź adres e-mail");
-const phonePlaceholder = ChangePlaceholderInput(
-  personal.phone,
-  "Wprowadź numer telefonu"
-);
-
-async function onSubmit(values: any) {
-  let { name, surname, email, phone } = values;
-  let nameNew = ChangeDataInput(name, personal.name);
-  let surnameNew = ChangeDataInput(surname, personal.surname);
-  let emailNew = ChangeDataInput(email, personal.email);
-  let phoneNew = ChangeDataInput(phone, personal.phone);
-  await userStore.updateUserPersonal(nameNew, surnameNew, emailNew, phoneNew);
-  witchModal()
-}
-
-const witchModal = () => {
-if(success){
-  return ModalSuccess()
-} else{
-  return ModalError()
-}
-}
-
 
 const ModalSuccess=()=> {
 isOpenSuccess.value =! isOpenSuccess.value
 }
-const ModalError=()=> {
-isOpenError.value =! isOpenError.value
-}
-
 </script>
 
 <style scoped>

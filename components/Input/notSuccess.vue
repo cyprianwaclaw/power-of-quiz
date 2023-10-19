@@ -1,8 +1,8 @@
 <template>
   <div class="base-input" :class="{ 'has-error': !!errorMessage, success: meta.valid }">
-    <!-- <label :for="name" class="label">{{ label }}</label> -->
+    <label :for="name" class="label">{{ placeholder}}</label>
     <input
-      class="base-input"
+      class="base-input -mt-[2px]"
       :class="color"
       :name="name"
       :id="name"

@@ -7,12 +7,12 @@
     @close="ModalSuccess()"
   />
   <ModalAlert
-  :modalActive="isOpenError"
-  title="Uups!"
-  des="Wprowdzone dane są błędne, zweryfikuj ich poprawność i spróbuj ponownie"
-  closeButton="Próbuje dalej"
-  @close="ModalError()"
-/>
+    :modalActive="isOpenError"
+    title="Uups!"
+    des="Wprowdzone dane są błędne, zweryfikuj ich poprawność i spróbuj ponownie"
+    closeButton="Próbuje dalej"
+    @close="ModalError()"
+  />
 
   <NuxtLayout name="edit-settings">
     <div class="mb-8">
@@ -21,125 +21,111 @@
     <div class="white-retangle">
       <Form
         @submit="onSubmit"
-        v-slot="{values}"
-        :validation-schema="schema"
-        @invalid-submit="onInvalidSubmit"
+        v-slot="{ values, meta }"
+        :validation-schema="schemaFinancial"
       >
         <div class="row-table -mt-2">
-          <InputSettings
-            :color="ibanPlaceholder.class"
-            name="iban"
-            label="Numer IBAN"
-            v-model="test"
-            id="iban"
+          <InputNotSuccess
+            name="bank_name"
+            :value="financial?.bank_name"
             type="text"
-            :placeholder="ibanPlaceholder.placeholder"
+            placeholder="Nazwa banku"
           />
         </div>
         <div class="row-table">
-          <InputSettings
-            :color="bank_namePlaceholder.class"
-            name="bank_name"
-            label="Nazwa banku"
-            id="bank_name"
-            type="text"
-            :placeholder="bank_namePlaceholder.placeholder"
-          />
+          <InputNotSuccess
+          name="iban"
+          :value="financial?.iban"
+          type="text"
+          placeholder="Number IBAN"
+        />
         </div>
         <div class="row-table-end">
-          <InputSettings
-            :color="swiftPlaceholder.class"
-            name="swift"
-            label="Kod SWIFT"
-            id="swift"
-            type="text"
-            :placeholder="swiftPlaceholder.placeholder"
-          />
+          <InputNotSuccess
+              name="swift"
+              :value="financial?.swift"
+              type="text"
+              placeholder="Numer SWIFT"
+            />
         </div>
-        <div
-        class="mt-3 mb-4 mr-7 justify-end flex"
-        v-if="
-          values.iban ||
-          values.bank_name ||
-          values.swift
-            ? false
-            : true
-        "
-      >
-        <button class="button-primary-disabled" disabled id="submit" type="submit">
-          Gotowe
-        </button>
-      </div>
-      <div v-else   class="mt-3 mb-4 mr-7 justify-end flex">
-        <button class="button-primary" id="submit" type="submit">Gotowe</button>
-      </div>
+        <div class="mt-3 mb-4 mr-7 justify-end flex">
+          <button  v-if="checkFinancial(values, meta.valid, financial)" class="button-primary" id="submit" type="submit">Gotowe</button>
+          <button class="button-primary-disabled" disabled v-else>
+            Gotowe
+          </button>
+        </div>
       </Form>
     </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import * as Yup from "yup";
+import * as yup from "yup";
 import { storeToRefs } from "pinia";
 import { Form } from "vee-validate";
 import { useUser } from "@/store/useUser";
-import { onInvalidSubmit, ChangePlaceholderInput,  ChangeDataInput } from "@/utils/function";
 
 definePageMeta({
   middleware: "auth",
 });
 
-const isOpenError = ref(false)
-const isOpenSuccess = ref(false)
+const isOpenError = ref(false);
+const isOpenSuccess = ref(false);
 const userStore = useUser();
 await userStore.getSettingsUser();
 const { getFinancial, errorMessage, success } = storeToRefs(userStore);
 const financial = getFinancial.value;
 
-const schema = Yup.object().shape({
-  iban: Yup.string().matches(/[A-Z]{2}\d{26}$/, "Błędny numer IBAN"),
+const schemaFinancial = yup.object().shape({
+  bank_name: yup
+    .string()
+    .test("valid-name", "Nieprawidłowa nazwa banku", (value) => {
+      if (!value) return true;
+      const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ0-9][a-zA-ZĄĆĘŁŃÓŚŹŻąćęłńóśźż0-9\s]*$/u;
+      return nameRegex.test(value);
+    })
+    .required("Pole wymagane"),
+  iban: yup
+    .string()
+    .test("valid-iban", "Nieprawidłowy numer IBAN", (value) => {
+      if (!value || value === "") return true;
+      const polishIbanRegex = /^[A-Z]{2}\d{26}$/;
+      return polishIbanRegex.test(value);
+    })
+    .max(28, "Numer IBAN ma 28 znaków")
+    .required("Pole wymagane"),
 
-  bank_name: Yup.string(),
-
-  swift: Yup.string().max(8, "Kod SWIFT posiada 8 znaków"),
-
-
+  swift: yup
+    .string()
+    .test("valid-swift", "Nieprawidłowy numer SWIFT", (value) => {
+      if (!value || value === "") return true;
+      const swiftRegex = /^[A-Z]{2}[A-Z0-9]{4}([A-Z0-9]{2})?$/;
+      return swiftRegex.test(value);
+    })
+    .required("Pole wymagane"),
 });
 
-const ibanPlaceholder = ChangePlaceholderInput(financial.iban, "Wprowadź numer IBAN");
-const bank_namePlaceholder = ChangePlaceholderInput(financial.bank_name, "Wprowadź nazwę banku");
-const swiftPlaceholder = ChangePlaceholderInput(financial.swift, "Wprowadź kod SWIFT");
-
-
-async function onSubmit(values: any) {
-  let { iban, bank_name, swift } = values;
-
-  let ibanNew = ChangeDataInput(iban, financial.iban);
-  let bank_nameNew = ChangeDataInput(bank_name, financial.bank_name);
-  let swiftNew = ChangeDataInput(swift, financial.swift);
-  await userStore.updateUserFinancial(ibanNew, bank_nameNew, swiftNew);
-witchModal()
-}
+const updateFinancial = (values: any) => {
+  userStore.updateUserFinancial(values.iban, values.bank_name, values.swift);
+  ModalSuccess();
+};
 
 const witchModal = () => {
-if(success){
-  return ModalSuccess()
-} else{
-  return ModalError()
-}
-}
+  if (success) {
+    return ModalSuccess();
+  } else {
+    return ModalError();
+  }
+};
 
+const ModalSuccess = () => {
+  isOpenSuccess.value = !isOpenSuccess.value;
+};
+const ModalError = () => {
+  isOpenError.value = !isOpenError.value;
+};
 
-const ModalSuccess=()=> {
-isOpenSuccess.value =! isOpenSuccess.value
-}
-const ModalError=()=> {
-isOpenError.value =! isOpenError.value
-}
-
-
-const test = ref('raz')
-
+const test = ref("raz");
 </script>
 
 <style scoped>
