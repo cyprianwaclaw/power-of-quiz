@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost/api';
+// const API_URL = 'http://localhost/api';
 // const API_URL = 'https://quiz.bojarm.pl/api';
-// const API_URL = 'https://powerofquizlogin.com.pl/api'
+const API_URL = 'https://powerofquizlogin.com.pl/api'
 
 export const axiosInstance = axios.create({
     baseURL: API_URL,
