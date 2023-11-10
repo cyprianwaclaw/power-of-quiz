@@ -6,10 +6,10 @@
     status="error"
     des="Ta część serwisu jest dostępna wyłącznie dla użytkowników z pakietem Premium. Wykup subskrypcję aby zyskać dostęp do tej sekcji"
     closeButton="Zamknij"
-    actionButton="Zobacz pakiety"
-    redirect="/panel/pakiety"
     @close="isAlert"
-  />
+    actionButton="Zobacz pakiety"
+    />
+    <!-- redirect="/panel/pakiety" -->
   <ModalAlert :modalActive="isOpenDesktop" name="singleQuiz" @close="isCloseDesktop()">
     <template #content>
       <ModalContentSingleQuizAlert :quiz="quiz" />

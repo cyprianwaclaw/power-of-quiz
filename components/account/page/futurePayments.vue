@@ -2,6 +2,9 @@
   <div class="flex w-full flex-col">
     <p class="text-3xl font-semibold mb-5">Faktury i płatności</p>
     <p class="text-xl font-semibold mb-5">Historia płatności</p>
+    <pre>
+      {{ payments.data }}
+    </pre>
     <div class="grid place-items-center my-10">
       <Icon name="ph:clock-clockwise-light" size="166" color="#CFD8E0" />
       <p class="empty">Brak  płatności</p>
@@ -20,8 +23,10 @@ import { useQuiz } from "@/store/useQuiz";
 import { useUser } from "@/store/useUser";
 
 const userStore = useUser();
-const { currentUser } = storeToRefs(userStore);
+const { currentUser,payments} = storeToRefs(userStore);
 await userStore.getUser();
+await userStore.getPaymentsObject() ;
+
 let user = currentUser.value;
 </script>
   

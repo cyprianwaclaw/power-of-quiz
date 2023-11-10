@@ -8,9 +8,9 @@
         closeButton="Zamknij"
         status="error"
         actionButton="Zobacz pakiety"
-        redirect="/panel/pakiety"
         @close="isClose"
-      />
+        />
+        <!-- redirect="/panel/pakiety" -->
         <div class=""  @click="isClose()">           
             <img v-if="!quiz.image" src="@/assets/file/placeholder-image.webp" class="my-quiz-image"/>
             <img v-if="quiz.image" :src="quiz.image" class="my-quiz-image isLoading" />

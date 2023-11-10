@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input type="text" v-on="handlers" :value="value" />
+    <input type="text" v-on="handlers" :value="value" placeholder="Czas trwania" class="base-input" />
     <span>{{ errorMessage }}</span>
   </div>
 </template>
@@ -58,3 +58,8 @@ const handlers = computed(() => {
   return on;
 });
 </script>
+<style scoped>
+.base-input{
+    border: transparent;
+  }
+</style>

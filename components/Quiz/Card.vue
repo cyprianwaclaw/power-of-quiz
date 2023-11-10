@@ -8,9 +8,9 @@
     des="Ta sekcja wymaga pakietu Premium. Dołącz już teraz i ciesz się pełnymi możliwościami"
     closeButton="Zamknij"
     actionButton="Zobacz pakiety"
-    redirect="/panel/pakiety"
     @close="isClose"
-  />
+    />
+    <!-- redirect="/panel/pakiety" -->
         <div class="card bg-size" :style="`background-image: url(${quiz?.image})`" @click="isClose()">
           <div class="bg-image">
             <div class="details">
@@ -21,8 +21,8 @@
                 <p class="des">{{ quiz?.time }} min</p>
                 <div class="vl"></div>
                 <p class="des">{{ quiz?.difficulty }}</p>
-                <div class="vl"></div>
-                <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p>
+                <!-- <div class="vl"></div> -->
+                <!-- <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p> -->
               </div>
             </div>
           </div>
@@ -53,8 +53,8 @@
               <p class="des">{{ quiz?.time }} min</p>
               <div class="vl"></div>
               <p class="des">{{ quiz?.difficulty }}</p>
-              <div class="vl"></div>
-              <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p>
+              <!-- <div class="vl"></div> -->
+              <!-- <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p> -->
             </div>
           </div>
         </div>

@@ -38,7 +38,7 @@
             </template>
             <template #time>
               <div class="flex flex-row w-full place-items-center" @click="isTime()">
-                <CustomField
+                <InputNotBorder
                   name="time"
                   mode="aggressive"
                   maxlength="2"

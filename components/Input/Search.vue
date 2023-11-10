@@ -7,9 +7,9 @@
     des="Ta sekcja wymaga pakietu Premium. Dołącz już teraz i ciesz się pełnymi możliwościami"
     closeButton="Zamknij"
     actionButton="Zobacz pakiety"
-    redirect="/panel/pakiety"
     @close="standardPlan"
-  />
+    />
+    <!-- redirect="/panel/pakiety" -->
   <ModalAlert :modalActive="premium" name="singleQuiz" @close="premiumPlan">
     <template #content>
       <ModalContentSingleQuizAlert :quiz="selectedQuiz" />

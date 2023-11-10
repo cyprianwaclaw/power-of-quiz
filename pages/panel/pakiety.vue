@@ -60,6 +60,7 @@
         A teraz...<br />
         wybierz <span class="primary-color"> swój</span> pakiet
       </p>
+      <!-- {{ plansObject }} -->
 <div class="w-full border-transparent rounded-2xl bg-white p-[24px]  mt-[46px]">
   <div class="flex items-end justify-between">
     <div class="flex flex-col">

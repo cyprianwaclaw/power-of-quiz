@@ -9,7 +9,7 @@ export const useUser = defineStore('user', {
         correctAnswers: {} as number,
         inCorrectAnswers: {} as number,
         invitedUser: [],
-        allUser: [],
+        allUser: [] as any,
         all: [] as any,
         payouts: [] as any,
         invoices: [] as any,
@@ -53,12 +53,12 @@ export const useUser = defineStore('user', {
                 this.correctAnswers = await res.data.data.correct_answers
             } catch { }
         },
-        async getInvitedUser() {
-            const res = await axiosInstance.get('/user/getInvitedUsers')
+        async getInvitedUser(page: number) {
+            const res = await axiosInstance.get(`/user/getInvitedUsers?page=${page}`)
             try {
                 this.allUser = await res.data.data
-                this.invitedUser = await res.data.success
-                this.invitedCount = await res.data.count
+                // this.invitedUser = await res.data.success
+                // this.invitedCount = await res.data.count
             } catch { }
         },
         async getSettingsUser() {
@@ -96,14 +96,23 @@ export const useUser = defineStore('user', {
                 this.errorMessage = error.response.data
             }
         },
-        async getPayoutsObject(user_id: any) {
+        async getPayoutsObject(user_id: any, page:number) {
             try {
-                const res = await axiosInstance.get(`/payouts/${user_id}`)
+                const res = await axiosInstance.get(`/payouts/${user_id}?page=${page}`)
                 this.payouts = await res.data.data
             } catch (error: any) {
                 this.errorMessage = error.response.data
             }
         },
+        async newPayouts(points: number) {
+            try {
+                const res = await axiosInstance.post(`/payouts`, { points })
+                // this.payouts = await res.data.data
+            } catch (error: any) {
+                this.errorMessage = error.response.data
+            }
+        },
+        
         async getPaymentsObject() {
             try {
                 const res = await axiosInstance.get('/payments')

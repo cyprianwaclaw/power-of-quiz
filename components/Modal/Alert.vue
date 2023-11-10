@@ -19,7 +19,8 @@
           @click="$emit('close')"
           />
         </div>
-        <div class="md:flex justify-center mt-11 hidden -mb-2">
+        <!-- {{ props.status }} -->
+        <div class="flex justify-center md:mt-11 md:-mb-2 w-full -mb-8 mt-10">
           <Icon v-if="props.status=='error'" name="ph:x-circle-light"  class="red" size="75"/>
           <Icon v-if="props.status=='success'" name="ph:check-circle-light"  size="75" class="green"/>
           <Icon v-if="props.status=='alert'" name="ph:warning-circle-light"  size="75" class="wait"/>
@@ -27,7 +28,7 @@
         <div class="px-5"
         :class="[props.name=='singleQuiz' ? '':'pb-2 md:pb-6  md:pt-4 pt-10 grid']"
         >
-            <p class="text-[21px] md:text-[24px] text-center font-semibold md:mb-1 mb-4">{{ props.title }}</p>
+            <p class="text-[21px] md:text-[24px] text-center font-semibold md:mb-1 ">{{ props.title }}</p>
             <slot name="content" />
               <p class="edit-message-modal">{{ props.des }}</p>
           </div>
@@ -35,8 +36,11 @@
             <p class="primary-color action-button cursor-pointer" @click="$emit('close')">
               {{ props.closeButton }}
             </p>
-            <NuxtLink :to="props.redirect" class="cursor-pointer">
-                <p class="button-primary-small">{{ props.actionButton }}</p>
+            <div v-if="props.actionButton == 'Zobacz pakiety'">
+              <button class="button-primary-small hover:cursor-pointer" @click="changePage()">{{ props.actionButton }}</button>
+            </div>
+            <NuxtLink :to="props.redirect" class="cursor-pointer" v-else>
+                <p class="button-primary-small hover:cursor-pointer">{{ props.actionButton }}</p>
             </NuxtLink>
           </div>
           <div class="flex md:mx-7 md:mb-6 mb-5 mx-5 place-items-center gap-6 justify-end" v-else>
@@ -109,6 +113,14 @@ const onBefore = (el:any)=>{
     y: -20,
     duration: 0.2,
   })
+}
+const router = useRouter()
+const changePage = () => {
+  if (window.screen.width <= 900) {
+    router.push('/panel/pakiety')
+  }else{
+    router.push('/panel/konto')
+  }
 }
 </script>
 

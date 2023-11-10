@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <div class="retangle mb-[35px]">
-        <div v-if="!payouts">
-<p>brak wypłat</p>
-        </div>
+  <div class="mb-[25px]">
+    <div class="retangle">
+      <div v-if="!allPayouts">
+        <p>brak wypłat</p>
+      </div>
       <div
-      v-else
-        v-for="(single, index) in ownPayouts"
+        v-else
+        v-for="(single, index) in allPayouts"
         :key="index"
-        :class="{ notBorder: index == ownPayouts.length - 1 ? true : false }"
+        :class="{ notBorder: index == allPayouts.length - 1 ? true : false }"
         class="px-[28px] py-[18px] grid grid-cols-2 justify-between border-own"
       >
         <div>
@@ -20,6 +20,7 @@
         </div>
       </div>
     </div>
+    <Pagination v-if="payouts.last_page" :last_page="payouts.last_page" />
   </div>
 </template>
 <script setup lang="ts">
@@ -30,19 +31,22 @@ const user = useUser();
 const { currentUser, payouts } = storeToRefs(user);
 await user.getUser();
 const userId = currentUser.value.id;
-await user.getPayoutsObject(userId);
+const router = useRouter();
+const allPayouts = ref(null) as any;
 
-let ownPayouts = Object.values(payouts.value).map((single: any) => ({
-  amount: single.points + " zł",
-  date: new Date(single.created_at)
-    .toISOString()
-    .split("T")[0]
-    .split("-")
-    .reverse()
-    .join("."),
-  statusName: changePayoutsStatus(single.status).name,
-  statusClass: changePayoutsStatus(single.status).class,
-}));
+onMounted(async () => {
+  let page = (router.currentRoute.value.query.page
+    ? router.currentRoute.value.query.page
+    : 1) as number;
+  await user.getPayoutsObject(userId, page);
+  allPayouts.value = test(payouts.value.data);
+});
+
+onBeforeRouteUpdate(async (to, from) => {
+  let page = Number(to.query.page ? to.query.page : 1);
+  await user.getPayoutsObject(userId, page);
+  allPayouts.value = test(payouts.value.data);
+});
 </script>
 
 <style scoped lang="scss">
@@ -58,12 +62,9 @@ let ownPayouts = Object.values(payouts.value).map((single: any) => ({
   border-bottom: transparent;
 }
 .date-text {
-
-
   font-size: 14px;
   font-weight: 300;
   color: $text-gray;
   margin-bottom: -2px;
 }
-
 </style>

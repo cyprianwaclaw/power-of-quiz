@@ -351,3 +351,33 @@ export const selectItemsByParams = (itemsList: any, params: any) => {
     }
   }
 }
+
+export const test = (payouts: any) => {
+  return Object.values(payouts).map((single: any) => ({
+    amount: single.points + " zł",
+    date: new Date(single.created_at)
+      .toISOString()
+      .split("T")[0]
+      .split("-")
+      .reverse()
+      .join("."),
+    statusName: changePayoutsStatus(single.status).name,
+    statusClass: changePayoutsStatus(single.status).class,
+  }));
+}  
+
+export const mapInvitedUsers = (allInvited: any) => {
+  return allInvited.data.map((user: any) => ({
+    is_photo: user.avatar_path,
+    photo: " https://powerofquizlogin.com.pl/storage/user-avatar/" + user.avatar_path,
+    id: user.id,
+    name: user.name,
+    is_premium: user.plan_subscriptions[0] ? true : false,
+  }));
+}
+// const mapUser = users.data.map((user: any) => ({
+//   is_photo: user.avatar_path,
+//   photo: " https://powerofquizlogin.com.pl/storage/user-avatar/" + user.avatar_path,
+//   id: user.id,
+//   name: user.name,
+//   is_premium: user.plan_subscriptions[0] ? true : false,

@@ -51,7 +51,7 @@
             </div>
           </div>
           <div class="row-table-end md:mb-3">
-            <h2 class="title">{{ users }}</h2>
+            <h2 class="title">{{ users.total }}</h2>
             <p class="text-des-mobile">Liczba zaproszonych osób</p>
             <div class="flex columns-2 mt-4 mb-2 place-items-center gap-1 cursor-pointer md:hidden" @click="copyToken">
               <Icon name="ic:round-content-copy" size="20" class="primary-color" />
@@ -86,19 +86,20 @@ const userStore = useUser();
 await userStore.getUser();
 await userStore.getInvitationToken();
 await userStore.getUserStats();
-await userStore.getInvitedUser();
+await userStore.getInvitedUser(1);
 
 const {
   currentUser,
   invitationToken,
   correctAnswers,
   inCorrectAnswers,
-  invitedCount,
+   allUser
 } = storeToRefs(userStore);
+// invitedCount,
 
 let correctAnswer: number = correctAnswers.value >= 0 ? correctAnswers.value : 0;
 let inCorrectAnswer: number = inCorrectAnswers.value >= 0 ? inCorrectAnswers.value : 0;
-let users: number = invitedCount.value;
+let users: number =  allUser.value;
 let current = ref(currentUser.value)
 
 

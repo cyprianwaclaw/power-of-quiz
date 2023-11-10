@@ -8,9 +8,9 @@
         des="Ta sekcja wymaga pakietu Premium. Dołącz już teraz i ciesz się pełnymi możliwościami"
         closeButton="Zamknij"
         actionButton="Zobacz pakiety"
-        redirect="/panel/pakiety"
         @close="isClose"
-      />
+        />
+        <!-- redirect="/panel/pakiety" -->
         <div class="card bg-size" :style="`background-image: url(${quiz.image})`" @click="isClose()">
             <div class="bg-image">
           <div class="details">

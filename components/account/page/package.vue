@@ -57,6 +57,7 @@
             </button>
           </div>
         </div>
+        <!-- {{ plansObject }} -->
         <div class="w-full border rounded-2xl bg-white p-[24px] mt-[28px]">
           <div class="flex items-end justify-between">
             <div class="flex flex-col">

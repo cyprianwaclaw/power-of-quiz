@@ -9,9 +9,9 @@
           des="Ta sekcja wymaga pakietu Premium. Dołącz już teraz i ciesz się pełnymi możliwościami"
           closeButton="Zamknij"
           actionButton="Zobacz pakiety"
-          redirect="/panel/pakiety"
           @close="isClose"
-        />
+          />
+          <!-- redirect="/panel/pakiety" -->
                 <div class="flex columns-2 w-full mb-2 place-items-center" @click="isClose()">
                   <Icon
                     name="ph:lightning-fill"

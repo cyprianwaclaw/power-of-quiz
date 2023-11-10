@@ -86,7 +86,7 @@ const mapAndAddValues = (data: any) => {
         noText: "Brak",
         istextNo: true,
       },
-      { text: "Zobacz pełne dane", link: "/panel/ustawienia/edycja/dane-faktura" },
+      { text: "Zobacz więcej", link: "/panel/ustawienia/edycja/dane-faktura" },
     ],
     financial: [
       {
@@ -116,40 +116,6 @@ const mappedData = mapAndAddValues(settings.value);
 <style lang="scss" scoped>
 @import "@/assets/style/_variables.scss";
 
-.image-hero {
-  width: 55px;
-  height: 55px;
-  border: 1px solid #ededed;
-  border-radius: 9999px;
-}
-.text-email {
-  font-size: 14px;
-  font-weight: 400;
-  margin-top: -1px;
-}
-.text-name {
-  font-size: 18px;
-  font-weight: 500;
-}
-.one {
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 14px;
-  letter-spacing: 0.02em;
-  border-right: 1px solid #618cfb;
-  margin-right: 11px;
-  padding-right: 11px;
-}
-.two {
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 14px;
-  letter-spacing: 0.02em;
-}
-.line {
-  line-height: 24px;
-  margin-top: 10px;
-}
 .avatar {
   border: 1px solid $border;
   border-radius: 2000px;

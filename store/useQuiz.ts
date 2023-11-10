@@ -42,7 +42,7 @@ export const useQuiz = defineStore('quiz', {
         singleQuiz: {} as Quiz,
         quizForYou: {} as any,
         quizLatest: {} as any,
-        startQuiz: null,
+        startQuiz:[] as any,
         correctAnswer: [],
         answer: null,
         nextQuestion: {} as any,
@@ -246,16 +246,16 @@ export const useQuiz = defineStore('quiz', {
         async startingQuiz(id: any) {
             try {
                 const res = await axiosInstance.get(`/quiz/${id}/start`)
-                this.startQuiz = await res.data.data
+                this.startQuiz = await res.data
             } catch (e) {
                 console.error(e)
-            }
+            }  
         },
         async postAnswerNextQuestion(quiz_submission: any, question_id: any, answer_id: any) {
             try {
                 const res = await axiosInstance.post(`/quiz/submission/${quiz_submission}/answerQuestion`, 
                 { question_id, answer_id })
-                this.nextQuestion = await res.data.data
+                this.nextQuestion = await res.data
             } catch (e) {
                 console.error(e)
             }
@@ -263,7 +263,7 @@ export const useQuiz = defineStore('quiz', {
         async getNextQuestion(quiz_submission: any) {
             try {
                 const res = await axiosInstance.get(`/quiz/submission/${quiz_submission}/getNextQuestion`)
-                this.getNextQuestion1 = await res.data.data
+                this.getNextQuestion1 = await res.data
             } catch (e) {
                 console.error(e)
             }

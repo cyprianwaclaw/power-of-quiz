@@ -12,7 +12,7 @@
         <QuizDesktopCard v-for="quiz in allQuiz.data" :key="quiz" :quiz="quiz" />
       </div>
       <div class="flex justify-end">
-        <Pagination :last_page="allQuiz.last_page" />
+        <Pagination :last_page="allQuiz.last_page" /> 
       </div>
     </div>
     <div v-else class="grid place-items-center my-10">

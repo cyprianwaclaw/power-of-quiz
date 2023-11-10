@@ -46,14 +46,26 @@
         </div>
       </button>
     </div>
-    <div v-if="mapUser.length <= 0">
-      <div class="grid place-items-center mt-10 md:mt-16">
+    <div class="text-[15px] text-gray-500 mb-2 flex gap-3 mt-6">
+      <p>
+        Strona
+        {{
+          router.currentRoute.value.query.page ? router.currentRoute.value.query.page : 1
+        }}/{{ last }}
+      </p>
+      <p>{{ count }} zaproszonych</p>
+    </div>
+    <div v-if="count <= 0">
+      <div class="grid place-items-center mt-4 md:mt-10">
         <Icon name="ph:users" size="166" color="#CFD8E0" />
         <p class="invite-text -mt-2 mb-5">Brak znajomych</p>
       </div>
     </div>
-    <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-20 pb-32">
-      <SingleInvitedUser v-for="(user, index) in mapUser" :key="index" :user="user" />
+    <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-20">
+      <SingleInvitedUser v-for="(user, index) in users" :key="index" :user="user" />
+    </div>
+    <div class="w-full flex md:justify-end justify-center pb-[100px] mt-7">
+      <Pagination :last_page="last" />
     </div>
   </NuxtLayout>
 </template>
@@ -65,6 +77,7 @@ import { useUser } from "@/store/useUser";
 definePageMeta({
   middleware: "auth",
 });
+const router = useRouter();
 
 const isOpenMobile = ref(false);
 const isOpenDesktop = ref(false);
@@ -85,28 +98,40 @@ const isCloseDesktop = () => {
 };
 const tooltip = ref<boolean>();
 const userStore = useUser();
-await userStore.getInvitationToken();
-await userStore.getInvitedUser();
 
 const { invitationToken, allUser, invitedUser } = storeToRefs(userStore);
 
 let isUser = invitedUser.value;
-let users = allUser.value;
-function Modal() {}
-function copyToken(token: any) {
+const users = ref() as any;
+const last = ref() as any;
+const count = ref() as any;
+
+// function Modal() {}
+
+const copyToken = async (token: any) => {
+  await userStore.getInvitationToken();
   var token: any = invitationToken.value;
   navigator.clipboard.writeText(token);
   tooltip.value = !tooltip.value;
   setTimeout(() => (tooltip.value = false), 1700);
-}
+};
 
-const mapUser = users.map((user: any) => ({
-  is_photo: user.avatar_path,
-  photo: " https://powerofquizlogin.com.pl/storage/user-avatar/" + user.avatar_path,
-  id: user.id,
-  name: user.name,
-  is_premium: user.is_premium,
-}));
+onMounted(async () => {
+  let page = (router.currentRoute.value.query.page
+    ? router.currentRoute.value.query.page
+    : 1) as number;
+  await userStore.getInvitedUser(page);
+  users.value = mapInvitedUsers(allUser.value);
+  last.value = allUser.value?.last_page;
+  count.value = allUser.value?.total;
+});
+onBeforeRouteUpdate(async (to, from) => {
+  let page = Number(to.query.page ? to.query.page : 1);
+  await userStore.getInvitedUser(page);
+  users.value = mapInvitedUsers(allUser.value);
+  // last.value = allUser.value?.last_page;
+  // count.value = allUser.value?.total;
+});
 </script>
 <style scoped>
 .invite-text {
