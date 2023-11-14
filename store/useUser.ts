@@ -113,10 +113,10 @@ export const useUser = defineStore('user', {
             }
         },
         
-        async getPaymentsObject() {
+        async getPaymentsObject(page:number) {
             try {
-                const res = await axiosInstance.get('/payments')
-                this.payments = await res.data
+                const res = await axiosInstance.get(`/payments?page=${page}`)
+                this.payments = await res.data.data
             } catch (error: any) {
                 this.errorMessage = error.response.data
             }

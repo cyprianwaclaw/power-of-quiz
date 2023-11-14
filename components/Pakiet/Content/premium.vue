@@ -1,6 +1,6 @@
 <template>
     <div class="text">
-        Gratulujemy, Twoja subskrypcja <br>jest aktywna. Dzięki temu<br> masz dostęp do pełnej wersji <br>serwisu. Kolejne odnowienie <br> nastąpi <span class="text-gray-400 font-medium">{{ date }}</span> 
+        Gratulujemy, Twój pakiet jest aktywny. Dzięki temu masz dostęp do pełnej wersji serwisu. Koniec dostępu do wersji Premium nastąpi <span class="text-gray-400 font-bold">{{ date }}</span> 
         
         <!-- <ul class="mt-2">
             <li>zdobywać punkty</li>
@@ -13,7 +13,11 @@
     </div>
 </template>
 <script setup lang="ts">
-const date = "12.12.2023"
+const props= defineProps({
+    date:{type:Date}
+
+})
+const date = props?.date
 </script>
 <style scoped>
 .text {

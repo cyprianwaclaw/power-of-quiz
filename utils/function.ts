@@ -168,6 +168,30 @@ export const changePayoutsStatus = (name: string) => {
   return results;
 }
 
+export const changePaymentStatus = (name: string) => {
+  let results: any = {
+    name: '',
+    class: ''
+  }
+  if (name == 'success') {
+    results = {
+      name: 'Sukces',
+      class: 'font-medium green'
+    }
+  } else if (name == 'fail') {
+    results = {
+      name: 'Błąd płatności',
+      class: 'red font-medium'
+    }
+  } else {
+    results = {
+      name: 'W oczekiwaniu',
+      class: 'font-medium wait'
+    }
+  }
+  return results;
+}
+
 export const dataURLtoBlob = (dataURL: any) => {
   const arr = dataURL.split(',');
   const mime = arr[0].match(/:(.*?);/)[1];
@@ -369,7 +393,7 @@ export const test = (payouts: any) => {
 export const mapInvitedUsers = (allInvited: any) => {
   return allInvited.data.map((user: any) => ({
     is_photo: user.avatar_path,
-    photo: " https://powerofquizlogin.com.pl/storage/user-avatar/" + user.avatar_path,
+    photo: "https://powerofquizlogin.com.pl/storage/user-avatar/" + user.avatar_path,
     id: user.id,
     name: user.name,
     is_premium: user.plan_subscriptions[0] ? true : false,
@@ -381,3 +405,13 @@ export const mapInvitedUsers = (allInvited: any) => {
 //   id: user.id,
 //   name: user.name,
 //   is_premium: user.plan_subscriptions[0] ? true : false,
+
+
+export const changeDateFormat = (date: any) => {
+  return new Date(date)
+    .toISOString()
+    .split("T")[0]
+    .split("-")
+    .reverse()
+    .join(".")
+}

@@ -56,13 +56,14 @@
         <button class="button-primary-disabled" v-if="point == 0">
           Zleć wypłatę <Icon name="carbon:chevron-right" class="-mr-2" size="24" />
         </button>
-        <button class="button-primary" @click="isClosePayouts()">
+        <button class="button-primary" v-else @click="isClosePayouts()">
           Zleć wypłatę <Icon name="carbon:chevron-right" class="-mr-2" size="24" />
         </button>
       </div>
     </div>
     <p class="text-3xl font-semibold mb-6 mt-10">Historia wypłat</p>
     <div class="flex flex-col">
+      <!-- {{ payouts }} -->
       <div v-if="Object.keys(payouts).length > 0 ? false : true">
         <div class="grid place-items-center my-10">
           <Icon name="ph:hand-coins-light" size="166" color="#CFD8E0" />
@@ -85,7 +86,7 @@
         <p :class="single.statusClass">{{ single.statusName }}</p>
       </div>
       <div class="flex justify-end">
-        <Pagination v-if="payouts.last_page" :last_page="payouts.last_page" />
+        <Pagination v-if="payouts.last_page == 1" :last_page="payouts.last_page" />
       </div>
     </div>
   </div>

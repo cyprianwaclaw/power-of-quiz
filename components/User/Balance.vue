@@ -58,7 +58,7 @@
           Zleć wypłatę <Icon name="carbon:chevron-right" class="-mr-2" size="24" />
         </button>
         <!-- <NuxtLink to="/wypłata" v-else> -->
-        <button class="button-primary" @click="isClosePayouts()">
+        <button class="button-primary"  v-else @click="isClosePayouts()">
           Zleć wypłatę <Icon name="carbon:chevron-right" class="-mr-2" size="24" />
         </button>
         <!-- </NuxtLink> -->

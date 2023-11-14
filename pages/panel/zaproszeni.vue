@@ -106,8 +106,6 @@ const users = ref() as any;
 const last = ref() as any;
 const count = ref() as any;
 
-// function Modal() {}
-
 const copyToken = async (token: any) => {
   await userStore.getInvitationToken();
   var token: any = invitationToken.value;
