@@ -121,9 +121,9 @@ export const useUser = defineStore('user', {
                 this.errorMessage = error.response.data
             }
         },
-        async getUserInvoices() {
+        async getPaymentInvoice(payment_id:number) {
             try {
-                const res = await axiosInstance.get('/plans')
+                const res = await axiosInstance.get(`/payments/${payment_id}/download`)
                 this.invoices = await res.data
             } catch (error: any) {
                 this.errorMessage = error.response.data
