@@ -2,30 +2,40 @@
   <NuxtLayout name="my-account">
     <div class="pb-[-30px]">
       <h1 class="title-h1 mb-5">Faktury i płatności</h1>
-<!-- {{ allPayments.total  }} -->
-  <div class="mb-[25px]">
-    <div class="retangle">
-      <div v-if=" allPayments?.total == 0">
-        <p>brak wypłat</p>
-      </div>
-      <div
-        v-else
-        v-for="(single, index) in allPayments?.data "
-        :key="index"
-        :class="{ notBorder: index == allPayments?.data?.length - 1 ? true : false }"
-        class="px-[28px] py-[18px] grid grid-cols-2 justify-between border-own"
-      >
-        <div>
-          <p class="date-text">{{ changeDateFormat(single.created_at) }}</p>
-     <p :class="changePaymentStatus(single.status).class">{{ changePaymentStatus(single.status).name}}</p>
+      <div class="mb-[25px]">
+        <div class="retangle">
+          <div v-if="allPayments?.total == 0">
+            <p>brak wypłat</p>
+          </div>
+          <div
+            v-else
+            v-for="(single, index) in allPayments?.data"
+            :key="index"
+            :class="{ notBorder: index == allPayments?.data?.length - 1 ? true : false }"
+            class="px-[28px] py-[18px] grid grid-cols-2 justify-between border-own"
+          >
+            <div>
+              <p class="date-text">{{ changeDateFormat(single.created_at) }}</p>
+              <p :class="changePaymentStatus(single.status).class">
+                {{ changePaymentStatus(single.status).name }}
+              </p>
+            </div>
+            <div class="grid justify-end content-center">
+              <button
+                @click="downloadInvoice1(single.id)"
+                class="button-primary"
+                v-if="single.status == 'success'"
+              >
+                Faktura
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="grid justify-end content-center">
-            <button @click="downloadInvoice1(single.id)" class="button-primary" v-if="single.status == 'success' ">Faktura</button>
-        </div>
+        <Pagination
+          v-if="allPayments?.last_page > 1"
+          :last_page="allPayments?.last_page"
+        />
       </div>
-    </div>
-    <Pagination v-if="allPayments?.last_page > 1" :last_page="allPayments?.last_page" />
-  </div>
     </div>
   </NuxtLayout>
 </template>
@@ -40,7 +50,7 @@ await userStore.getUser();
 let user = currentUser.value;
 const router = useRouter();
 
-const allPayments = ref(null) as any
+const allPayments = ref(null) as any;
 
 onMounted(async () => {
   let page = (router.currentRoute.value.query.page

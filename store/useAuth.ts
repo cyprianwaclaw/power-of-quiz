@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 export const useAuth = defineStore('auth', {
     state: () => ({
         loggedIn: localStorage.getItem("access_token") ? true : false,
+        user: [] as any,
         error: {} as any,
         access_token: [] as any
     }),
@@ -16,11 +17,18 @@ export const useAuth = defineStore('auth', {
                 localStorage.setItem("access_token", this.access_token)
                 await useRouter().push('/panel')
                 window.location.reload();
-            } catch (error) {
+            } catch (error:any) {
                 this.error = error.response.data.message
             }
         },
-        
+        async getUser() {
+            try {
+                const res = await axiosInstance.get('/users/current')
+                this.user = await res.data.user
+            } catch (error: any) {
+                this.error = error.response.data.message
+            }
+        },
         async registerUser(name:any, invitation:any, email:any, password:any, password_confirmation:any) {
             try {
                 // const res = await axiosInstance.post('/register', {values})
@@ -30,7 +38,7 @@ export const useAuth = defineStore('auth', {
                 localStorage.setItem("access_token", this.access_token)
                 await useRouter().push('/panel')
                 window.location.reload();
-            } catch (error) {
+            } catch (error:any) {
                 this.error = error.response.data.message
             }
         },

@@ -8,9 +8,10 @@
       <div v-else>
         <Icon name="carbon:user-avatar-filled" color="#BFCBEE" class="w-10 h-10" />
       </div>
+      <!-- {{ premium }} -->
       <div class="xl:flex xl:flex-col hidden ml-2">
         <p class="text-[14px]">{{ user.name }} {{ user?.surname }}</p>
-        <div v-if="premium" class="flex">
+        <div v-if="premium.has_premium" class="flex">
           <p class="text-[12px] primary-color font-semibold">PREMIUM</p>
         </div>
         <div v-else class="flex">

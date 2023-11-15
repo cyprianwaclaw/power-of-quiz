@@ -1,10 +1,12 @@
 <template>
   <div class="flex w-full flex-col">
-    <div v-if="premium">
+    <div v-if="premium.has_premium">
       <p class="text-3xl font-semibold mb-5">Twój pakiet</p>
       {{ premium }}
     </div>
     <div v-else>
+    <!-- <div> -->
+
       <h1 class="title-h1">
         Odkryj pełnię<br />
         możliwości w pakiecie <span class="primary-color"> Premium</span>

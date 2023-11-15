@@ -4,10 +4,7 @@
       <NuxtLoadingIndicator
 
       />
-     <div v-if="isLoading">
-      test
-     </div>
-      <NuxtPage v-else/>
+      <NuxtPage/>
   </div>
 </template>
 

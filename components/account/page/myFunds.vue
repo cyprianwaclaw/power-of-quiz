@@ -63,15 +63,19 @@
     </div>
     <p class="text-3xl font-semibold mb-6 mt-10">Historia wypłat</p>
     <div class="flex flex-col">
-      <!-- {{ payouts }} -->
-      <div v-if="Object.keys(payouts).length > 0 ? false : true">
+      <!-- {{ allPayouts.length>0 }} -->
+      <!-- {{ payouts.data.length>0 }}
+      {{ payouts.data.length > 0 ? false : true }} -->
+      <div v-if="allPayouts?.length==0">
+      <!-- <div> -->
+
         <div class="grid place-items-center my-10">
           <Icon name="ph:hand-coins-light" size="166" color="#CFD8E0" />
           <p class="empty">Brak wypłat</p>
         </div>
       </div>
       <div
-        v-else
+      v-else
         v-for="(single, index) in allPayouts"
         :key="index"
         :class="{
