@@ -49,7 +49,7 @@
                         <div class="vl"></div>
                         <p class="des">{{ quiz.time }} min</p>
                         <div class="vl"></div>
-                        <p class="des">{{ quiz.difficulty }}</p>
+                        <p class="des">{{  changeDifficult(quiz.difficulty) }}</p>
                     </div>
                 </div>
             </div>

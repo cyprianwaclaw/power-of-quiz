@@ -68,7 +68,7 @@
   </p>
 </div>
 </div>
-  <div class="mt-12 flex gap-6 mb-2 justify-end">
+      <div class="mt-12 flex gap-6 mb-2 justify-end">
       <button @click="isModal()">
         <p class="action-button red">Usuń quiz</p>
       </button>

@@ -19,6 +19,7 @@
       :validation-schema="schemaPersonal"
       v-slot="{ values, meta }"
     >
+    <!-- {{ user}} -->
       <div class="flex place-items-center gap-12">
         <div v-if="user.avatar_path" class="relative w-[140px]">
           <img :src="user.avatar_path" class="avatar" />

@@ -20,7 +20,7 @@
                 <div class="vl"></div>
                 <p class="des">{{ quiz?.time }} min</p>
                 <div class="vl"></div>
-                <p class="des">{{ quiz?.difficulty }}</p>
+                <p class="des">{{ changeDifficult(quiz.difficulty) }}</p>
                 <!-- <div class="vl"></div> -->
                 <!-- <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p> -->
               </div>
@@ -52,7 +52,7 @@
               <div class="vl"></div>
               <p class="des">{{ quiz?.time }} min</p>
               <div class="vl"></div>
-              <p class="des">{{ quiz?.difficulty }}</p>
+              <p class="des">{{ changeDifficult(quiz.difficulty) }}</p>
               <!-- <div class="vl"></div> -->
               <!-- <p class="des">{{ categoryMapping(categories, quiz)?.name }}</p> -->
             </div>
