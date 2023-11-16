@@ -59,7 +59,8 @@ import { storeToRefs } from "pinia";
 import { Form } from "vee-validate";
 import { useAuth } from "@/store/useAuth";
 import { ErrorInput, onInvalidSubmit } from "@/utils/function";
-
+const submissionQuiz = useCookie("submissionQuiz") as any;
+submissionQuiz.value = false
 definePageMeta({
   middleware: "guest",
 });

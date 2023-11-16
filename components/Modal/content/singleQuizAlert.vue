@@ -105,8 +105,7 @@ const {categories } = storeToRefs(useQuiz());
       <!-- :to="{path:'/panel/quiz/${quiz?.id}', query:{submission}}" -->
       <!-- :to="{path:`/panel/quiz/${quiz?.id}-${submission}`, state:{firstQuestion: startQuiz?.data},}" -->
       <NuxtLink
-      :to="`/panel/quiz/${quiz?.id}`"
-
+        :to="`/panel/quiz/${quiz?.id}`"
         class="button-primary absolute bottom-[52px] w-[300px]"
       >
         <p class="text-center">Zagraj w quiz</p>
@@ -120,17 +119,30 @@ import { Quiz } from "@/types";
 import { useQuiz } from "@/store/useQuiz";
 import { storeToRefs } from "pinia";
 const props = defineProps<{ quiz: Quiz }>();
-const firstQuestion = useCookie('firstQuestion')
+const question = useCookie("question");
+const submissionQuiz = useCookie("submissionQuiz");
+const countCorrect = useCookie("countCorrect") as any;
+const countInCorrect = useCookie("countInCorrect") as any;
+const countQuestion = useCookie("countQuestion") as any;
+const isNextQuestion = useCookie("isNextQuestion") as any;
+const cookie = useCookie('bar') as any
 const route = useRoute();
 const quizState = useQuiz();
-const {categories,singleQuiz, startQuiz } = storeToRefs(quizState);
-await quizState.startingQuiz(props.quiz.id)
-console.log(startQuiz.value)
-firstQuestion.value = startQuiz.value
+const { categories, singleQuiz, startQuiz } = storeToRefs(quizState);
+await quizState.startingQuiz(props.quiz.id);
+console.log(startQuiz.value);
+
+question.value = startQuiz.value;
+submissionQuiz.value = startQuiz.value.data.submission_id;
+countCorrect.value = 0;
+countInCorrect.value = 0;
+countQuestion.value = 1;
+isNextQuestion.value = true;
+cookie.value = '0'
 // await quizState.getNextQuestion(startQuiz.value.data.submission_id)
 // console.log(getNextQuestion1.value)
 // console.log(props.quiz.id)
-const submission = startQuiz.value.data.submission_id
+// const submission = startQuiz.value.data.submission_id
 </script>
 
 <style scoped lang="scss">
@@ -147,4 +159,3 @@ const submission = startQuiz.value.data.submission_id
   object-fit: cover;
 }
 </style>
-
