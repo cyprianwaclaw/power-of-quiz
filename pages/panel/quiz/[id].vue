@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen">
     <NavUser />
-    <div class="pt-[95px] w-full h-4 bg-red-300">
+    <div class="pt-[80px] w-full bg-red-300">
       <div class="loading-bar" ref="loadingBar">
       </div>
     </div>

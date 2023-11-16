@@ -21,7 +21,7 @@
     </div>
     <div class="flex flex-row">
       <p class="text-base text-[#a7a2a2] font-thin">Poziom trudności:</p>
-      <p class="text-base primary-color font-medium ml-[4px]">{{ quiz.difficulty }}</p> 
+      <p class="text-base primary-color font-medium ml-[4px]">{{ changeDifficult(quiz.difficulty) }}</p> 
     </div>
     <div class="flex flex-row">
       <p class="text-base text-[#a7a2a2] font-thin">Szacunkowy czas trwania:</p>
@@ -32,9 +32,14 @@
       <p class="text-lg font-semibold">Opis quizu</p>
       <p class="text mt-2 pr-6">{{ quiz.description }}</p>
     </div>
-    <NuxtLink :to="`/panel/quiz/${quiz?.id}`" class="button-primary mb-[21px] mt-[42px]">
+    <div class="w-full flex mt-10 mb-7">
+      <NuxtLink
+      :to="`/panel/quiz/${quiz?.id}`"
+      class="button-primary w-full"
+      >
       <p class="text-center">Zagraj w quiz</p>
     </NuxtLink>
+  </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -42,7 +47,7 @@ import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
 import { Quiz } from "@/types";
 
-defineProps<{ quiz: Quiz }>();
+const props = defineProps<{ quiz: Quiz }>();
 const {categories } = storeToRefs(useQuiz());
 
 const emit = defineEmits<{
@@ -57,6 +62,26 @@ const copyLink = (quizId: any) => {
   tooltip.value = !tooltip.value;
   setTimeout(() => (tooltip.value = false), 1700);
 };
+
+const question = useCookie("question");
+const submissionQuiz = useCookie("submissionQuiz");
+const countCorrect = useCookie("countCorrect") as any;
+const countInCorrect = useCookie("countInCorrect") as any;
+const countQuestion = useCookie("countQuestion") as any;
+const isNextQuestion = useCookie("isNextQuestion") as any;
+const cookie = useCookie('bar') as any
+const quizState = useQuiz();
+const {startQuiz } = storeToRefs(quizState);
+await quizState.startingQuiz(props.quiz.id);
+
+question.value = startQuiz.value;
+submissionQuiz.value = startQuiz.value.data.submission_id;
+countCorrect.value = 0;
+countInCorrect.value = 0;
+countQuestion.value = 1;
+isNextQuestion.value = true;
+cookie.value = '0'
+
 </script>
 
 <style scoped lang="scss">
