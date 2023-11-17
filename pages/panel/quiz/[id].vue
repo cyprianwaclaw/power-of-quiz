@@ -1,68 +1,103 @@
 <template>
   <div class="h-screen">
     <NavUser />
-    <div class="pt-[80px] w-full bg-red-300">
-      <div class="loading-bar" ref="loadingBar">
-      </div>
+    <div
+      v-if="!isNextQuestion"
+      class="w-full bg-[#EEF7FF] absolute top-[64px] h-[15px] z-50"
+    />
+    <div class="w-full loading-bar-bg absolute top-[64px] h-[8px] md:h-[14px]">
+      <div class="loading-bar absolute h-[8px] md:h-[14px]" ref="loadingBar"></div>
     </div>
     <div class="pt-[95px] px-8 md:w-[500px] mx-auto">
-      <p class="flex text-center">{{ isAnimating  }}</p>
-      <div class="w-full flex flex-col items-center justify-center gap-2 mb-10">
+      <!-- <div v-if="!isNextQuestion">
+  test
+      </div> -->
+      <!-- <div class="w-full flex flex-col items-center justify-center gap-2 mb-10">
+        <p class="flex text-center">{{ isAnimating }}</p>
         <div class="flex gap-5">
           <button @click="start" class="button-primary w-[100px]">Start</button>
           <button @click="stop" class="button-primary w-[100px]">Stop</button>
         </div>
-<button @click="reserve" class=" text-semibold text-red-500 w-[220px]">Reserve</button>
-
-      </div>
-    <img :src="singleQuiz.image" class="image-single" />
-    <div class="flex flex-col gap-2 mb-10">
-      <p>Pytanie: {{ countQuestion }}/{{ singleQuiz.questions_count }}</p>
+        <button @click="reserve" class="text-semibold text-red-500 w-[220px]">
+          Reserve
+        </button>
+      </div> -->
+      <img :src="singleQuiz.image" class="image-single" />
+      <!-- <div class="flex flex-col gap-2">
+        <p>{{ countQuestion }}/{{ singleQuiz.questions_count }}</p>
         <div class="flex gap-2">
-          <p>Poprawne odpowiedzi:{{ countCorrect }}</p>
+          <p>Poprawne odpowiedzi: {{ countCorrect }}</p>
         </div>
         <div class="flex gap-2">
-          <p>Błędne odpowiedzi{{ countInCorrect }}</p>
+          <p>Błędne odpowiedzi: {{ countInCorrect }}</p>
         </div>
-      </div>
-        <div v-if="isNextQuestion">
+      </div> -->
+      <div v-if="isNextQuestion">
+        <div class="w-full flex flex-col items-center justify-center">
+          <p class="text-[13px] text-gray-400">
+            {{ countQuestion }}/{{ singleQuiz.questions_count }}
+          </p>
+          <p class="text-[20px] font-semibold mb-5">
+            {{ current.data.next_question.question }}
+          </p>
+        </div>
         <div v-for="(quiz, index) in current.data" :key="index">
           <div class="grid grid-cols-2 gap-4">
             <button
-            :disabled="isLoading" 
-            v-for="(answer, index) in quiz?.answers"
-            :key="index"
-            @click="postAnswer(quiz.id, answer.id)"
-            :class="{
-              questOK: answer.id === select && isCorrect,
-              questERROR: answer.id === select && isInCorrect,
-              quest: answer.id !== select || (!isCorrect && !isInCorrect),
-            }"
-            class="grid place-items-center h-[84px] border cursor-pointer"  
+              :disabled="isLoading"
+              v-for="(answer, index) in quiz?.answers"
+              :key="index"
+              @click="postAnswer(quiz.id, answer.id)"
+              :class="{
+                questERROR: notAnswer || (answer.id === select && isInCorrect),
+                questOK: answer.id === select && isCorrect,
+                quest:
+                  !notAnswer && (answer.id !== select || (!isCorrect && !isInCorrect)),
+              }"
+              class="grid place-items-center h-[84px] border cursor-pointer"
             >
-            <p>{{ answer.answer }}</p>
-          </button>
+              <p class="answer-text">{{ answer.answer }}</p>
+            </button>
+          </div>
         </div>
       </div>
+      <div
+        v-else
+        class="w-full flex flex-col items-center justify-center bg-white p-10 border-transparent rounded-[21px]"
+      >
+      <p class="text-center text-[14px] text-gray-400 mb-[4px]">
+        Czas rozwiązywania
+      </p>
+      <p class="font-semibold text-[28px]">
+        {{ current?.data?.quiz_time }}
+      </p>
+        <div class="flex w-full gap-14  mt-5 mb-8 items-center justify-center">
+          <div class="flex flex-col">
+            <p class="correct text-[18px] text-center">{{ countCorrect }}</p>
+            <p class="correct text-[18px]">Poprawne</p>
+          </div>
+          <div class="flex flex-col">
+            <p class="bad text-center">{{ countInCorrect }}</p>
+            <p class="bad">Błędne</p>
+          </div>
+        </div>
+        <button class="button-primary w-full" @click="replay">Zagraj ponownie</button>
+      </div>
     </div>
-    <div v-else class="w-full flex flex-col items-center justify-center bg-white py-10 border-transparent rounded-md">
-      <p class="text-center">Czas rozwiązywania quizu: {{ current?.data?.quiz_time }}</p>
-      <button class="button-primary w-[220px] mt-4" @click="replay">Zagraj ponownie</button>
-    </div>
+    <NavBottom />
   </div>
-  <NavBottom />
-</div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
-import gsap from 'gsap';
+import gsap from "gsap";
+import { set } from "nuxt/dist/app/compat/capi";
 
 const loadingBar = ref(null);
 const isAnimating = ref(false);
 let animationTimeline = null as any;
-
+const answerChecked = ref(false);
 const start = () => {
   animationTimeline = animateProgressBar();
 
@@ -89,7 +124,7 @@ const reserve = () => {
   }
 };
 
-const cookie = useCookie('bar') as any
+const cookie = useCookie("bar") as any;
 const animateProgressBar = () => {
   const tl = gsap.timeline({
     paused: true,
@@ -100,11 +135,11 @@ const animateProgressBar = () => {
     onUpdate: () => {
       // Funkcja wywoływana podczas każdego kroku animacji
       const progress = tl.progress() as any; // Pobierz postęp animacji (wartość od 0 do 1)
-      cookie.value = progress
+      cookie.value = progress;
     },
   });
 
-  tl.to(loadingBar.value, { x: '100%', duration: 2, ease: 'linear' });
+  tl.to(loadingBar.value, { x: "100%", duration: 10, ease: "linear" });
 
   // Znajdź pozycję, od której chcesz zacząć animację (np. 0.5 to środek animacji)
   const startPosition = cookie.value;
@@ -117,7 +152,6 @@ const animateProgressBar = () => {
   return tl;
 };
 
-
 const route = useRoute();
 const quizState = useQuiz();
 await quizState.getSingleQuiz(route.params.id);
@@ -129,7 +163,6 @@ const submissionQuiz = useCookie("submissionQuiz") as any;
 const current = ref() as any;
 current.value = question.value;
 
-
 const countCorrect = useCookie("countCorrect") as any;
 const countInCorrect = useCookie("countInCorrect") as any;
 const isNextQuestion = useCookie("isNextQuestion") as any;
@@ -137,25 +170,33 @@ const countQuestion = useCookie("countQuestion") as any;
 await quizState.getSingleQuiz(route.params.id);
 const isCorrect = ref(false) as any;
 const isInCorrect = ref(false) as any;
+const notAnswer = ref(false) as any;
 const select = ref(null);
 
 onBeforeUnmount(() => {
+  cookie.value = "0";
+});
 
-cookie.value = '0'
-})
+watch(isAnimating, async (newValue: boolean) => {
+  console.log(select.value);
+  console.log(answerChecked.value);
+  if (newValue === false && answerChecked.value === false) {
+    // setTimeout(()=>{
+    notAnswer.value = true;
 
-watch(isAnimating, async (newValue:boolean) => {
-  if(newValue===false) {  
-   await quizState.getAnswerById(current.value.data.next_question.id)
-   let currentQuestion = answerById.value
-   let inCorrectAnswer =  currentQuestion.find((answer: any)=>answer.correct == 0) as any
-   console.log(inCorrectAnswer.id)
-   console.log(currentQuestion)
-    console.log(current.value.data.next_question.id)
-    postAnswer(current.value.data.next_question.id, inCorrectAnswer.id)
+    // }, 1000)
+    //  select.value = null
+    await quizState.getAnswerById(current.value.data.next_question.id);
+    let currentQuestion = answerById.value;
+    let inCorrectAnswer = currentQuestion.find(
+      (answer: any) => answer.correct == 0
+    ) as any;
+    // console.log(inCorrectAnswer.id);
+    // console.log(currentQuestion);
+    // console.log(current.value.data.next_question.id);
+    postAnswer(current.value.data.next_question.id, inCorrectAnswer.id);
   }
-
-})
+});
 
 onMounted(async () => {
   countCorrect.value = countCorrect.value ? countCorrect.value : 0;
@@ -173,16 +214,18 @@ onMounted(async () => {
     submissionQuiz.value = startQuiz.value.data.submission_id;
     question.value = startQuiz.value;
     current.value = question.value;
-
-  } else if(submissionQuiz.value == true){
- 
+  } else if (submissionQuiz.value == true) {
   } else {
-    start()
-    cookie.value = '0'
+    start();
+    cookie.value = "0";
   }
 });
 const postAnswer = async (question_id: any, answer_id: any) => {
-  stop()
+  answerChecked.value = true;
+  setTimeout(() => {
+    notAnswer.value = false;
+  }, 800);
+  stop();
   isLoading.value = true;
   await quizState.postAnswerNextQuestion(submissionQuiz.value, question_id, answer_id);
   let next = nextQuestion.value;
@@ -192,33 +235,44 @@ const postAnswer = async (question_id: any, answer_id: any) => {
   setTimeout(async () => {
     current.value = next;
     isLoading.value = false;
+    // select.value = null
+    // quizTime.value = true
   }, 400);
+  answerChecked.value = false;
 
+  // setTimeout(() => {
+  // },4000)
   question.value = next;
-checkAnswerAlert(nextQuestion.value.data.is_correct)
+  checkAnswerAlert(nextQuestion.value.data.is_correct);
   if (nextQuestion.value.data.is_correct == 1) {
     countCorrect.value = countCorrect.value + 1;
+    // select.value = null
   } else {
     countInCorrect.value = countInCorrect.value + 1;
+    // select.value = null
   }
   if (nextQuestion.value.data.next_question) {
+    // answerChecked.value = false;
     countQuestion.value = countQuestion.value + 1;
     let next = nextQuestion.value.data.next_question;
-    reserve()
+    reserve();
   } else {
+    answerChecked.value = false;
     submissionQuiz.value = true;
-    isNextQuestion.value = false;
-    console.error("koniec_quizu");
-    cookie.value = '0'
-     stop()
-     reserve()
-       stop()
+    setTimeout(async () => {
+      isNextQuestion.value = false;
+      console.error("koniec_quizu");
+      cookie.value = "0";
+      stop();
+      reserve();
+      stop();
+    }, 600);
   }
 };
 
 const replay = async () => {
-  start()
-  cookie.value = '0'
+  start();
+  cookie.value = "0";
   submissionQuiz.value = false;
   countCorrect.value = 0;
   countInCorrect.value = 0;
@@ -237,29 +291,34 @@ const checkAnswerAlert = (check: any) => {
     isInCorrect.value = true;
     setTimeout(() => {
       isInCorrect.value = false;
-    }, 360);
+    }, 550);
   } else if (check == 1) {
     isCorrect.value = true;
     setTimeout(() => {
       isCorrect.value = false;
-    }, 360);
+    }, 550);
   }
 };
 onBeforeRouteUpdate(async (to) => {
   submissionQuiz.value = false;
-  stop()
+  stop();
 });
 </script>
 
 <style scoped lang="scss">
 @import "@/assets/style/variables";
-
+.answer-text {
+  font-size: 15px !important;
+  line-height: 22px !important;
+  padding: 14px !important;
+  word-break: break-all;
+}
 .image-single {
   border: 1px solid $border;
   border-radius: 12px;
-  height: 200px;
+  height: 214px;
   width: 100%;
-  margin-bottom: 14px;
+  margin-bottom: 24px;
 }
 
 .single-answer:focus {
@@ -273,14 +332,13 @@ onBeforeRouteUpdate(async (to) => {
 
 .quest {
   height: 100px;
-  position: relative;
+  border-radius: 12px;
   background: linear-gradient(
     103.38deg,
     #3961c9 -9.26%,
     #618cfb 119.62%,
     #497cff 119.62%
   );
-  border-radius: 16px;
   p {
     font-family: "Manrope";
     font-style: normal;
@@ -294,10 +352,9 @@ onBeforeRouteUpdate(async (to) => {
 }
 .questOK {
   height: 100px;
-  position: relative;
   background-color: $color-success;
-    cursor: not-allowed;
-  border-radius: 16px;
+  cursor: not-allowed;
+  border-radius: 12px;
   p {
     font-family: "Manrope";
     font-style: normal;
@@ -311,10 +368,9 @@ onBeforeRouteUpdate(async (to) => {
 }
 .questERROR {
   height: 100px;
-  position: relative;
   background-color: $color-error;
   cursor: not-allowed;
-  border-radius: 16px;
+  border-radius: 12px;
   p {
     font-family: "Manrope";
     font-style: normal;
@@ -327,10 +383,17 @@ onBeforeRouteUpdate(async (to) => {
   }
 }
 
-  .loading-bar {
-    height: 40px;
-    width: 100%;
-    margin-top: -40px;
-    background-color: #3498db;
-  }
+.loading-bar {
+  width: 100%;
+  background: #d5e0fc;
+  z-index: 10;
+}
+.loading-bar-bg {
+  background: linear-gradient(
+    103.38deg,
+    #3961c9 -9.26%,
+    #618cfb 119.62%,
+    #497cff 119.62%
+  );
+}
 </style>

@@ -22,6 +22,8 @@
         </template>
       </ModalAlert>
     <div class="w-full">
+      {{ current }}
+      {{ correctAnswers }}
         <h2 class="title-h2 mb-7 md:mt-3">Twoje statystyki</h2>
         <div class="white-retangle">
           <div class="row-table-start -mt-1">
@@ -118,16 +120,6 @@ function copyToken(token: any) {
     color: $primary;
 }
 
-.bad {
-    font-size: 16px;
-    color: #f23648;
-    font-weight: 500;
-  }
-  .correct {
-    font-size: 16px;
-    color: #21a67a;
-    font-weight: 500;
-  }
   .title {
     font-size: 24px;
     font-weight: 600;
