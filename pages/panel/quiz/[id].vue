@@ -1,10 +1,6 @@
 <template>
   <div class="h-screen">
     <NavUser />
-    <div
-      v-if="!isNextQuestion"
-      class="w-full bg-[#EEF7FF] absolute top-[64px] h-[15px] z-50"
-    />
     <div class="w-full loading-bar-bg absolute top-[64px] h-[8px] md:h-[14px]">
       <div class="loading-bar absolute h-[8px] md:h-[14px]" ref="loadingBar"></div>
     </div>
@@ -85,7 +81,7 @@
         <button class="button-primary w-full" @click="replay">Zagraj ponownie</button>
       </div>
       Polecane quizu:
-      
+
        </div>
     </div>
     <NavBottom />
