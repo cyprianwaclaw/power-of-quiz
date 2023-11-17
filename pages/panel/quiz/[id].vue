@@ -22,7 +22,6 @@
           Reserve
         </button>
       </div> -->
-      <img :src="singleQuiz.image" class="image-single" />
       <!-- <div class="flex flex-col gap-2">
         <p>{{ countQuestion }}/{{ singleQuiz.questions_count }}</p>
         <div class="flex gap-2">
@@ -33,6 +32,7 @@
         </div>
       </div> -->
       <div v-if="isNextQuestion">
+        <img :src="singleQuiz.image" class="image-single" />
         <div class="w-full flex flex-col items-center justify-center">
           <p class="text-[13px] text-gray-400">
             {{ countQuestion }}/{{ singleQuiz.questions_count }}
@@ -61,8 +61,9 @@
           </div>
         </div>
       </div>
+       <div
+        v-else>
       <div
-        v-else
         class="w-full flex flex-col items-center justify-center bg-white p-10 border-transparent rounded-[21px]"
       >
       <p class="text-center text-[14px] text-gray-400 mb-[4px]">
@@ -83,6 +84,9 @@
         </div>
         <button class="button-primary w-full" @click="replay">Zagraj ponownie</button>
       </div>
+      Polecane quizu:
+      
+       </div>
     </div>
     <NavBottom />
   </div>
