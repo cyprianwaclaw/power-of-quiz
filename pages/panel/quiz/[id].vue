@@ -6,15 +6,15 @@
       </div>
     </div>
     <div class="pt-[95px] px-8 md:w-[500px] mx-auto">
-      <!-- <div class="w-full flex flex-col items-center justify-center gap-2 mb-10">
-        <p class="flex text-center">{{ isAnimating  }}</p>
+      <p class="flex text-center">{{ isAnimating  }}</p>
+      <div class="w-full flex flex-col items-center justify-center gap-2 mb-10">
         <div class="flex gap-5">
           <button @click="start" class="button-primary w-[100px]">Start</button>
           <button @click="stop" class="button-primary w-[100px]">Stop</button>
         </div>
 <button @click="reserve" class=" text-semibold text-red-500 w-[220px]">Reserve</button>
 
-      </div> -->
+      </div>
     <img :src="singleQuiz.image" class="image-single" />
     <div class="flex flex-col gap-2 mb-10">
       <p>Pytanie: {{ countQuestion }}/{{ singleQuiz.questions_count }}</p>
@@ -104,7 +104,7 @@ const animateProgressBar = () => {
     },
   });
 
-  tl.to(loadingBar.value, { x: '100%', duration: 20, ease: 'linear' });
+  tl.to(loadingBar.value, { x: '100%', duration: 2, ease: 'linear' });
 
   // Znajdź pozycję, od której chcesz zacząć animację (np. 0.5 to środek animacji)
   const startPosition = cookie.value;
@@ -121,7 +121,7 @@ const animateProgressBar = () => {
 const route = useRoute();
 const quizState = useQuiz();
 await quizState.getSingleQuiz(route.params.id);
-const { singleQuiz, startQuiz, nextQuestion } = storeToRefs(quizState);
+const { singleQuiz, startQuiz, nextQuestion, answerById } = storeToRefs(quizState);
 const isLoading = ref(false);
 
 const question = useCookie("question") as any;
@@ -142,6 +142,19 @@ const select = ref(null);
 onBeforeUnmount(() => {
 
 cookie.value = '0'
+})
+
+watch(isAnimating, async (newValue:boolean) => {
+  if(newValue===false) {  
+   await quizState.getAnswerById(current.value.data.next_question.id)
+   let currentQuestion = answerById.value
+   let inCorrectAnswer =  currentQuestion.find((answer: any)=>answer.correct == 0) as any
+   console.log(inCorrectAnswer.id)
+   console.log(currentQuestion)
+    console.log(current.value.data.next_question.id)
+    postAnswer(current.value.data.next_question.id, inCorrectAnswer.id)
+  }
+
 })
 
 onMounted(async () => {
@@ -196,6 +209,7 @@ checkAnswerAlert(nextQuestion.value.data.is_correct)
     submissionQuiz.value = true;
     isNextQuestion.value = false;
     console.error("koniec_quizu");
+    cookie.value = '0'
      stop()
      reserve()
        stop()
@@ -203,6 +217,8 @@ checkAnswerAlert(nextQuestion.value.data.is_correct)
 };
 
 const replay = async () => {
+  start()
+  cookie.value = '0'
   submissionQuiz.value = false;
   countCorrect.value = 0;
   countInCorrect.value = 0;
@@ -214,7 +230,6 @@ const replay = async () => {
   submissionQuiz.value = startQuiz.value.data.submission_id;
   question.value = startQuiz.value;
   current.value = question.value;
-  start()
 };
 
 const checkAnswerAlert = (check: any) => {
