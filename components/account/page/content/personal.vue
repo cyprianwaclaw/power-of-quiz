@@ -19,7 +19,6 @@
       :validation-schema="schemaPersonal"
       v-slot="{ values, meta }"
     >
-    <!-- {{ user}} -->
       <div class="flex place-items-center gap-12">
         <div v-if="user.avatar_path" class="relative w-[140px]">
           <img :src="user.avatar_path" class="avatar" />
@@ -70,7 +69,7 @@
               placeholder="Numer telefonu"
             />
           </div>
-        </div>
+        </div> 
       </div>
       <div class="justify-end flex mt-10">
         <button class="button-primary" v-if="checkPersonal(values, meta.valid, personal)">
@@ -137,12 +136,13 @@ const schemaPersonal = yup.object().shape({
     })
     .max(20, "Nazwisko nie może mieć więcej niż 20 znaków"),
   email: yup.string().test("valid-email", "Nieprawidłowy adres e-mail", (value) => {
-    // if (!value) return false;
     if (!value || value === "") return true;
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     return emailRegex.test(value);
   }),
-  phone: yup.string().test("valid-phone", "Błędny format numeru telefonu", (value) => {
+  phone: yup.string()
+  .required('pole wymanage')
+  .test("valid-phone", "Błędny format numeru telefonu", (value) => {
     if (!value || value === "") return true;
     const phoneRegex = /^\d{9}$/;
     return phoneRegex.test(value) && parseInt(value) > 0;

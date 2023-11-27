@@ -9,18 +9,18 @@
     actionButton="Zobacz pakiety"
     @close="standardPlan"
     />
-    <!-- redirect="/panel/pakiety" -->
   <ModalAlert :modalActive="premium" name="singleQuiz" @close="premiumPlan">
     <template #content>
       <ModalContentSingleQuizAlert :quiz="selectedQuiz" />
     </template>
   </ModalAlert>
+  <!-- {{ userPlan }} -->
   <div v-if="isOpen" class="dark-blur-background z-10"></div>
   <div class="py-8 md:py-0 place-items-center relative w-full md:flex hidden">
     <input
-      class="z-30 w-full"
-      @click="openSearch()"
-      placeholder="Wyszukaj quiz..."
+    class="z-30 w-full"
+    @click="openSearch()"
+    placeholder="Wyszukaj quiz..."
       v-model="search"
     />
     <div class="flex absolute left-7">
@@ -36,7 +36,6 @@
       v-on-click-outside="openSearch"
       class="border-own top-7 absolute w-full bg-white min-h p-6  z-20 h-[400px]"
     >
-      <!-- {{ typeof(userPlan) }} -->
       <div class="" v-if="!search">
         <p class="font-semibold text-lg mb-4">Popularne quizy</p>
         <div class="overflow-y-auto rounded-xl h-[295px] scrollbar-hide">
@@ -173,16 +172,13 @@ const standardPlan = () => {
 };
 
 const isAlert = () => {
-  if (userPlan === true) {
+  if (userPlan.has_premium === true) {
     premium.value = !premium.value;
   }
   if (userPlan === false) {
     standard.value = !standard.value;
-    console.log("dsd");
   }
   openSearch();
-  // alert.value = !alert.value;
-  // console.log('close')
 };
 </script>
 

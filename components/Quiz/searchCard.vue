@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!hasPremium">
+    <div v-if="!hasPremium.has_premium  ">
         <ModalAlert
         :modalActive="isOpen"
         name="Premium"

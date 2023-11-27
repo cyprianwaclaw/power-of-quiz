@@ -2,13 +2,12 @@
   <div class="flex w-full flex-col">
     <p class="text-3xl font-semibold mb-5">Faktury i płatności</p>
     <p class="text-xl font-semibold mb-10">Historia płatności</p>
-    <!-- <div class="grid place-items-center my-10" v-if="payments.data.length < 0">
+    <div class="grid place-items-center my-10" v-if="payments?.data?.length==0">
       <Icon name="ph:clock-clockwise-light" size="166" color="#CFD8E0" />
       <p class="empty">Brak płatności</p>
-    </div> -->
-    <!-- v-else -->
-    <!-- {{ allPayments?.last_page}} -->
+    </div>
     <div
+    v-else
       v-for="(single, index) in allPayments?.data "
       :key="index"
       :class="{
@@ -21,7 +20,7 @@
         <p class="text-[15px] font-semibold">Plan premium</p>
         <p :class="changePaymentStatus(single.status).class">{{ changePaymentStatus(single.status).name}}</p>
       </div>
-      <button @click="downloadInvoice1(single.id)" class="button-primary" v-if="single.status == 'success' ">Pobierz fakture</button>
+        <button @click="downloadInvoice1(single.id)" class="button-primary" v-if="single.status == 'success' && userStore.getCompany?.nip ? true:false">Pobierz fakture</button>
     </div>
     <div class="flex justify-end">
       <Pagination v-if="allPayments?.last_page > 1" :last_page="allPayments?.last_page" />
@@ -34,11 +33,11 @@ import { useQuiz } from "@/store/useQuiz";
 import { useUser } from "@/store/useUser";
 
 const userStore = useUser();
-const { currentUser, payments } = storeToRefs(userStore);
+const { currentUser, payments, getCompany } = storeToRefs(userStore);
 await userStore.getUser();
 let user = currentUser.value;
 const router = useRouter();
-
+await userStore.getSettingsUser();
 const allPayments = ref(null) as any
 
 onMounted(async () => {

@@ -23,7 +23,7 @@ export const useUser = defineStore('user', {
         getFinancial: {} as Financial,
         success: {} as boolean,
         errorMessage: {} as string,
-        hasPremium: {} as boolean,
+        hasPremium: {} as any,
     }),
 
     actions: {

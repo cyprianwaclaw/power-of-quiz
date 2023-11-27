@@ -22,7 +22,7 @@
     </template>
   </ModalDown>
   <div
-    v-if="!hasPremium"
+    v-if="!hasPremium.has_premium  "
     class="border-transparent rounded-[24px] lg:rounded-[12px] w-[260px] lg:w-full"
     :style="`background-image: url(${quiz.image}); background-size: cover;`"
     @click="isAlert()"
