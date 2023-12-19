@@ -68,6 +68,8 @@ definePageMeta({
   middleware: "auth",
 });
 
+
+
 const userStore = useUser();
 const quizStore = useQuiz();
 const { currentUser } = storeToRefs(userStore);

@@ -1,7 +1,7 @@
 <template>
   <div class="auth-background">
     <div class="auth-des hidden sm:flex">
-      <h1>Test</h1>
+      <!-- <h1>Test</h1> -->
     </div>
     <div class="width-login sm:shaddow-effect" @click="inputColor()">
       <h1 class="title-form">Logowanie</h1>

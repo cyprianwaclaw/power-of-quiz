@@ -1,4 +1,10 @@
 <template>
+  <ModalAlert :modalActive="premium" name="singleQuiz" @close="premiumPlan">
+    <template #content>
+      <ModalContentSingleQuizAlert :quiz="selectedQuiz" />
+    </template>
+  </ModalAlert>
+
   <div class="h-screen">
     <NavUser />
     <div class="w-full loading-bar-bg absolute top-[64px] h-[8px] md:h-[14px]">
@@ -80,8 +86,19 @@
         </div>
         <button class="button-primary w-full" @click="replay">Zagraj ponownie</button>
       </div>
-      Polecane quizu:
-
+      <!-- <div> -->
+       <p class="text-[21px] mt-6">Polecane quizy</p>
+<!-- <pre>
+  {{  popularQuiz.slice(0, 5) }}
+</pre> -->
+ <QuizSearchCardMini
+              v-for="quiz in  popularQuiz.slice(0, 3) "
+              :key="quiz"
+              :quiz="quiz"
+              @click="premiumPlan(quiz)"
+              class="mt-5"
+              />
+      <!-- </div> -->
        </div>
     </div>
     <NavBottom />
@@ -93,6 +110,8 @@ import { storeToRefs } from "pinia";
 import { useQuiz } from "@/store/useQuiz";
 import gsap from "gsap";
 import { set } from "nuxt/dist/app/compat/capi";
+
+
 
 const loadingBar = ref(null);
 const isAnimating = ref(false);
@@ -155,7 +174,7 @@ const animateProgressBar = () => {
 const route = useRoute();
 const quizState = useQuiz();
 await quizState.getSingleQuiz(route.params.id);
-const { singleQuiz, startQuiz, nextQuestion, answerById } = storeToRefs(quizState);
+const { singleQuiz, startQuiz, nextQuestion, answerById, popularQuiz } = storeToRefs(quizState);
 const isLoading = ref(false);
 
 const question = useCookie("question") as any;
@@ -260,6 +279,7 @@ const postAnswer = async (question_id: any, answer_id: any) => {
     answerChecked.value = false;
     submissionQuiz.value = true;
     setTimeout(async () => {
+      // await quizState.getPopularQuiz();
       isNextQuestion.value = false;
       console.error("koniec_quizu");
       cookie.value = "0";
@@ -303,6 +323,16 @@ onBeforeRouteUpdate(async (to) => {
   submissionQuiz.value = false;
   stop();
 });
+
+await quizState.getPopularQuiz()
+const premium = ref(false)
+const selectedQuiz = ref(null);
+const premiumPlan = (quizData: any) => {
+  // openSearch();
+  selectedQuiz.value = quizData;
+  premium.value = !premium.value;
+};
+
 </script>
 
 <style scoped lang="scss">

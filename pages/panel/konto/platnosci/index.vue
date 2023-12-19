@@ -21,13 +21,7 @@
               </p>
             </div>
             <div class="grid justify-end content-center">
-              <button
-                @click="downloadInvoice1(single.id)"
-                class="button-primary"
-                v-if="single.status == 'success'"
-              >
-                Faktura
-              </button>
+                <button @click="downloadInvoice1(single.id)" class="button-primary" v-if="single.status == 'success' && userStore.getCompany?.nip ? true:false">Pobierz</button>
             </div>
           </div>
         </div>
@@ -45,11 +39,11 @@ import { useQuiz } from "@/store/useQuiz";
 import { useUser } from "@/store/useUser";
 
 const userStore = useUser();
-const { currentUser, payments } = storeToRefs(userStore);
+const { currentUser, payments, getCompany } = storeToRefs(userStore);
 await userStore.getUser();
 let user = currentUser.value;
 const router = useRouter();
-
+await userStore.getSettingsUser();
 const allPayments = ref(null) as any;
 
 onMounted(async () => {

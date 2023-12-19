@@ -33,6 +33,12 @@ export const useUser = defineStore('user', {
                 this.currentUser = await res.data.user
             } catch { }
         },
+        async generateInvite(id:number) {
+            try {
+                const res = await axiosInstance.get(`generate-invitation-token/${id}`)
+                // this.currentUser = await res.data.user
+            } catch { }
+        },
         async getUserPremium() {
             try {
                 // zwraca true jeśli ma lub false gdy nie ma Premium

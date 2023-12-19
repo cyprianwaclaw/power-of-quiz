@@ -1,8 +1,14 @@
 <template>
   <div class="mb-[25px]">
     <div class="retangle">
-      <div v-if="!allPayouts">
-        <p>brak wypłat</p>
+      <!-- {{ allPayouts }} -->
+           <div v-if="allPayouts?.length==0">
+      <!-- <div> -->
+
+        <div class="grid place-items-center py-10">
+          <Icon name="ph:hand-coins-light" size="154" color="#CFD8E0" />
+          <p class="empty1">Brak wypłat</p>
+        </div>
       </div>
       <div
         v-else
@@ -66,5 +72,12 @@ onBeforeRouteUpdate(async (to, from) => {
   font-weight: 300;
   color: $text-gray;
   margin-bottom: -2px;
+}
+.empty1 {
+  margin-top: 4px;
+  margin-bottom: 12px;
+  color: #cfd8e0;
+  font-size: 32px;
+  font-weight: 800;
 }
 </style>

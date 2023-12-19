@@ -1,7 +1,7 @@
 <template>
   <div class="auth-background">
     <div class="auth-des hidden sm:flex">
-      <h1>Test</h1>
+      <!-- <h1>Test</h1> -->
     </div>
     <div class="width-login sm:shaddow-effect" @click="inputColor()">
       <h1 class="title-form">Zarejestruj się</h1>
@@ -85,9 +85,7 @@ const onSubmit = async (values: any) => {
   const { name, invitation, email, password, password_confirmation } = values;
   await authStore.registerUser(name, invitation, email, password, password_confirmation);
 
-console.log(values)
-
-
+// console.log(values)
 
   let input = ErrorInput(error.value);
   ErrorLogin = input;
