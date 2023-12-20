@@ -21,7 +21,7 @@
       >
         <InputSearch/>
         <div class=" shrink-0 lg:flex hidden">
-          <userCard @open="openMenuDesktop" />
+          <UserCard @open="openMenuDesktop" />
         </div>
       </div>
       <NavOpenMenu class="hidden sm:flex lg:hidden" />

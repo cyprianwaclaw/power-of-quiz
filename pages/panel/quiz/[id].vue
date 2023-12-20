@@ -1,39 +1,23 @@
 <template>
-  <ModalAlert :modalActive="premium" name="singleQuiz" @close="premiumPlan">
+  <ModalAlert :modalActive="isOpenDesktop" name="singleQuiz" @close="isCloseDesktop()">
     <template #content>
       <ModalContentSingleQuizAlert :quiz="selectedQuiz" />
     </template>
   </ModalAlert>
 
-  <div class="h-screen">
+  <ModalDown :modalActive="isOpenMobile" title="Quiz" @close="isCloseMobile">
+    <template #content>
+      <ModalContentSingleQuiz :quiz="selectedQuiz" />
+    </template>
+  </ModalDown>
+
+  <div >
     <NavUser />
     <div class="w-full loading-bar-bg absolute top-[64px] h-[8px] md:h-[14px]">
       <div class="loading-bar absolute h-[8px] md:h-[14px]" ref="loadingBar"></div>
     </div>
     <div class="pt-[95px] px-8 md:w-[500px] mx-auto">
-      <!-- <div v-if="!isNextQuestion">
-  test
-      </div> -->
-      <!-- <div class="w-full flex flex-col items-center justify-center gap-2 mb-10">
-        <p class="flex text-center">{{ isAnimating }}</p>
-        <div class="flex gap-5">
-          <button @click="start" class="button-primary w-[100px]">Start</button>
-          <button @click="stop" class="button-primary w-[100px]">Stop</button>
-        </div>
-        <button @click="reserve" class="text-semibold text-red-500 w-[220px]">
-          Reserve
-        </button>
-      </div> -->
-      <!-- <div class="flex flex-col gap-2">
-        <p>{{ countQuestion }}/{{ singleQuiz.questions_count }}</p>
-        <div class="flex gap-2">
-          <p>Poprawne odpowiedzi: {{ countCorrect }}</p>
-        </div>
-        <div class="flex gap-2">
-          <p>Błędne odpowiedzi: {{ countInCorrect }}</p>
-        </div>
-      </div> -->
-      <div v-if="isNextQuestion">
+      <div v-if="isNextQuestion" class="h-screen">
         <img :src="singleQuiz.image" class="image-single" />
         <div class="w-full flex flex-col items-center justify-center">
           <p class="text-[13px] text-gray-400">
@@ -86,20 +70,17 @@
         </div>
         <button class="button-primary w-full" @click="replay">Zagraj ponownie</button>
       </div>
-      <!-- <div> -->
-       <p class="text-[21px] mt-6">Polecane quizy</p>
-<!-- <pre>
-  {{  popularQuiz.slice(0, 5) }}
-</pre> -->
- <QuizSearchCardMini
-              v-for="quiz in  popularQuiz.slice(0, 3) "
-              :key="quiz"
-              :quiz="quiz"
-              @click="premiumPlan(quiz)"
-              class="mt-5"
-              />
-      <!-- </div> -->
-       </div>
+      <div class="pb-20">
+        <p class="text-[21px] mt-6">Polecane quizy</p>
+        <QuizSearchCardMini
+        v-for="quiz in  popularQuiz.slice(0, 3) "
+        :key="quiz"
+        :quiz="quiz"
+        @click="isModal(quiz)"
+        class="mt-5"
+        />
+      </div>
+    </div>
     </div>
     <NavBottom />
   </div>
@@ -324,14 +305,37 @@ onBeforeRouteUpdate(async (to) => {
   stop();
 });
 
-await quizState.getPopularQuiz()
-const premium = ref(false)
+
+const isOpen = ref(false);
+const isOpenMobile = ref(false);
+const isOpenDesktop = ref(false);
 const selectedQuiz = ref(null);
-const premiumPlan = (quizData: any) => {
-  // openSearch();
+
+const isModal = (quizData:any) => {
   selectedQuiz.value = quizData;
-  premium.value = !premium.value;
+  if (window.screen.width <= 900) {
+    isOpenMobile.value = true;
+    // console.log(window.screen.width);
+  } else {
+    isOpenDesktop.value = true;
+  }
 };
+
+const isCloseMobile = () => {
+  isOpenMobile.value = false;
+};
+const isCloseDesktop = () => {
+  isOpenDesktop.value = false;
+};
+
+// await quizState.getPopularQuiz()
+// const premium = ref(false)
+// const selectedQuiz = ref(null);
+// const premiumPlan = (quizData: any) => {
+//   // openSearch();
+//   selectedQuiz.value = quizData;
+//   premium.value = !premium.value;
+// };
 
 </script>
 

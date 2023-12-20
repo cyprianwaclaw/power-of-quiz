@@ -2,7 +2,11 @@
   <div class="flex w-full flex-col">
     <div v-if="premium.has_premium">
       <p class="text-3xl font-semibold mb-5">Twój pakiet</p>
-      {{ premium }}
+
+      Twój pakiet Premium jest już aktywny! Dzięki niemu korzystasz z pełnej wersji naszego serwisu. Data zakończenia dostępu do wersji Premium to
+
+      {{ changeDateFormat(premium.premium_end) }}
+
     </div>
     <div v-else>
     <!-- <div> -->

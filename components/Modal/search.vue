@@ -17,9 +17,7 @@
           class="search_icon_color"
         />
       </div>
-      <!-- {{ popularQuiz }} -->
       <div v-if="!search" class="flex w-full flex-col">
-        <!-- <LazyQuizLastResults /> -->
         <p class="mb-4 font-semibold text-xl mt-5">Popularne quizy</p>
         <!-- {{ populars }} -->
         <div class="overflow-y-auto rounded-xl h-screen scrollbar-hide pb-[360px]">
