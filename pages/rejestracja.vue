@@ -54,7 +54,7 @@
       <div class="flex flex-col">
         <p class="text-des">Rejestrując się aklceptujesz regulamin serwisu</p>
       </div>
-            <div class="sm:hidden md:hidden flex flex-col">
+            <div class="flex flex-col">
         <p class="text-des">Masz już konto?</p>
         <p class="navigate -mt-7 mb-8">
           <NuxtLink to="/rejestracja">Zaloguj się</NuxtLink>
