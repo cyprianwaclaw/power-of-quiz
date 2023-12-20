@@ -4,38 +4,24 @@
       <!-- <h1>Test</h1> -->
     </div>
     <div class="width-login sm:shaddow-effect" @click="inputColor()">
-      <h1 class="title-form">Zarejestruj się</h1>
+      <h1 class="title-form">Logowanie</h1>
       <Form
         @submit="onSubmit"
         :validation-schema="schema"
         @invalid-submit="onInvalidSubmit"
       >
-      <div class="gap-[17px] flex flex-col">
-        <InputNotSuccess ref="inputField" class="base-input" type="text"
-        :class="{errorInput: ErrorLogin.errorInput }" hasError: true name="name"
-        placeholder="Twoje imię" /> 
-        <InputNotSuccess ref="inputField" class="base-input" type="text"
-        :class="{errorInput: ErrorLogin.errorInput }" hasError: true name="invitation"
-        placeholder="Kod polecający" /> 
-        <InputNotSuccess ref="inputField" class="base-input"
-        type="email" :class="{errorInput: ErrorLogin.errorInput }" hasError: true
-        name="email" placeholder="E-mail" />
-        <InputNotSuccess
+        <InputSettings ref="inputField" class="base-input" type="email" :class="{
+        errorInput: ErrorLogin.errorInput }" hasError: true name="email"
+        placeholder="E-mail" />
+        <InputSettings 
           type="password"
           :class="{ errorInput: ErrorLogin.errorInput }"
-          class="base-input"
+          class="mt-3"
           name="password"
           placeholder="Hasło"
-          />
-          <InputNotSuccess
-          type="password"
-          :class="{ errorInput: ErrorLogin.errorInput }"
-          class="base-input"
-          name="password_confirmation"
-          placeholder="Potwierdz hasło"
-          />
-        </div>
+        />
         <div v-if="!hideAfter">
+          <!-- TODO:Chowanie komunikatu gdy nie ma błędu -->
           <div v-if="ErrorLogin.plMessage">
             <p class="errorUser red font-medium">
               <Icon
@@ -47,17 +33,20 @@
             </p>
           </div>
         </div>
-        <button class="submit-auth w-full mt-10" id="submit" type="submit">
-          Zarejestruj się
-        </button>
+        <button class="submit-auth w-full mt-10" id="submit" type="submit">Zaloguj się</button>
       </Form>
-      <div class="flex flex-col">
-        <p class="text-des">Rejestrując się aklceptujesz regulamin serwisu</p>
+      <div class="sm:flex hidden">
+        <p class="text-des">
+          Nie masz jeszcze konta?
+          <NuxtLink to="/rejestracja"
+            ><span class="navigate">Zarejestruj się</span></NuxtLink
+          >
+        </p>
       </div>
-                 <div class="flex flex-col">
-        <p class="text-des">Masz już konto?</p>
+      <div class="sm:hidden md:hidden flex flex-col">
+        <p class="text-des">Nie masz jeszcze konta?</p>
         <p class="navigate -mt-7 mb-8">
-          <NuxtLink to="/rejestracja">Zaloguj się</NuxtLink>
+          <NuxtLink to="/rejestracja">Zarejestruj się</NuxtLink>
         </p>
       </div>
     </div>
@@ -70,7 +59,8 @@ import { storeToRefs } from "pinia";
 import { Form } from "vee-validate";
 import { useAuth } from "@/store/useAuth";
 import { ErrorInput, onInvalidSubmit } from "@/utils/function";
-
+const submissionQuiz = useCookie("submissionQuiz") as any;
+submissionQuiz.value = false
 definePageMeta({
   middleware: "guest",
 });
@@ -85,41 +75,19 @@ function inputColor() {
   ErrorLogin = false;
 }
 
-const onSubmit = async (values: any) => {
-
-  
-  const { name, invitation, email, password, password_confirmation } = values;
-  await authStore.registerUser(name, invitation, email, password, password_confirmation);
-
-// console.log(values)
-
+async function onSubmit(values) {
+  const { email, password } = values;
+  await authStore.loginUser(email, password);
   let input = ErrorInput(error.value);
   ErrorLogin = input;
   hideAfter = false;
-};
+}
 
 const schema = Yup.object().shape({
-  name: Yup
-      .string()
-      .test("valid-name", "Nieprawidłowe imię", (value:any) => {
-        if (!value) return true;
-        const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż\s]*$/u;
-        return nameRegex.test(value);
-      })
-      .max(20, "Imię nie może mieć więcej niż 20 znaków")
-      .required("Uzupełnij swoję imię"),
   email: Yup.string().email("Błędny email").required("Proszę wpisać adres e-mail"),
   password: Yup.string()
-    .min(6, "Hasło musi mieć przynajmniej 6 znaków")
-    .matches(
-      /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/,
-      "Hasło musi zawierać przynajmniej jedną dużą literę i jeden znak specjalny"
-    )
+    .min(8, "Hasło musi mieć powyżej 8 znaków")
     .required("Uzupełnij hasło"),
-    invitation: Yup.string().required("Uzupełnij kod polecający"),
-  password_confirmation: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Hasła muszą być takie same') // Dodaj walidację na potwierdzenie hasła
-    .required('Potwierdź hasło'), // Dodaj komunikat o wymaganym polu
 });
 </script>
 
@@ -205,4 +173,5 @@ const schema = Yup.object().shape({
   margin-bottom: 32px;
   color: #a7a2a2;
 }
+
 </style>

@@ -2,14 +2,23 @@
   <div class="auth-background">
     <div class="width-login sm:shaddow-effect">
       <h1 class="text-[24px] font-semibold">Potwierdź swój adres e-mail</h1>
-
-
+<!-- {{ data.data.user.id }} -->
+<pre>
+{{ route.query.id }}
+</pre>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
+import { axiosInstance } from '~~/utils/axios.config'
+const route = useRoute()
+// const current =  await axiosInstance.get('/users/current') as any
+if( route.query.id ){
+  await axiosInstance.get('/verify-email/39') as any
+  // console.log("jest")
+}
+// console.log(data.data.user.id )
 </script>
 
 <style scoped>

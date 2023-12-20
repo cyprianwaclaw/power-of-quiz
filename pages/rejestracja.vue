@@ -54,10 +54,12 @@
       <div class="flex flex-col">
         <p class="text-des">Rejestrując się aklceptujesz regulamin serwisu</p>
       </div>
-            <div class="flex flex-col">
-        <p class="text-des">Masz już konto?</p>
-        <p class="navigate -mt-7 mb-8">
-          <NuxtLink to="/rejestracja">Zaloguj się</NuxtLink>
+      <div class="sm:flex hidden">
+        <p class="text-[14px] text-[#a7a2a2] -mt-3 mb-8">
+          Masz już konto?
+          <NuxtLink to="/logowanie"
+            ><span class="navigate">Zaloguj się</span></NuxtLink
+          >
         </p>
       </div>
     </div>
