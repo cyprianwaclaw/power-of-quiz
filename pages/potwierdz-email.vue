@@ -15,8 +15,8 @@ import { axiosInstance } from '~~/utils/axios.config'
 const route = useRoute()
 // const current =  await axiosInstance.get('/users/current') as any
 if( route.query.id ){
-  await axiosInstance.get('/verify-email/39') as any
-  // console.log("jest")
+  await axiosInstance.get(`/verify-email/${route.query.id}`) as any
+  console.log(route.query.id )
 }
 // console.log(data.data.user.id )
 </script>
