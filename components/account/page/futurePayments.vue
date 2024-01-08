@@ -119,14 +119,31 @@ onBeforeRouteUpdate(async (to, from) => {
 //   }
 // };
 
+// const downloadInvoice1 = (id: string) => {
+//   axiosInstance.get(`/payments/${id}/download`).then((res) => {
+//     const url = window.URL.createObjectURL(new Blob([res.data]));
+//     const link = document.createElement("a");
+//     link.href = url;
+//     link.setAttribute("download", `invoice-${id}.pdf`);
+//     document.body.appendChild(link);
+//     link.click();
+//   });
+// };
+
 const downloadInvoice1 = (id: string) => {
-  axiosInstance.get(`/payments/${id}/download`).then((res) => {
+  axiosInstance.get(`/payments/${id}/download`, {
+    responseType: 'arraybuffer',
+  })
+  .then((res) => {
     const url = window.URL.createObjectURL(new Blob([res.data]));
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", `invoice-${id}.pdf`);
     document.body.appendChild(link);
     link.click();
+  })
+  .catch((error) => {
+    console.error('Błąd podczas pobierania faktury:', error);
   });
 };
 </script>
