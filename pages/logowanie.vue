@@ -4,7 +4,7 @@
       <!-- <h1>Test</h1> -->
     </div>
     <div class="width-login sm:shaddow-effect" @click="inputColor()">
-      <h1 class="title-form">Logowanie</h1>
+      <h1 class="text-[24px] ">Logowanie</h1>
       <Form
         @submit="onSubmit"
         :validation-schema="schema"

@@ -1,7 +1,8 @@
 <template>
     <div class="text">
-        Gratulujemy, Twój pakiet jest aktywny. Dzięki temu masz dostęp do pełnej wersji serwisu. Koniec dostępu do wersji Premium nastąpi <span class="text-gray-400 font-bold">{{ date }}</span> 
-        
+        Gratulujemy, Twój pakiet jest aktywny. Dzięki temu masz dostęp do pełnej wersji serwisu. Koniec dostępu do wersji
+        Premium nastąpi <span class="text-gray-400 font-bold">{{ date }}</span>
+
         <!-- <ul class="mt-2">
             <li>zdobywać punkty</li>
             <li>zapraszać znajomych</li>
@@ -13,8 +14,8 @@
     </div>
 </template>
 <script setup lang="ts">
-const props= defineProps({
-    date:{type:Date}
+const props = defineProps({
+    date: { type: Date }
 
 })
 const date = props?.date

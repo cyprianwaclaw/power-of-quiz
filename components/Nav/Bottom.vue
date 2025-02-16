@@ -5,7 +5,7 @@
     </template>
   </ModalDown>
   <div
-    class=" md:hidden px-2 py-2 border-t border-gray-200 fixed left-0 bottom-0 z-30 grid grid-cols-5 w-full h-70 bg-white justify-items-center"
+    class=" md:hidden px-2 py-2 border-t border-gray-200 fixed left-0 grid grid-cols-5 w-full h-70 bg-white justify-items-center"
   >
     <div class="w-full grid justify-center">
       <div v-if="routeName == 'home'">
